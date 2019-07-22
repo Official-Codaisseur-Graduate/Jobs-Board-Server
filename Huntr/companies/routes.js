@@ -84,4 +84,8 @@ router.get('/companies/indeed/:name', function (req, res, next) {
     .catch(error => next(error))
 })
 
+router.post('/event', (req, res, next) => {
+  
+})
+
 module.exports = router
