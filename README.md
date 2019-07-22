@@ -1,3 +1,6 @@
+# Preface
+- This repository is a continuation by members of Codaisseur class #27 of the "Jobs Board" real world project that was started by members of Codaisseur class #26. The original repo can be found here https://github.com/hastinc/Jobs-Board-Server.
+
 # Table of contents
 - [Jobs Board Server](#Jobs-Board-Server)
 - [Technologies used](#Technologies-used)
