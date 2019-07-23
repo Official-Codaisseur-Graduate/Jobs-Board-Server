@@ -17,6 +17,7 @@ const jobAdded = (job, res, next) => {
        .findOne({ where: { id: job.employer.id } })
        .then(company => {
            job.companyId = job.employer.id
+           job.address = job.location.address
 
            Job
                .create(job)
@@ -27,8 +28,6 @@ const jobAdded = (job, res, next) => {
 
 router.post('/jobs', function (req, res, next) {
    const event = req.body;
-   console.log('Jobs test', event.job);
-   console.log('event type', event.eventType);
 
    switch (event.eventType) {
        case 'JOB_ADDED':

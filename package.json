@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "indeed-scraper": "^3.0.2",
+    "ngrok": "^3.2.3",
     "nodemon": "^1.19.1",
     "pg": "^7.11.0",
     "sequelize": "^5.8.12",
