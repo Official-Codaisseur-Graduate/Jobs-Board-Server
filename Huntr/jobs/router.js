@@ -17,7 +17,7 @@ const jobAdded = (job, res, next) => {
        .findOne({ where: { id: job.employer.id } })
        .then(company => {
            job.companyId = job.employer.id
-
+          job.address = job.location.address
            Job
                .create(job)
                .then(job => res.status(201).json(job))

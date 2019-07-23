@@ -24,7 +24,7 @@ const Job = sequelize.define('jobs', {
        type: Sequelize.STRING,
        allowNull: false
    },
-   adress: {
+   address: {
        type: Sequelize.STRING,
        allowNull: false
    },
