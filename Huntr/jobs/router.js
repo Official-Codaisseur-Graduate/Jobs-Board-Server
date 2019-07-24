@@ -15,7 +15,6 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIx
 axios.defaults.baseURL = 'https://api.huntr.co/org'
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
-//
 router.post('/copy-jobs', (req, res, next) => {
     axios
         .get(`https://api.huntr.co/org/jobs`)
@@ -45,36 +44,5 @@ router.post('/copy-jobs', (req, res, next) => {
                 .end()
     })
 })
-
-// const jobAdded = (job, res, next) => {
-//     Company
-//         .findOne({ where: { id: job.employer.id } })
-//         .then(company => {
-//             job.companyId = job.employer.id
-//             job.address = job.location.address
-
-//             Job
-//                 .create(job)
-//                 .then(job => res.status(201).json(job))
-//                 .catch(error => next(error))
-//         })
-// };
-
-// router.post('/jobs', function (req, res, next) {
-//     const event = req.body;
-
-//     switch (event.eventType) {
-//         case 'JOB_ADDED':
-//             jobAdded(event.job, res, next);
-//             break;
-//         case 'JOB_MOVED':
-//             break;
-//         default:
-//             break;
-//     }
-// })
-//         })
-//         .catch(error => next(error))
-// })
 
 module.exports = router
