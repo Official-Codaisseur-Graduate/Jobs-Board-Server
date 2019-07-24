@@ -41,4 +41,37 @@ router.post('/jobs', function (req, res, next) {
    }
 })
 
+//
+router.post('/copy-jobs', (req, res, next) => {
+    axios
+        .get(`https://api.huntr.co/org/jobs`)
+        .then(response => {
+            const data = response.data.data
+            
+            const allJobs = data.map(entity => {
+                console.log("ENTITY!!", entity)
+                const job = {
+                    id: entity.id,
+                    memberId: entity.member.id,
+                    companyId: entity.employer.id,
+                    title: entity.title,
+                    employer: entity.employer.name,
+                    url: entity.url,
+                    address: entity.location
+                }
+                return (
+                    Job
+                        .create(job)
+                )
+            })
+            return Promise.all(allJobs)
+        })
+        .then(jobs => {
+            res
+                .send({length: jobs.length})
+                .end()
+        })
+        .catch(error => next(error))
+})
+
 module.exports = router
