@@ -2,7 +2,6 @@ const Sequelize = require('sequelize')
 const sequelize = require('../../db')
 // const Duplicate = require('../duplicates/model')
 const Company = require('../companies/model')
-//
 const Member = require('../members/model');
 
 const Job = sequelize.define('jobs', {
@@ -18,10 +17,6 @@ const Job = sequelize.define('jobs', {
     },
     url: {
         type: Sequelize.STRING,
-    },
-    address: {
-        type: Sequelize.STRING
-
     }
 },
     {
@@ -30,7 +25,7 @@ const Job = sequelize.define('jobs', {
     }
 )
 Job.belongsTo(Company)
-Job.belongsTo(Member)
+// Job.hasMany(Member)
 // Job.hasMany(Duplicate)
 
 module.exports = Job

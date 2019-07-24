@@ -36,7 +36,3 @@ router.post(`/copy-members`, (req, res, next) => {
 
 module.exports = router
 
-//NOTES
-//Job.belongsTo(Member)
-//OR
-//Job.hasMany(Member)
