@@ -13,13 +13,10 @@ const Event = sequelize.define(
         },
         eventType: {
             type: Sequelize.STRING,
-        },
-        createdAt: {
-            type: Sequelize.DATE
         }
     }, {
         tableName: 'events',
-        timestamps: false
+        timestamps: true
     }
 )
 
