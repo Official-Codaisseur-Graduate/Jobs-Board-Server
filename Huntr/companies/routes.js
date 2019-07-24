@@ -68,20 +68,20 @@ router.get('/companies/:id', function (req, res, next) {
     .catch(error => next(error))
 })
 
-router.get('/companies/indeed/:name', function (req, res, next) {
-  const { name } = req.params
-  const searchName = {
-    name: { [Op.like]: `${name.toLowerCase()}%` }
-  }
-  Company
-    .findOne({
-      where: searchName
-    })
-    .then(companies => {
-      res.send(companies)
-        .end()
-    })
-    .catch(error => next(error))
-})
+// router.get('/companies/indeed/:name', function (req, res, next) {
+//   const { name } = req.params
+//   const searchName = {
+//     name: { [Op.like]: `${name.toLowerCase()}%` }
+//   }
+//   Company
+//     .findOne({
+//       where: searchName
+//     })
+//     .then(companies => {
+//       res.send(companies)
+//         .end()
+//     })
+//     .catch(error => next(error))
+// })
 
 module.exports = router
