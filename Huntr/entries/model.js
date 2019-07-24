@@ -1,3 +1,5 @@
+//NOTES --> ENTRY = the status of a "jo" in regards to a member 
+
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
 
@@ -9,21 +11,27 @@ const Entry = sequelize.define(
     {
         status: {
             type: Sequelize.STRING,
+            defaultValue: "wishlist"
         },
         wishlistDate: {
-            type: Sequelize.DATEONLY
+            type: Sequelize.DATEONLY,
+            defaultValue: "tbd"
         },
         applicationDate: {
-            type: Sequelize.DATEONLY
+            type: Sequelize.DATEONLY,
+            defaultValue: "tbd"
         },
         interviewDate: {
-            type: Sequelize.DATEONLY
+            type: Sequelize.DATEONLY,
+            defaultValue: "tbd"
         },
         offerDate: {
-            type: Sequelize.DATEONLY
+            type: Sequelize.DATEONLY,
+            defaultValue: "tbd"
         },
         rejectionDate: {
-            type: Sequelize.DATEONLY
+            type: Sequelize.DATEONLY,
+            defaultValue: "tbd"
         }
     }, {
         tableName: 'entries',
@@ -31,7 +39,7 @@ const Entry = sequelize.define(
     }
 )
 
-// Entry.belongsTo(Job)
-// Entry.belongsTo(Member)
+Entry.belongsTo(Job)
+Entry.belongsTo(Member)
 
 module.exports = Entry

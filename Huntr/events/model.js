@@ -1,3 +1,5 @@
+//NOTES --> EVENTS = events taht are coming in through the webhook
+
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
 
@@ -13,13 +15,10 @@ const Event = sequelize.define(
         },
         eventType: {
             type: Sequelize.STRING,
-        },
-        createdAt: {
-            type: Sequelize.DATE
         }
     }, {
         tableName: 'events',
-        timestamps: false
+        timestamps: true
     }
 )
 
