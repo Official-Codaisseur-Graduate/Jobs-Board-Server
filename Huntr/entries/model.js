@@ -1,3 +1,5 @@
+//NOTES --> ENTRY = the status of a "jo" in regards to a member 
+
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
 
@@ -37,7 +39,7 @@ const Entry = sequelize.define(
     }
 )
 
-// Entry.belongsTo(Job)
-// Entry.belongsTo(Member)
+Entry.belongsTo(Job)
+Entry.belongsTo(Member)
 
 module.exports = Entry

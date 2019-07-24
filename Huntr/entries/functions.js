@@ -1,3 +1,5 @@
+//NOTES --> ENTRY = the status of a "jo" in regards to a member 
+
 const Entry = require('../entries/model');
 const Job = require('../jobs/model');
 
@@ -46,7 +48,8 @@ export const jobAdded = (event) => {
         jobId: jobId
     }
 
-    //check if job exists //check if company exists
+    //check if company exists
+    //check if job exists
     //create entry with memberId & jobId
     Job
         .findOne({
@@ -68,6 +71,14 @@ export const jobAdded = (event) => {
     
     Entry
         .create(entry)
+        .then(entry => {
+            res
+                .status(201)
+                .send({
+                    message: "A NEW ENTRY WAS CREATED",
+                    entry: entry
+                })
+        })
     
 
 

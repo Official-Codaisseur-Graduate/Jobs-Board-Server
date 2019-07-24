@@ -1,3 +1,5 @@
+//NOTES --> EVENTS = events taht are coming in through the webhook
+
 const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')
@@ -80,48 +82,48 @@ router.get('/events', (req, res, next) => {
 module.exports = router
 
 //NOTES - for once the webhook is working
-router.post('/events', (req, res, next) => {
-    const data = req.body
-    const event = {
-        id: data.id,
-        eventType: data.eventType,
-        jobId: data.job.id,
-        memberId: data.member.id
-    }
+// router.post('/events', (req, res, next) => {
+//     const data = req.body
+//     const event = {
+//         id: data.id,
+//         eventType: data.eventType,
+//         jobId: data.job.id,
+//         memberId: data.member.id
+//     }
 
-    //create event
-    Event
-        .create(event)
-        .then(event => {
-            res
-                //webhook expects status 200 back
-                .status(200)
-                .send({
-                    message: "NEW EVENT CREATED",
-                    event: event
-                })
-        })
-        .catch(error => next(error))
+//     //create event
+//     Event
+//         .create(event)
+//         .then(event => {
+//             res
+//                 //webhook expects status 200 back
+//                 .status(200)
+//                 .send({
+//                     message: "NEW EVENT CREATED",
+//                     event: event
+//                 })
+//         })
+//         .catch(error => next(error))
 
-    //what to do with incoming information?!
-    if (data.eventType === "JOB_ADDED") {
-        //function job added
-        //check if job exists if not create job
-        //create entry
-    } else if (data.eventType === "JOB_MOVED") {
-        //function
-        //update entry || if not exist create entry
-    } else if (data.eventType === "JOB_APPLICATION_DATE_SET") {
-        //function
-        //update entry || if not exist create entry
-    } else if (data.eventType === "JOB_FIRST_INTERVIEW_DATE_SET") {
-        //function
-        //update entry || if not exist create entry
-    } else if (data.eventType === "JOB_SECOND_INTERVIEW_DATE_SET") {
-        //update entry || if not exist create entry
-    } else if (data.eventType === "JOB_OFFER_DATE_SET") {
-        //update entry || if not exist create entry
-    } else {
-        //not a correct event name
-    }
-})
+//     //what to do with incoming information?!
+//     if (data.eventType === "JOB_ADDED") {
+//         //function job added
+//         //check if job exists if not create job
+//         //create entry
+//     } else if (data.eventType === "JOB_MOVED") {
+//         //function
+//         //update entry || if not exist create entry
+//     } else if (data.eventType === "JOB_APPLICATION_DATE_SET") {
+//         //function
+//         //update entry || if not exist create entry
+//     } else if (data.eventType === "JOB_FIRST_INTERVIEW_DATE_SET") {
+//         //function
+//         //update entry || if not exist create entry
+//     } else if (data.eventType === "JOB_SECOND_INTERVIEW_DATE_SET") {
+//         //update entry || if not exist create entry
+//     } else if (data.eventType === "JOB_OFFER_DATE_SET") {
+//         //update entry || if not exist create entry
+//     } else {
+//         //not a correct event name
+//     }
+// })
