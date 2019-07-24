@@ -1,26 +1,26 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
-// const Duplicate = require('../duplicates/model')
 const Company = require('../companies/model')
-const Member = require('../members/model');
+// const Duplicate = require('../duplicates/model')
+// const Member = require('../members/model');
 
-const Job = sequelize.define(
-  'jobs',
-  {
-    id: {
-        type: Sequelize.STRING,
-        primaryKey: true
+const Job = sequelize.define('jobs',
+    {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        title: {
+            type: Sequelize.STRING,
+        },
+        employer: {
+            type: Sequelize.JSON,
+        },
+        url: {
+            type: Sequelize.STRING,
+        }
     },
-    title: {
-        type: Sequelize.STRING,
-    },
-    employer: {
-        type: Sequelize.JSON,
-    },
-    url: {
-        type: Sequelize.STRING,
-    }
-},
     {
         tableName: 'jobs',
         timestamps: false
@@ -28,6 +28,7 @@ const Job = sequelize.define(
 )
 
 Job.belongsTo(Company)
+Company.hasMany(Job)
 // Job.hasMany(Member)
 // Job.hasMany(Duplicate)
 

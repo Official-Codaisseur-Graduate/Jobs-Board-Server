@@ -6,9 +6,7 @@ const Op = Sequelize.Op
 const Company = require('./model')
 const Duplicate = require('../duplicates/model')
 const { removeDuplicateCompanies } = require('./removeDuplicates')
-const {baseURL, token} = require('../constants')
-
-console.log('tokenDog', baseURL, token);
+const { baseURL, token } = require('../constants')
 
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
@@ -16,8 +14,6 @@ axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 router.post('/copy-companies', function (req, res, next) {
   axios.get(`${baseURL}/employers?limit=10000`)
     .then(response => {
-      console.log('Then 1');
-      
       const employers = response.data.data
       const noDuplicateEmployers = removeDuplicateCompanies(employers)
 
@@ -35,10 +31,7 @@ router.post('/copy-companies', function (req, res, next) {
     .then(companies => {
       res.send({ length: companies.length }).end()
     })
-    .catch(error => {
-      console.log('Catch Companies', error);
-      next(error)
-    })
+    .catch(error => next(error))
 })
 
 router.get('/companies', function (req, res, next) {
@@ -53,6 +46,7 @@ router.get('/companies', function (req, res, next) {
       name: { [Op.like]: `%${req.query.search}%` }
     }
   }
+  
   Company
     .findAndCountAll({
       limit, offset,

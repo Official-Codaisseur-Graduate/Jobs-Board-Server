@@ -6,7 +6,6 @@ const Op = Sequelize.Op
 const {baseURL, token} = require('../constants')
 const Job = require('./model')
 const Company = require('../companies/model')
-const Entry = require('../entries/model')
 
 // const Duplicate = require('../duplicates/model')
 // const { removeDuplicateCompanies } = require(‘./removeDuplicates’)
@@ -14,15 +13,13 @@ const Entry = require('../entries/model')
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
-//
 router.post('/copy-jobs', (req, res, next) => {
     axios
         .get(`${baseURL}/jobs`)
         .then(response => {
-            const data = response.data.data
+            const jobs = response.data.data
 
-            const allJobs = data.map(entity => {
-                console.log("ENTITY!!", entity)
+            const allJobs = jobs.map(entity => {
                 const job = {
                     id: entity.id,
                     companyId: entity.employer.id,
@@ -30,18 +27,16 @@ router.post('/copy-jobs', (req, res, next) => {
                     employer: entity.employer.name,
                     url: entity.url
                 }
+
                 //function to check if job already exists
-                return (
-                    Job
-                        .create(job)
-                )
+
+                // return Job.create(job)
             })
+
             return Promise.all(allJobs)
         })
         .then(jobs => {
-            res
-                .send({ length: jobs.length })
-                .end()
+            res.send({ length: jobs.length }).end()
         })
         .catch(err => next(err))
 })
