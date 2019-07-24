@@ -43,8 +43,38 @@ router.post('/copy-jobs', (req, res, next) => {
             res
                 .send({length: jobs.length})
                 .end()
-        })
-        .catch(error => next(error))
+    })
 })
+
+// const jobAdded = (job, res, next) => {
+//     Company
+//         .findOne({ where: { id: job.employer.id } })
+//         .then(company => {
+//             job.companyId = job.employer.id
+//             job.address = job.location.address
+
+//             Job
+//                 .create(job)
+//                 .then(job => res.status(201).json(job))
+//                 .catch(error => next(error))
+//         })
+// };
+
+// router.post('/jobs', function (req, res, next) {
+//     const event = req.body;
+
+//     switch (event.eventType) {
+//         case 'JOB_ADDED':
+//             jobAdded(event.job, res, next);
+//             break;
+//         case 'JOB_MOVED':
+//             break;
+//         default:
+//             break;
+//     }
+// })
+//         })
+//         .catch(error => next(error))
+// })
 
 module.exports = router
