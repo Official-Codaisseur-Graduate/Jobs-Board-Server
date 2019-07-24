@@ -13,31 +13,53 @@ axios.defaults.baseURL = 'https://api.huntr.co/org'
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 const jobAdded = (job, res, next) => {
-   Company
-       .findOne({ where: { id: job.employer.id } })
-       .then(company => {
-           job.companyId = job.employer.id
-           job.address = job.location.address
+    Company
+        .findOne({ where: { id: job.employer.id } })
+        .then(company => {
+            job.companyId = job.employer.id
+            job.address = job.location.address
 
-           Job
-               .create(job)
-               .then(job => res.status(201).json(job))
-               .catch(error => next(error))
-       })
+            Job
+                .create(job)
+                .then(job => res.status(201).json(job))
+                .catch(error => next(error))
+        })
 };
 
 router.post('/jobs', function (req, res, next) {
-   const event = req.body;
+    const event = req.body;
 
-   switch (event.eventType) {
-       case 'JOB_ADDED':
-           jobAdded(event.job, res, next);
-           break;
-       case 'JOB_MOVED':
-           break;
-       default:
-           break;
-   }
+    switch (event.eventType) {
+        case 'JOB_ADDED':
+            jobAdded(event.job, res, next);
+            break;
+        case 'JOB_MOVED':
+            break;
+        default:
+            break;
+    }
+})
+
+router.post('/copy-jobs', function (req, res, next) {
+    axios.get(`https://api.huntr.co/org/jobs`)
+        .then(response => {
+            const jobs = response.data.data
+            console.log('tatyjobs', jobs[0])
+            jobs.map(job => {
+                Company
+                    .findOne({ where: { id: job.employer.id } })
+                    .then(company => {
+                        job.companyId = job.employer.id
+                        // job.address = job.location.address
+
+                        Job
+                            .create(job)
+                            .then(job => res.status(201).send('Updated'))
+                            .catch(error => next(error))
+                    })
+            })
+        })
+        .catch(error => next(error))
 })
 
 module.exports = router

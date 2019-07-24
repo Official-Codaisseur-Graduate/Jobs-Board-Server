@@ -6,6 +6,7 @@ const Company = require('../companies/model')
 const Job = sequelize.define('jobs', {
    id: {
        type: Sequelize.STRING,
+       allowNull: false,
        primaryKey: true
    },
    title: {
@@ -14,19 +15,15 @@ const Job = sequelize.define('jobs', {
    },
    description: {
        type: Sequelize.STRING,
-       allowNull: false
    },
    salary: {
        type: Sequelize.INTEGER,
-       allowNull: false
    },
    url: {
        type: Sequelize.STRING,
-       allowNull: false
    },
    address: {
        type: Sequelize.STRING,
-       allowNull: false
    },
    applicationDate: {
        type: Sequelize.INTEGER,
