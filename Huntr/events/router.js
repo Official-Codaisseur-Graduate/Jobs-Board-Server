@@ -3,16 +3,15 @@ const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-
+const {baseURL, token} = require('../constants')
 const Event = require('./model');
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6IjJlZDFkNmIyLWU3YjItNDE2ZS04NzVlLWJiNDhkNzBkM2RhNCIsImlhdCI6MTU1NDgyNTEzMX0.hOfXhHcElNhCOMtM_TTwHr6tf6VhFmL0uzUEuT9hNjk"
-axios.defaults.baseURL = 'https://api.huntr.co/org'
+axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-events', (req, res, next) => {
     axios
-        .get(`https://api.huntr.co/org/events`)
+        .get(`${baseURL}/events`)
         .then(response => {
             const data = response.data.data
 

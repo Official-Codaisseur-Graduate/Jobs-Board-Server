@@ -3,7 +3,7 @@ const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-
+const {baseURL, token} = require('../constants')
 const Job = require('./model')
 const Company = require('../companies/model')
 const Entry = require('../entries/model')
@@ -11,17 +11,16 @@ const Entry = require('../entries/model')
 // const Duplicate = require('../duplicates/model')
 // const { removeDuplicateCompanies } = require(‘./removeDuplicates’)
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6IjJlZDFkNmIyLWU3YjItNDE2ZS04NzVlLWJiNDhkNzBkM2RhNCIsImlhdCI6MTU1NDgyNTEzMX0.hOfXhHcElNhCOMtM_TTwHr6tf6VhFmL0uzUEuT9hNjk"
-axios.defaults.baseURL = 'https://api.huntr.co/org'
+axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 //
 router.post('/copy-jobs', (req, res, next) => {
     axios
-        .get(`https://api.huntr.co/org/jobs`)
+        .get(`${baseURL}/jobs`)
         .then(response => {
             const data = response.data.data
-            
+
             const allJobs = data.map(entity => {
                 console.log("ENTITY!!", entity)
                 const job = {
@@ -41,40 +40,53 @@ router.post('/copy-jobs', (req, res, next) => {
         })
         .then(jobs => {
             res
-                .send({length: jobs.length})
+                .send({ length: jobs.length })
                 .end()
-    })
+        })
+        .catch(err => next(err))
 })
 
-// const jobAdded = (job, res, next) => {
-//     Company
-//         .findOne({ where: { id: job.employer.id } })
-//         .then(company => {
-//             job.companyId = job.employer.id
-//             job.address = job.location.address
+const jobAdded = (job, res, next) => {
+    console.log('job added')
+    console.log('job test', job)
+    console.log('res test', res)
+    Company
+        .findOne({ where: { id: job.employer.id } })
+        .then(company => {
+            console.log('company test', company)
 
-//             Job
-//                 .create(job)
-//                 .then(job => res.status(201).json(job))
-//                 .catch(error => next(error))
-//         })
-// };
+            job.companyId = job.employer.id
+            job.address = job.location.address
 
-// router.post('/jobs', function (req, res, next) {
-//     const event = req.body;
+            console.log('job.companyId', job.employer.id)
+            console.log('job.address', job.location.address)
 
-//     switch (event.eventType) {
-//         case 'JOB_ADDED':
-//             jobAdded(event.job, res, next);
-//             break;
-//         case 'JOB_MOVED':
-//             break;
-//         default:
-//             break;
-//     }
-// })
-//         })
-//         .catch(error => next(error))
-// })
+            Job
+                .create(job)
+                .then(job => res.status(200).json(job))
+                .catch(error => next(error))
+        })
+}
+
+const jobMoved = (job, res, next) => {
+    console.log('job moved')
+    console.log('job test', job)
+    console.log('res test', res)
+}
+
+router.post('/events', function (req, res, next) {
+    const event = req.body;
+
+    switch (event.eventType) {
+        case 'JOB_ADDED':
+            jobAdded(event.job, res, next);
+            break;
+        case 'JOB_MOVED':
+            jobMoved(event.job, res, next)
+            break;
+        default:
+            break;
+    }
+})
 
 module.exports = router

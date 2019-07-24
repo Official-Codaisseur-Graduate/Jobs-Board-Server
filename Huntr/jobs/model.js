@@ -15,7 +15,7 @@ const Job = sequelize.define(
         type: Sequelize.STRING,
     },
     employer: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSON,
     },
     url: {
         type: Sequelize.STRING,
@@ -26,6 +26,7 @@ const Job = sequelize.define(
         timestamps: false
     }
 )
+
 Job.belongsTo(Company)
 // Job.hasMany(Member)
 // Job.hasMany(Duplicate)

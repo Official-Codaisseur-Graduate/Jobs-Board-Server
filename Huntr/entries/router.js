@@ -3,11 +3,11 @@ const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
+const {baseURL, token} = require('../constants')
 
 const Entry = require('./model');
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6IjJlZDFkNmIyLWU3YjItNDE2ZS04NzVlLWJiNDhkNzBkM2RhNCIsImlhdCI6MTU1NDgyNTEzMX0.hOfXhHcElNhCOMtM_TTwHr6tf6VhFmL0uzUEuT9hNjk"
-axios.defaults.baseURL = 'https://api.huntr.co/org'
+axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 const jobAdded = (job, res, next) => {

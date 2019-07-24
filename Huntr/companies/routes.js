@@ -6,14 +6,18 @@ const Op = Sequelize.Op
 const Company = require('./model')
 const Duplicate = require('../duplicates/model')
 const { removeDuplicateCompanies } = require('./removeDuplicates')
+const {baseURL, token} = require('../constants')
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6IjJlZDFkNmIyLWU3YjItNDE2ZS04NzVlLWJiNDhkNzBkM2RhNCIsImlhdCI6MTU1NDgyNTEzMX0.hOfXhHcElNhCOMtM_TTwHr6tf6VhFmL0uzUEuT9hNjk"
-axios.defaults.baseURL = 'https://api.huntr.co/org'
+console.log('tokenDog', baseURL, token);
+
+axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-companies', function (req, res, next) {
-  axios.get(`https://api.huntr.co/org/employers?limit=10000`)
+  axios.get(`${baseURL}/employers?limit=10000`)
     .then(response => {
+      console.log('Then 1');
+      
       const employers = response.data.data
       const noDuplicateEmployers = removeDuplicateCompanies(employers)
 
@@ -31,7 +35,10 @@ router.post('/copy-companies', function (req, res, next) {
     .then(companies => {
       res.send({ length: companies.length }).end()
     })
-    .catch(error => next(error))
+    .catch(error => {
+      console.log('Catch Companies', error);
+      next(error)
+    })
 })
 
 router.get('/companies', function (req, res, next) {
@@ -68,20 +75,20 @@ router.get('/companies/:id', function (req, res, next) {
     .catch(error => next(error))
 })
 
-// router.get('/companies/indeed/:name', function (req, res, next) {
-//   const { name } = req.params
-//   const searchName = {
-//     name: { [Op.like]: `${name.toLowerCase()}%` }
-//   }
-//   Company
-//     .findOne({
-//       where: searchName
-//     })
-//     .then(companies => {
-//       res.send(companies)
-//         .end()
-//     })
-//     .catch(error => next(error))
-// })
+router.get('/companies/indeed/:name', function (req, res, next) {
+  const { name } = req.params
+  const searchName = {
+    name: { [Op.like]: `${name.toLowerCase()}%` }
+  }
+  Company
+    .findOne({
+      where: searchName
+    })
+    .then(companies => {
+      res.send(companies)
+        .end()
+    })
+    .catch(error => next(error))
+})
 
 module.exports = router
