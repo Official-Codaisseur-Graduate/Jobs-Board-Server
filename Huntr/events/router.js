@@ -47,9 +47,9 @@ router.post('/events', (req, res, next) => {
     const event = {
         id: data.id,
         eventType: data.eventType,
-        createdAt: data.createdAt,
-        jobId: data.job.id,
-        memberId: data.member.id
+        // createdAt: data.createdAt,
+        // jobId: data.job.id,
+        // memberId: data.member.id
     }
 
     Event
@@ -58,6 +58,10 @@ router.post('/events', (req, res, next) => {
             res
                 //webhook expects status 200 back
                 .status(200)
+                // .send({
+                //     message: "NEW EVENT CREATED",
+                //     event: event
+                // })
         })
         .catch(error => next(error))
  })
@@ -73,6 +77,7 @@ router.post('/events', (req, res, next) => {
                     events: events
                 })
         })
+        .catch(error => next(error))
  })
 
 module.exports = router
