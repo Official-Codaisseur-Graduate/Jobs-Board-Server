@@ -62,4 +62,17 @@ router.post('/events', (req, res, next) => {
         .catch(error => next(error))
  })
 
+ router.get('/events', (req, res, next) => {
+     Event
+        .findAll()
+        .then(events => {
+            res
+                .status(200)
+                .send({
+                    message: "ALL EVENTS",
+                    events: events
+                })
+        })
+ })
+
 module.exports = router
