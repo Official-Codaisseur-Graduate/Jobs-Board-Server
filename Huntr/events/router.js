@@ -50,8 +50,8 @@ router.post('/events', (req, res, next) => {
     const event = {
         id: eventData.id,
         eventType: eventData.eventType,
-        jobId: data.job.id,
-        memberId: data.member.id
+        jobId: eventData.job.id,
+        memberId: eventData.member.id
     }
 
     //create event record
@@ -68,24 +68,23 @@ router.post('/events', (req, res, next) => {
         })
         .catch(error => next(error))
 
-    // //sort data
-    // switch (eventType) {
-    //     case "JOB_ADDED":
-    //         return (
-    //             jobAdded(eventData)
-    //         )
-    //     case "JOB_MOVED":
-    //         return (
-    //             jobMoved(eventData)
-    //         )
-    //     case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
-    //         return (
-    //             jobStatusDateSet(eventData)
-    //         )
-    //     default:
-    //         return
-    //     //what?
-    // }
+    //sort data
+    switch (eventType) {
+        case "JOB_ADDED":
+            return (
+                jobAdded(eventData)
+            )
+        case "JOB_MOVED":
+            return (
+                jobMoved(eventData)
+            )
+        case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
+            return (
+                jobStatusDateSet(eventData)
+            )
+        default:
+            return
+    }
 })
 
 router.get('/events', (req, res, next) => {
