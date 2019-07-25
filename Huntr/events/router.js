@@ -8,7 +8,7 @@ const Event = require('./model');
 const Member = require('../members/model');
 const Job = require('../jobs/model');
 
-const { sortData } = require('../entries/functions') //correct way of import & export?
+const { sortData } = require('../entries/functions')
 
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
@@ -48,72 +48,19 @@ router.post('/copy-events', (req, res, next) => {
 //MAKE ENTRY
 router.post('/events', (req, res, next) => {
     const eventData = req.body
-    const member = eventData.member
-    const job = eventData.job
 
-    Member
-        .findOne({
-            where: {
-                id: eventData.member.id
-            }
-        })
-        .then(entity => {
-            if(!entity) {
-                Member
-                    .create({
-                        id: member.id,
-                        givenName: member.givenName,
-                        familyName: member.familyName,
-                        email: member.email,
-                        createdAt: member.createdAt
-                    })
-                    .then(newMember => {
-
-                    })
-                    .catch(error => next(error))
-            } else {
-                //
-            }
-        })
-        .catch(error => next(error))
-    
-    Job
-        .findOne({
-            where: {
-                id: job.id
-            }
-        })
-        .then(entity => {
-            if(!entity) {
-                Job
-                    .create({
-                        id: job.id,
-                        title: job.title,
-                        employer: job.employer.name,
-                        url: job.url
-                    })
-                    .catch(error => next(error))
-            } else {
-                //
-            }
-        })
-        .catch(error => next(error))
-    
     Event
         .create({
             id: eventData.id,
             eventType: eventData.eventType,
-            jobId: job.id,
-            memberId: member.id
+            memberId: eventData.member.id,
+            jobId: eventData.job.id
         })
         .then(event => {
-            res
-                .status(200)
+            sortData(eventData)
+            res.send(event).status(200)
         })
         .catch(error => next(error))
-    
-    sortData(eventData)
-
 })
 
 router.get('/events', (req, res, next) => {

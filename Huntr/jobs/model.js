@@ -21,8 +21,6 @@ const Job = sequelize.define('jobs',
         },
         companyId: {
             type: Sequelize.STRING,
-            allowNull: true,
-            foreignKey: true
         }
     },
     {
@@ -42,8 +40,9 @@ const Job = sequelize.define('jobs',
 //         constraints: true
 //     }
 // })
-Job.belongsTo(Company)
-Company.hasMany(Job)
+// Job.belongsTo(Company)
+// Company.hasMany(Job)
+
 Job.hasMany(Member)
 
 module.exports = Job
