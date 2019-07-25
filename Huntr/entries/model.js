@@ -32,6 +32,12 @@ const Entry = sequelize.define(
         rejectionDate: {
             type: Sequelize.DATEONLY,
             // defaultValue: "tbd"
+        },
+        jobId: {
+            type: Sequelize.STRING
+        },
+        memberId: {
+            type: Sequelize.STRING
         }
     }, {
         tableName: 'entries',
