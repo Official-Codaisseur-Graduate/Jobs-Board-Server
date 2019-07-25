@@ -7,8 +7,10 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
 const Event = require('./model');
+const Member = require('../members/model');
+const Job = require('../jobs/model');
 
-const { jobAdded, jobMoved, jobStatusDateSet } = require('../entries/functions') //correct way of import & export?
+const { sortData } = require('../entries/functions') //correct way of import & export?
 
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
 axios.defaults.baseURL = 'https://api.huntr.co/org'
@@ -43,48 +45,77 @@ router.post('/copy-events', (req, res, next) => {
 })
 
 //WEBHOOK ENDPOINT
-//WHAT ARE ALL THE EVENT TYPES --> new member?
+//WHAT ARE ALL THE EVENT TYPES
+//CHECKS: MEMBER // JOB // COMPANY //
+//MAKE ENTRY
 router.post('/events', (req, res, next) => {
-    const eventType = req.body.eventType //correct? or .data?
     const eventData = req.body
-    const event = {
-        id: eventData.id,
-        eventType: eventData.eventType,
-        jobId: eventData.job.id,
-        memberId: eventData.member.id
-    }
+    const member = eventData.member
+    const job = eventData.job
 
-    //create event record
-    Event
-        .create(event)
-        .then(event => {
-            res
-                //webhook expects status 200 back
-                .status(200)
-                .send({
-                    message: "NEW EVENT CREATED",
-                    event: event
-                })
+    Member
+        .findOne({
+            where: {
+                id: eventData.member.id
+            }
+        })
+        .then(entity => {
+            if(!entity) {
+                Member
+                    .create({
+                        id: member.id,
+                        givenName: member.givenName,
+                        familyName: member.familyName,
+                        email: member.email,
+                        createdAt: member.createdAt
+                    })
+                    .then(newMember => {
+
+                    })
+                    .catch(error => next(error))
+            } else {
+                //
+            }
         })
         .catch(error => next(error))
+    
+    Job
+        .findOne({
+            where: {
+                id: job.id
+            }
+        })
+        .then(entity => {
+            if(!entity) {
+                Job
+                    .create({
+                        id: job.id,
+                        title: job.title,
+                        employer: job.employer.name,
+                        url: job.url
+                    })
+                    .catch(error => next(error))
+            } else {
+                //
+            }
+        })
+        .catch(error => next(error))
+    
+    Event
+        .create({
+            id: eventData.id,
+            eventType: eventData.eventType,
+            jobId: job.id,
+            memberId: member.id
+        })
+        .then(event => {
+            res
+                .status(200)
+        })
+        .catch(error => next(error))
+    
+    sortData(eventData)
 
-    //sort data
-    switch (eventType) {
-        case "JOB_ADDED":
-            return (
-                jobAdded(eventData)
-            )
-        case "JOB_MOVED":
-            return (
-                jobMoved(eventData)
-            )
-        case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
-            return (
-                jobStatusDateSet(eventData)
-            )
-        default:
-            return
-    }
 })
 
 router.get('/events', (req, res, next) => {
@@ -100,45 +131,5 @@ router.get('/events', (req, res, next) => {
         })
         .catch(error => next(error))
 })
-
-//turn all events into entries
-// router.post('/copy-events-entries', (req, res, next) => {
-//     axios
-//         .get(`https://api.huntr.co/org/events`)
-//         .then(response => {
-//             const data = response.data.data
-
-//             const allEvents = data.map(entity => {
-//                 const eventType = entity.eventType
-
-//                 const eventData = entity
-//                 //make entries
-//                 switch (eventType) {
-//                     case "JOB_ADDED":
-//                         return (
-//                             jobAdded(eventData)
-//                         )
-//                     case "JOB_MOVED":
-//                         return (
-//                             jobMoved(eventData)
-//                         )
-//                     case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
-//                         return (
-//                             jobStatusDateSet(eventData)
-//                         )
-//                     default:
-//                         return
-//                     //what?
-//                 }
-//             })
-//             return Promise.all(allEvents)
-//         })
-//         .then(entries => {
-//             res
-//                 .send({ length: entries.length })
-//                 .end()
-//         })
-//         .catch(error => next(error))
-// })
 
 module.exports = router
