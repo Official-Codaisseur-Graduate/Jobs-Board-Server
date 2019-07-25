@@ -27,7 +27,7 @@ const Member = sequelize.define(
             defaultValue: true
         }
     }, {
-        timestamps: false,
+        timestamps: true,
         tableName: 'members'
     }
 )

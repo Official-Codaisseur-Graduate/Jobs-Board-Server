@@ -135,7 +135,8 @@ const jobMoved = (eventData) => {
 const jobStatusDateSet = (eventData) => {
     const memberId = eventData.member.id
     const jobId = eventData.job.id
-    const date = eventData.date
+    // const date = eventData.date
+    const date = new Date()
     const eventType = eventData.eventType
 
     // const entry = entryCheck(memberId, jobId)
@@ -154,7 +155,7 @@ const jobStatusDateSet = (eventData) => {
                         jobId: jobId,
                         memberId: memberId,
                         status: eventData.toList.name
-                        //date
+                        //date 
                     })
             }
             switch (eventType) {

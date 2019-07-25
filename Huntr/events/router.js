@@ -70,7 +70,7 @@ router.post('/events', (req, res, next) => {
                         givenName: member.givenName,
                         familyName: member.familyName,
                         email: member.email,
-                        createdAt: member.createdAt
+                        // createdAt: member.createdAt
                     })
                     .then(newMember => {
 
@@ -108,14 +108,13 @@ router.post('/events', (req, res, next) => {
         .create({
             id: eventData.id,
             eventType: eventData.eventType,
-            // jobId: eventData.jobId,
-            // memberId: eventData.memberId
             jobId: job.id,
             memberId: member.id
         })
         .then(event => {
             res
                 .status(200)
+                .end()
         })
         .catch(error => next(error))
     
