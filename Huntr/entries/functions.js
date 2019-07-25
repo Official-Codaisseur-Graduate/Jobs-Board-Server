@@ -7,6 +7,8 @@ const Company = require('../companies/model');
 const sortData = (eventData) => {
     const eventType = eventData.eventType
 
+    console.log("SORTING IS RUNNING")
+
     switch(eventType) {
         case "JOB_ADDED":
             return jobAdded(eventData)

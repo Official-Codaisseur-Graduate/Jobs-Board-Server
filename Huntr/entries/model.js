@@ -39,7 +39,7 @@ const Entry = sequelize.define(
     }
 )
 
-Entry.belongsTo(Job)
-Entry.belongsTo(Member)
+// Entry.belongsTo(Job)
+// Entry.belongsTo(Member)
 
 module.exports = Entry

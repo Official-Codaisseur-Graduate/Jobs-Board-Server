@@ -7,6 +7,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
 const Event = require('./model');
+const Entry = require('../entries/model')
 const Member = require('../members/model');
 const Job = require('../jobs/model');
 
@@ -131,5 +132,37 @@ router.get('/events', (req, res, next) => {
         })
         .catch(error => next(error))
 })
+
+//test
+// router.post('/events', (req, res, next) => {
+//     Event
+//         .create({
+//             id: req.body.id,
+//             eventType: req.body.eventType,
+//             jobId: req.body.jobId,
+//             memberId: req.body.memberId
+//         })
+//         .then(event => {
+//             Entry
+//                 .create({
+//                     status: req.body.status,
+//                     jobId: event.jobId,
+//                     memberId: event.memberId
+//                 })
+//                 .then(entry => {
+//                     res
+//                         .status(201)
+//                         .send({
+//                             message: "NEW EVENT CREATED & ENTRY",
+//                             event: event,
+//                             entry: entry
+//                         })
+//                 })
+//                 .catch(error => next(error))
+
+//         })
+//         .catch(error => next(error))
+// })
+
 
 module.exports = router
