@@ -7,11 +7,8 @@ const Company = require('../companies/model');
 const sortData = (eventData) => {
     const eventType = eventData.eventType
 
-    console.log("SORTING IS RUNNING", eventData)
-
     switch(eventType) {
         case "JOB_ADDED":
-            console.log("SWITCH JOB ADDED RUNNING")
             return jobAdded(eventData)
         case "JOB_MOVED":
             return jobMoved(eventData)
@@ -50,40 +47,37 @@ const entryCheck = (memberId, jobId) => {
 }
 
 const jobAdded = (eventData) => {
-    console.log("RUNNNINGGGG!!")
-    // const status = eventData.toList.name
-    const status = eventData.status
-    // const memberId = eventData.member.id
-    const memberId = eventData.memberId
-    // const jobId = eventData.job.id
-    const jobId = eventData.jobId
+    const status = eventData.toList.name
+    const memberId = eventData.member.id
+    const jobId = eventData.job.id
 
-    // const wishlistDate = (status) => {
-    //     if (status === "Wishlist") {
-    //         return eventData.createdAt
-    //     } else {
-    //         return null
-    //     }
-    // }
-    const wishlistDate = null
+    const wishlistDate = (status) => {
+        if (status === "Wishlist") {
+            return eventData.createdAt
+        } else {
+            return null
+        }
+    }
+
+    // const wishlistDate = null
 
     const entry = {
         status: status,
         memberId: memberId,
         jobId: jobId,
-        wishlistDate: wishlistDate
+        wishlistDate: wishlistDate(status)
     }
 
     Entry
         .create(entry)
         .then(entry => {
-            //
-            res
-                .status(201)
-                .send({
-                    message: "NEW ENTRY",
-                    entry: entry
-                })
+            // //
+            // res
+            //     .status(201)
+            //     .send({
+            //         message: "NEW ENTRY",
+            //         entry: entry
+            //     })
         })
         .catch(console.error)
 }
@@ -117,17 +111,17 @@ const jobMoved = (eventData) => {
                         jobId: jobId,
                         memberId: memberId,
                         status: "Rejected",
-                        rejectionDate: rejectionDate
+                        rejectionDate: rejectionDate(status)
                     })
                     .then(newEntry => {
-                        return newEntry
+                        // return newEntry
                     })
                     .catch(console.error)
             } else {
                 entity
                     .update({
                         status: status,
-                        rejectionDate: rejectionDate
+                        rejectionDate: rejectionDate(status)
                     })
                     .then(updateEntity => {
 
@@ -154,9 +148,15 @@ const jobStatusDateSet = (eventData) => {
             }
         })
         .then(entry => {
-            //if(!entry) {
-                //make new entry
-            // }
+            if(!entry) {
+                Entry
+                    .create({
+                        jobId: jobId,
+                        memberId: memberId,
+                        status: eventData.toList.name
+                        //date
+                    })
+            }
             switch (eventType) {
                 case "JOB_APPLICATION_DATE_SET":
                     return (
