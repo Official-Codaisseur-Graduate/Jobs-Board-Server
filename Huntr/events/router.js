@@ -8,7 +8,8 @@ const Op = Sequelize.Op
 
 const Event = require('./model');
 
-// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6IjJlZDFkNmIyLWU3YjItNDE2ZS04NzVlLWJiNDhkNzBkM2RhNCIsImlhdCI6MTU1NDgyNTEzMX0.hOfXhHcElNhCOMtM_TTwHr6tf6VhFmL0uzUEuT9hNjk"
+const { jobAdded, jobMoved, jobStatusDateSet } = require('../entries/functions') //correct way of import & export?
+
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
 axios.defaults.baseURL = 'https://api.huntr.co/org'
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
@@ -44,14 +45,16 @@ router.post('/copy-events', (req, res, next) => {
 //WEBHOOK ENDPOINT
 //!!EDIT TO SEND TO CORRECT FUNCTION DEPENDING ON EVENTYPE
 router.post('/events', (req, res, next) => {
-    const data = req.body
+    const eventType = req.body.eventType //correct? or .data?
+    const eventData = req.body
     const event = {
-        id: data.id,
-        eventType: data.eventType,
+        id: eventData.id,
+        eventType: eventData.eventType,
         // jobId: data.job.id,
         // memberId: data.member.id
     }
 
+    //create event record
     Event
         .create(event)
         .then(event => {
@@ -64,6 +67,25 @@ router.post('/events', (req, res, next) => {
                 })
         })
         .catch(error => next(error))
+
+    //sort data
+    switch (eventType) {
+        case "JOB_ADDED":
+            return (
+                jobAdded(eventData)
+            )
+        case "JOB_MOVED":
+            return (
+                jobMoved(eventData)
+            )
+        case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
+            return (
+                jobStatusDateSet(eventData)
+            )
+        default:
+            return
+                //what?
+    }
 })
 
 router.get('/events', (req, res, next) => {
@@ -81,50 +103,3 @@ router.get('/events', (req, res, next) => {
 })
 
 module.exports = router
-
-//NOTES - for once the webhook is working
-// router.post('/events', (req, res, next) => {
-//     const data = req.body
-//     const event = {
-//         id: data.id,
-//         eventType: data.eventType,
-//         jobId: data.job.id,
-//         memberId: data.member.id
-//     }
-
-//     //create event
-//     Event
-//         .create(event)
-//         .then(event => {
-//             res
-//                 //webhook expects status 200 back
-//                 .status(200)
-//                 .send({
-//                     message: "NEW EVENT CREATED",
-//                     event: event
-//                 })
-//         })
-//         .catch(error => next(error))
-
-//     //what to do with incoming information?!
-//     if (data.eventType === "JOB_ADDED") {
-//         //function job added
-//         //check if job exists if not create job
-//         //create entry
-//     } else if (data.eventType === "JOB_MOVED") {
-//         //function
-//         //update entry || if not exist create entry
-//     } else if (data.eventType === "JOB_APPLICATION_DATE_SET") {
-//         //function
-//         //update entry || if not exist create entry
-//     } else if (data.eventType === "JOB_FIRST_INTERVIEW_DATE_SET") {
-//         //function
-//         //update entry || if not exist create entry
-//     } else if (data.eventType === "JOB_SECOND_INTERVIEW_DATE_SET") {
-//         //update entry || if not exist create entry
-//     } else if (data.eventType === "JOB_OFFER_DATE_SET") {
-//         //update entry || if not exist create entry
-//     } else {
-//         //not a correct event name
-//     }
-// })

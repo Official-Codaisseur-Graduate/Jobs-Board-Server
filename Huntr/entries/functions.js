@@ -2,34 +2,45 @@
 
 const Entry = require('../entries/model');
 const Job = require('../jobs/model');
+const Company = require('../companies/model');
 
-    // //what to do with incoming information?!
-    // if (data.eventType === "JOB_ADDED") {
-    //     //function job added
-    //     //check if job exists if not create job
-    //     //create entry
-    // } else if (data.eventType === "JOB_MOVED") {
-    //     //function
-    //     //update entry || if not exist create entry
-    // } else if (data.eventType === "JOB_APPLICATION_DATE_SET") {
-    //     //function
-    //     //update entry || if not exist create entry
-    // } else if (data.eventType === "JOB_FIRST_INTERVIEW_DATE_SET") {
-    //     //function
-    //     //update entry || if not exist create entry
-    // } else if (data.eventType === "JOB_SECOND_INTERVIEW_DATE_SET") {
-    //     //update entry || if not exist create entry
-    // } else if (data.eventType === "JOB_OFFER_DATE_SET") {
-    //     //update entry || if not exist create entry
-    // } else {
-    //     //not a correct event name
-    // }
+const entryCheck = (memberId, jobId) => {
+    Entry
+        .findOne({
+            where: {
+                jobId: jobId,
+                memberId: memberId
+            }
+        })
+        .then(entity => {
+            if (!entity) {
+                Entry
+                    .create({
+                        jobId: jobId,
+                        memberId: memberId
+                    })
+                    .then(newEntry => {
+                        return newEntry
+                    })
+                    .catch(console.error)
+            } else {
+                return entity
+            }
+        })
+        .catch(console.error)
+}
 
-
-export const jobAdded = (event) => {
-    const status = event.toList
-    const memberId = event.member.id
-    const jobId = event.job.id
+export const jobAdded = (eventData) => {
+    const status = eventData.toList
+    const memberId = eventData.member.id
+    const jobId = eventData.job.id
+    const wishlistDate = (status) => {
+        if(status === "Wishlist") {
+            return eventData.createdAt
+        } else {
+            return null
+        }
+    }
 
     const company = {
         //company model
@@ -45,41 +56,103 @@ export const jobAdded = (event) => {
     const entry = {
         status: status,
         memberId: memberId,
-        jobId: jobId
+        jobId: jobId,
+        wishlistDate: wishlistDate
     }
 
-    //check if company exists
-    //check if job exists
-    //create entry with memberId & jobId
     Job
         .findOne({
             where: {
                 id: jobId
             }
         })
-        .then(job => {
-            if(!job) {
+        .then(entity => {
+            if (!entity) {
                 Job
                     .create(job)
                     .then(newJob => {
-                        //send something back? no right?
+
                     })
                     .catch(error => next(error))
             }
         })
         .catch(error => next(error))
-    
+
     Entry
         .create(entry)
         .then(entry => {
-            res
-                .status(201)
-                .send({
-                    message: "A NEW ENTRY WAS CREATED",
-                    entry: entry
-                })
+
         })
-    
-
-
+        .catch(error => next(error))
 }
+
+export const jobMoved = (eventData) => {
+    const status = eventData.toList.name
+    const memberId = eventData.member.id
+    const jobId = eventData.job.id
+    const entry = entryCheck(memberId, jobId)
+    const rejectionDate = (status) => {
+        if(status === "Rejected") {
+            return eventData.createdAt
+        } else {
+            return null
+        }
+    }
+
+    entry
+        .update({
+            status: status,
+            rejectionDate: rejectionDate
+        })
+        .then(updateEntity => {
+
+        })
+        .catch(error => next(error))
+}
+
+export const jobStatusDateSet = (eventData) => {
+    const memberId = eventData.member.id
+    const jobId = eventData.job.id
+    const date = eventData.date
+    const entry = entryCheck(memberId, jobId)
+
+    switch (event.eventType) {
+        case "JOB_APPLICATION_DATE_SET":
+            return (
+                entry
+                    .update({
+                        applicationDate: date
+                    })
+                    .then(entry => {
+
+                    })
+                    .catch(error => next(error))
+            )
+        case ("JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_SECOND_INTERVIEW_DATE_SET"):
+            return (
+                entry
+                    .update({
+                        interviewDate: date
+                    })
+                    .then(entry => {
+
+                    })
+                    .catch(error => next(error))
+            )
+        case "JOB_OFFER_DATE_SET":
+            return (
+                entry
+                    .update({
+                        offerDate: date
+                    })
+                    .then(entry => {
+
+                    })
+                    .catch(error => next(error))
+            )
+        default:
+            return
+    }
+}
+
+module.exports = { jobAdded, jobMoved, jobStatusDateSet }
