@@ -30,7 +30,7 @@ const entryCheck = (memberId, jobId) => {
         .catch(console.error)
 }
 
-export const jobAdded = (eventData) => {
+const jobAdded = (eventData) => {
     const status = eventData.toList
     const memberId = eventData.member.id
     const jobId = eventData.job.id
@@ -86,7 +86,7 @@ export const jobAdded = (eventData) => {
         .catch(error => next(error))
 }
 
-export const jobMoved = (eventData) => {
+const jobMoved = (eventData) => {
     const status = eventData.toList.name
     const memberId = eventData.member.id
     const jobId = eventData.job.id
@@ -110,7 +110,7 @@ export const jobMoved = (eventData) => {
         .catch(error => next(error))
 }
 
-export const jobStatusDateSet = (eventData) => {
+const jobStatusDateSet = (eventData) => {
     const memberId = eventData.member.id
     const jobId = eventData.job.id
     const date = eventData.date
