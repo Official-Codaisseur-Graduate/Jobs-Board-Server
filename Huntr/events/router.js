@@ -7,11 +7,9 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
 const Event = require('./model');
-const Entry = require('../entries/model')
-const Member = require('../members/model');
-const Job = require('../jobs/model');
 
-const { sortData } = require('../entries/functions') //correct way of import & export?
+
+const { sortData, memberCheck, jobCheck, companyCheck } = require('../entries/functions') //correct way of import & export?
 
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
 axios.defaults.baseURL = 'https://api.huntr.co/org'
@@ -54,79 +52,10 @@ router.post('/events', (req, res, next) => {
     const member = eventData.member
     const job = eventData.job
 
+    memberCheck(eventData)
+    jobCheck(eventData)
+    companyCheck(eventData)
     sortData(eventData)
-
-    Member
-        .findOne({
-            where: {
-                id: eventData.member.id
-            }
-        })
-        .then(entity => {
-            if(!entity) {
-                Member
-                    .create({
-                        id: member.id,
-                        givenName: member.givenName,
-                        familyName: member.familyName,
-                        email: member.email,
-                        // createdAt: member.createdAt
-                    })
-                    .then(newMember => {
-
-                    })
-                    .catch(error => next(error))
-                    .next()
-            }
-        })
-        .catch(error => next(error))
-    
-    Job
-        .findOne({
-            where: {
-                id: job.id
-            }
-        })
-        .then(entity => {
-            if(!entity) {
-                Job
-                    .create({
-                        id: job.id,
-                        title: job.title,
-                        employer: job.employer.name,
-                        url: job.url
-                    })
-                    .catch(error => next(error))
-                    .next()
-            }
-        })
-        .catch(error => next(error))
-    
-    Company
-        .findOne({
-            where: {
-                id: eventData.employer.id
-            }
-        })
-        .then(company => {
-            if(!company) {
-                Company
-                    .create({
-                        id: eventData.employer.id,
-                        name: eventData.employer.name,
-                        interviewCount: eventData.employer.interviewCount,
-                        jobCount: eventData.employer.jobCount,
-                        offerCount: eventData.employer.offerCount,
-                        domain: eventData.employer.domain,
-                        description: eventData.employer.description
-                    })
-                    .then(company => {
-
-                    })
-                    .catch(error => next(error))
-                    .next()
-            }
-        })
 
     Event
         .create({
@@ -158,36 +87,80 @@ router.get('/events', (req, res, next) => {
         .catch(error => next(error))
 })
 
-//test
-// router.post('/events', (req, res, next) => {
-//     Event
-//         .create({
-//             id: req.body.id,
-//             eventType: req.body.eventType,
-//             jobId: req.body.jobId,
-//             memberId: req.body.memberId
-//         })
-//         .then(event => {
-//             Entry
-//                 .create({
-//                     status: req.body.status,
-//                     jobId: event.jobId,
-//                     memberId: event.memberId
-//                 })
-//                 .then(entry => {
-//                     res
-//                         .status(201)
-//                         .send({
-//                             message: "NEW EVENT CREATED & ENTRY",
-//                             event: event,
-//                             entry: entry
-//                         })
-//                 })
-//                 .catch(error => next(error))
-
-//         })
-//         .catch(error => next(error))
-// })
-
 
 module.exports = router
+
+// NOTES
+
+// Member
+// .findOne({
+//     where: {
+//         id: eventData.member.id
+//     }
+// })
+// .then(entity => {
+//     if(!entity) {
+//         Member
+//             .create({
+//                 id: member.id,
+//                 givenName: member.givenName,
+//                 familyName: member.familyName,
+//                 email: member.email,
+//                 // createdAt: member.createdAt
+//             })
+//             .then(newMember => {
+
+//             })
+//             .catch(error => next(error))
+//             .next()
+//     }
+// })
+// .catch(error => next(error))
+
+// Job
+//         .findOne({
+//             where: {
+//                 id: job.id
+//             }
+//         })
+//         .then(entity => {
+//             if(!entity) {
+//                 Job
+//                     .create({
+//                         id: job.id,
+//                         title: job.title,
+//                         employer: job.employer.name,
+//                         url: job.url
+//                     })
+//                     .catch(error => next(error))
+//                     .next()
+//             }
+//         })
+//         .catch(error => next(error))
+
+// Company
+// .findOne({
+//     where: {
+//         id: eventData.employer.id
+//     }
+// })
+// .then(company => {
+//     if(!company) {
+//         Company
+//             .create({
+//                 id: eventData.employer.id,
+//                 name: eventData.employer.name,
+//                 interviewCount: eventData.employer.interviewCount,
+//                 jobCount: eventData.employer.jobCount,
+//                 offerCount: eventData.employer.offerCount,
+//                 domain: eventData.employer.domain,
+//                 description: eventData.employer.description
+//             })
+//             .then(company => {
+
+//             })
+//             .catch(error => next(error))
+//             .next()
+//     }
+// })
+// .catch(error => next(error))

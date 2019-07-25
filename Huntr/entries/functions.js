@@ -4,6 +4,82 @@ const Entry = require('../entries/model');
 const Job = require('../jobs/model');
 const Company = require('../companies/model');
 
+const companyCheck = (eventData) => {
+    Company
+    .findOne({
+        where: {
+            id: eventData.employer.id
+        }
+    })
+    .then(company => {
+        if(!company) {
+            Company
+                .create({
+                    id: eventData.employer.id,
+                    name: eventData.employer.name,
+                    interviewCount: eventData.employer.interviewCount,
+                    jobCount: eventData.employer.jobCount,
+                    offerCount: eventData.employer.offerCount,
+                    domain: eventData.employer.domain,
+                    description: eventData.employer.description
+                })
+                .then(company => {
+
+                })
+                .catch(console.error)
+        }
+    })
+    .catch(console.error)
+}
+
+const jobCheck = (eventData) => {
+    const job = eventData.job
+    Job
+        .findOne({
+            where: {
+                id: job.id
+            }
+        })
+        .then(entity => {
+            if(!entity) {
+                Job
+                    .create({
+                        id: job.id,
+                        title: job.title,
+                        employer: job.employer.name,
+                        url: job.url
+                    })
+                    .catch(console.error)
+            }
+        })
+        .catch(console.error)
+}
+
+const memberCheck = (eventData) => {
+    Member
+        .findOne({
+            where: {
+                id: eventData.member.id
+            }
+        })
+        .then(entity => {
+            if(!entity) {
+                Member
+                    .create({
+                        id: member.id,
+                        givenName: member.givenName,
+                        familyName: member.familyName,
+                        email: member.email
+                    })
+                    .then(newMember => {
+
+                    })
+                    .catch(console.error)
+            }
+        })
+        .catch(error => next(error))
+}
+
 const sortData = (eventData) => {
     const eventType = eventData.eventType
 
@@ -19,31 +95,31 @@ const sortData = (eventData) => {
     }
 }
 
-const entryCheck = (memberId, jobId) => {
-    Entry
-        .findOne({
-            where: {
-                jobId: jobId,
-                memberId: memberId
-            }
-        })
-        .then(entity => {
-            if (!entity) {
-                Entry
-                    .create({
-                        jobId: jobId,
-                        memberId: memberId
-                    })
-                    .then(newEntry => {
-                        return newEntry
-                    })
-                    .catch(console.error)
-            } else {
-                return entity
-            }
-        })
-        .catch(console.error)
-}
+// const entryCheck = (memberId, jobId) => {
+//     Entry
+//         .findOne({
+//             where: {
+//                 jobId: jobId,
+//                 memberId: memberId
+//             }
+//         })
+//         .then(entity => {
+//             if (!entity) {
+//                 Entry
+//                     .create({
+//                         jobId: jobId,
+//                         memberId: memberId
+//                     })
+//                     .then(newEntry => {
+//                         return newEntry
+//                     })
+//                     .catch(console.error)
+//             } else {
+//                 return entity
+//             }
+//         })
+//         .catch(console.error)
+// }
 
 const jobAdded = (eventData) => {
     const status = eventData.toList.name
@@ -61,6 +137,7 @@ const jobAdded = (eventData) => {
 
     // const wishlistDate = null
     //not only directly added to wishlist --> switch case?
+    //wishlist/applied/rejected/firstinterview/secondinterview/offer
 
     const entry = {
         status: status,
@@ -133,7 +210,6 @@ const jobStatusDateSet = (eventData) => {
     const memberId = eventData.member.id
     const jobId = eventData.job.id
     const date = new Date()
-    const setDate = eventData.date
     const eventType = eventData.eventType
 
     // const entry = entryCheck(memberId, jobId)
@@ -211,4 +287,4 @@ const jobStatusDateSet = (eventData) => {
         .catch(console.error)
 }
 
-module.exports = { sortData }
+module.exports = { sortData, memberCheck, jobCheck, companyCheck }
