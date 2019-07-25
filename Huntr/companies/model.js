@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
-const Duplicate = require('../duplicates/model')
+const Duplicate = require('../duplicates/companiesModel')
 
 const Company = sequelize.define('companies', {
   id: {

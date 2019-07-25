@@ -4,7 +4,7 @@ const axios = require('axios')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const Company = require('./model')
-const Duplicate = require('../duplicates/model')
+const Duplicate = require('../duplicates/companiesModel')
 const { removeDuplicateCompanies } = require('./removeDuplicates')
 const { baseURL, token } = require('../constants')
 
@@ -20,8 +20,9 @@ router.post('/copy-companies', function (req, res, next) {
       const allCompanies = noDuplicateEmployers.map(employer => {
         const companies = {
           ...employer,
-          companyId: employer.id,
+          companyId: employer.id
         }
+
         const relations = { include: [{ model: Duplicate }] }
 
         return Company.create(companies, relations)

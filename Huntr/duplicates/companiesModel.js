@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
 
-const Duplicate = sequelize.define('duplicates', {
+const Duplicate = sequelize.define('companiesDuplicates', {
   relatedId: {
     type: Sequelize.STRING
   },
@@ -13,7 +13,7 @@ const Duplicate = sequelize.define('duplicates', {
   }
 },
   {
-    tableName: 'duplicates',
+    tableName: 'companiesDuplicates',
     timestamps: false
   }
 )
