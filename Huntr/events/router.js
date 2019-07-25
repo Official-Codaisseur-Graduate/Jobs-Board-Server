@@ -43,15 +43,15 @@ router.post('/copy-events', (req, res, next) => {
 })
 
 //WEBHOOK ENDPOINT
-//!!EDIT TO SEND TO CORRECT FUNCTION DEPENDING ON EVENTYPE
+//WHAT ARE ALL THE EVENT TYPES --> new member?
 router.post('/events', (req, res, next) => {
     const eventType = req.body.eventType //correct? or .data?
     const eventData = req.body
     const event = {
         id: eventData.id,
         eventType: eventData.eventType,
-        // jobId: data.job.id,
-        // memberId: data.member.id
+        jobId: data.job.id,
+        memberId: data.member.id
     }
 
     //create event record
@@ -68,24 +68,24 @@ router.post('/events', (req, res, next) => {
         })
         .catch(error => next(error))
 
-    //sort data
-    switch (eventType) {
-        case "JOB_ADDED":
-            return (
-                jobAdded(eventData)
-            )
-        case "JOB_MOVED":
-            return (
-                jobMoved(eventData)
-            )
-        case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
-            return (
-                jobStatusDateSet(eventData)
-            )
-        default:
-            return
-                //what?
-    }
+    // //sort data
+    // switch (eventType) {
+    //     case "JOB_ADDED":
+    //         return (
+    //             jobAdded(eventData)
+    //         )
+    //     case "JOB_MOVED":
+    //         return (
+    //             jobMoved(eventData)
+    //         )
+    //     case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
+    //         return (
+    //             jobStatusDateSet(eventData)
+    //         )
+    //     default:
+    //         return
+    //     //what?
+    // }
 })
 
 router.get('/events', (req, res, next) => {
@@ -101,5 +101,45 @@ router.get('/events', (req, res, next) => {
         })
         .catch(error => next(error))
 })
+
+//turn all events into entries
+// router.post('/copy-events-entries', (req, res, next) => {
+//     axios
+//         .get(`https://api.huntr.co/org/events`)
+//         .then(response => {
+//             const data = response.data.data
+
+//             const allEvents = data.map(entity => {
+//                 const eventType = entity.eventType
+
+//                 const eventData = entity
+//                 //make entries
+//                 switch (eventType) {
+//                     case "JOB_ADDED":
+//                         return (
+//                             jobAdded(eventData)
+//                         )
+//                     case "JOB_MOVED":
+//                         return (
+//                             jobMoved(eventData)
+//                         )
+//                     case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
+//                         return (
+//                             jobStatusDateSet(eventData)
+//                         )
+//                     default:
+//                         return
+//                     //what?
+//                 }
+//             })
+//             return Promise.all(allEvents)
+//         })
+//         .then(entries => {
+//             res
+//                 .send({ length: entries.length })
+//                 .end()
+//         })
+//         .catch(error => next(error))
+// })
 
 module.exports = router
