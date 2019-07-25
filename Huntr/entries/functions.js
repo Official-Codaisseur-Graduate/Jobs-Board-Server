@@ -31,27 +31,28 @@ const entryCheck = (memberId, jobId) => {
 }
 
 const jobAdded = (eventData) => {
+    console.log("OVER HERE", eventData)
     const status = eventData.toList
-    const memberId = eventData.member.id
+    const memberId = eventData.member.id || eventData.memberId
     const jobId = eventData.job.id
     const wishlistDate = (status) => {
-        if(status === "Wishlist") {
+        if (status === "Wishlist") {
             return eventData.createdAt
         } else {
             return null
         }
     }
 
-    const company = {
-        //company model
-    }
+    // const company = {
+    //     //company model
+    // }
 
-    const job = {
-        id: jobId,
-        title: event.job.title,
-        // employer: event
-        url: event.job.url
-    }
+    // const job = {
+    //     id: jobId,
+    //     title: event.job.title,
+    //     // employer: event
+    //     url: event.job.url
+    // }
 
     const entry = {
         status: status,
@@ -69,7 +70,10 @@ const jobAdded = (eventData) => {
         .then(entity => {
             if (!entity) {
                 Job
-                    .create(job)
+                    .create({
+                        id: jobId,
+                        title: eventData.job.title
+                    })
                     .then(newJob => {
 
                     })
@@ -90,24 +94,44 @@ const jobMoved = (eventData) => {
     const status = eventData.toList.name
     const memberId = eventData.member.id
     const jobId = eventData.job.id
+
     const entry = entryCheck(memberId, jobId)
+
     const rejectionDate = (status) => {
-        if(status === "Rejected") {
+        if (status === "Rejected") {
             return eventData.createdAt
         } else {
             return null
         }
     }
-
-    entry
-        .update({
-            status: status,
-            rejectionDate: rejectionDate
+    Entry
+        .findOne({
+            where: {
+                memberId: memberId,
+                jobId: jobId
+            }
         })
-        .then(updateEntity => {
+        .then(entry => {
+            if (!entry) {
+                Entry
+                    .create({
+                        jobId: jobId,
+                        memberId: memberId,
+                        status: "Rejected",
+                        rejectionDate: rejectionDate
+                    })
+            } else {
+                entry
+                    .update({
+                        status: status,
+                        rejectionDate: rejectionDate
+                    })
+                    .then(updateEntity => {
 
+                    })
+                    .catch(error => next(error))
+            }
         })
-        .catch(error => next(error))
 }
 
 const jobStatusDateSet = (eventData) => {
