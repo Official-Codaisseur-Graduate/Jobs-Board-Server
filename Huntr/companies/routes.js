@@ -86,7 +86,7 @@ router.get('/allcompanies', (req, res, next) => {
         .status(200)
         .send({
           message: "ALL COMPANIES",
-          comapnies: companies
+          companies: companies
         })
     })
     .catch(error => next(error))
