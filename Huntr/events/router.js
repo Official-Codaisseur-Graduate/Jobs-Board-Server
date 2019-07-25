@@ -102,12 +102,16 @@ router.post('/events', (req, res, next) => {
     //     })
     //     .catch(error => next(error))
     
+    sortData(eventData)
+
     Event
         .create({
             id: eventData.id,
             eventType: eventData.eventType,
-            jobId: job.id,
-            memberId: member.id
+            jobId: eventData.jobId,
+            memberId: eventData.memberId
+            // jobId: job.id,
+            // memberId: member.id
         })
         .then(event => {
             res
@@ -115,8 +119,6 @@ router.post('/events', (req, res, next) => {
         })
         .catch(error => next(error))
     
-    sortData(eventData)
-
 })
 
 router.get('/events', (req, res, next) => {
