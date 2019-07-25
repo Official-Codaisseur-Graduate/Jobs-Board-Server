@@ -35,5 +35,24 @@ router.post(`/copy-members`, (req, res, next) => {
         .catch(error => next(error))
 })
 
+router.get('/members/active', (req,res, next) => {
+    Member
+        .findAll({
+            where: {
+                isActive: true
+            }
+        })
+        .then(members => {
+            res
+                .status(200)
+                .send({
+                    message: "ALL ACTIVE MEMBERS",
+                    members: members,
+                    amount: members.length
+                })
+        })
+        .catch(error => next(error))
+})
+
 module.exports = router
 
