@@ -7,7 +7,7 @@ const Company = require('../companies/model');
 const sortData = (eventData) => {
     const eventType = eventData.eventType
 
-    switch(eventType) {
+    switch (eventType) {
         case "JOB_ADDED":
             return jobAdded(eventData)
         case "JOB_MOVED":
@@ -15,7 +15,7 @@ const sortData = (eventData) => {
         case ("JOB_APPLICATION_DATE_SET" || "JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_OFFER_DATE_SET"):
             return jobStatusDateSet(eventData)
         default:
-        return
+            return
     }
 }
 
@@ -50,10 +50,11 @@ const jobAdded = (eventData) => {
     const status = eventData.toList.name
     const memberId = eventData.member.id
     const jobId = eventData.job.id
+    const date = new Date()
 
     const wishlistDate = (status) => {
         if (status === "Wishlist") {
-            return eventData.createdAt
+            return date
         } else {
             return null
         }
@@ -71,13 +72,7 @@ const jobAdded = (eventData) => {
     Entry
         .create(entry)
         .then(entry => {
-            // //
-            // res
-            //     .status(201)
-            //     .send({
-            //         message: "NEW ENTRY",
-            //         entry: entry
-            //     })
+
         })
         .catch(console.error)
 }
@@ -86,12 +81,13 @@ const jobMoved = (eventData) => {
     const status = eventData.toList.name
     const memberId = eventData.member.id
     const jobId = eventData.job.id
+    const date = new Date()
 
     // const entry = entryCheck(memberId, jobId)
 
     const rejectionDate = (status) => {
         if (status === "Rejected") {
-            return eventData.createdAt
+            return date
         } else {
             return null
         }
@@ -135,8 +131,8 @@ const jobMoved = (eventData) => {
 const jobStatusDateSet = (eventData) => {
     const memberId = eventData.member.id
     const jobId = eventData.job.id
-    // const date = eventData.date
     const date = new Date()
+    const setDate = eventData.date
     const eventType = eventData.eventType
 
     // const entry = entryCheck(memberId, jobId)
@@ -149,54 +145,58 @@ const jobStatusDateSet = (eventData) => {
             }
         })
         .then(entry => {
-            if(!entry) {
+            if (!entry) {
                 Entry
                     .create({
                         jobId: jobId,
                         memberId: memberId,
                         status: eventData.toList.name
-                        //date 
                     })
-            }
-            switch (eventType) {
-                case "JOB_APPLICATION_DATE_SET":
-                    return (
-                        entry
-                            .update({
-                                applicationDate: date
-                            })
-                            .then(entry => {
-        
-                            })
-                            .catch(error => next(error))
-                    )
-                case ("JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_SECOND_INTERVIEW_DATE_SET"):
-                    return (
-                        entry
-                            .update({
-                                interviewDate: date
-                            })
-                            .then(entry => {
-        
-                            })
-                            .catch(error => next(error))
-                    )
-                case "JOB_OFFER_DATE_SET":
-                    return (
-                        entry
-                            .update({
-                                offerDate: date
-                            })
-                            .then(entry => {
-        
-                            })
-                            .catch(error => next(error))
-                    )
-                default:
-                    return
+                    .then(entry => {
+                        jobStatusDateSet(eventData)
+                    })
+                    .catch(console.error)
+            } else {
+                switch (eventType) {
+                    case "JOB_APPLICATION_DATE_SET":
+                        return (
+                            entry
+                                .update({
+                                    applicationDate: setDate
+                                })
+                                .then(entry => {
+
+                                })
+                                .catch(console.error)
+                        )
+                    case ("JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_SECOND_INTERVIEW_DATE_SET"):
+                        return (
+                            entry
+                                .update({
+                                    interviewDate: setDate
+                                })
+                                .then(entry => {
+
+                                })
+                                .catch(console.error)
+                        )
+                    case "JOB_OFFER_DATE_SET":
+                        return (
+                            entry
+                                .update({
+                                    offerDate: setDate
+                                })
+                                .then(entry => {
+
+                                })
+                                .catch(console.error)
+                        )
+                    default:
+                        return
+                }
             }
         })
-        .catch(error => next(error))
+        .catch(console.error)
 }
 
 module.exports = { sortData }
