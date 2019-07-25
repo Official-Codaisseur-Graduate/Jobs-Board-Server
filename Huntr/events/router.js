@@ -8,19 +8,14 @@ const Event = require('./model');
 const Member = require('../members/model');
 const Job = require('../jobs/model');
 
-<<<<<<< HEAD
-axios.defaults.baseURL = baseURL
-=======
 const { sortData } = require('../entries/functions') //correct way of import & export?
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
-axios.defaults.baseURL = 'https://api.huntr.co/org'
->>>>>>> development
+axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-events', (req, res, next) => {
     axios
-        .get(`${baseURL}/events`)
+        .get(`${baseURL}/events?limit=10000`)
         .then(response => {
             const data = response.data.data
 
@@ -52,16 +47,6 @@ router.post('/copy-events', (req, res, next) => {
 //CHECKS: MEMBER // JOB // COMPANY //
 //MAKE ENTRY
 router.post('/events', (req, res, next) => {
-<<<<<<< HEAD
-    const data = req.body
-    const event = {
-        id: data.id,
-        eventType: data.eventType,
-        createdAt: data.createdAt,
-        jobId: data.job.id,
-        memberId: data.member.id
-    }
-=======
     const eventData = req.body
     const member = eventData.member
     const job = eventData.job
@@ -83,7 +68,6 @@ router.post('/events', (req, res, next) => {
                         createdAt: member.createdAt
                     })
                     .then(newMember => {
->>>>>>> development
 
                     })
                     .catch(error => next(error))
@@ -125,11 +109,6 @@ router.post('/events', (req, res, next) => {
         .then(event => {
             res
                 .status(200)
-<<<<<<< HEAD
-        })
-        .catch(error => next(error))
- })
-=======
         })
         .catch(error => next(error))
     
@@ -150,6 +129,5 @@ router.get('/events', (req, res, next) => {
         })
         .catch(error => next(error))
 })
->>>>>>> development
 
 module.exports = router

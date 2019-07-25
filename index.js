@@ -3,8 +3,9 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const companiesRouter = require('./Huntr/companies/router')
 const jobsRouter = require('./Huntr/jobs/router')
-// const membersRouter = require('./Huntr/members/router')
-// const eventsRouter = require('./Huntr/events/router')
+const membersRouter = require('./Huntr/members/router')
+const eventsRouter = require('./Huntr/events/router')
+const entriesRouter = require('./Huntr/entries/router')
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -14,7 +15,8 @@ app
   .use(
     companiesRouter,
     jobsRouter,
-    // membersRouter,
-    // eventsRouter
+    membersRouter,
+    eventsRouter,
+    entriesRouter
   )
   .listen(port, () => console.log(`Listening on port ${port}`))

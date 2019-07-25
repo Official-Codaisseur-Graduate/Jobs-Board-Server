@@ -5,11 +5,11 @@ const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
+const { baseURL, token } = require('../constants')
 
 const Entry = require('./model');
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
-axios.defaults.baseURL = 'https://api.huntr.co/org'
+axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 //all records of all jobs of all members
@@ -27,6 +27,47 @@ router.get('/entries', (req, res, next) => {
         .catch(error => next(error))
 })
 
+// const jobAdded = (job, res, next) => {
+//     console.log('job added')
+//     console.log('job test', job)
+//     console.log('res test', res)
+//     Company
+//         .findOne({ where: { id: job.employer.id } })
+//         .then(company => {
+//             console.log('company test', company)
 
+//             job.companyId = job.employer.id
+//             job.address = job.location.address
 
- module.exports = router
+//             console.log('job.companyId', job.employer.id)
+//             console.log('job.address', job.location.address)
+
+//             Job
+//                 .create(job)
+//                 .then(job => res.status(200).json(job))
+//                 .catch(error => next(error))
+//         })
+// }
+
+// const jobMoved = (job, res, next) => {
+//     console.log('job moved')
+//     console.log('job test', job)
+//     console.log('res test', res)
+// }
+
+// router.post('/events', function (req, res, next) {
+//     const event = req.body;
+
+//     switch (event.eventType) {
+//         case 'JOB_ADDED':
+//             jobAdded(event.job, res, next);
+//             break;
+//         case 'JOB_MOVED':
+//             jobMoved(event.job, res, next)
+//             break;
+//         default:
+//             break;
+//     }
+// })
+
+module.exports = router

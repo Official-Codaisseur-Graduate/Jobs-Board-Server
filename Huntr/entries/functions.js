@@ -47,7 +47,8 @@ const entryCheck = (memberId, jobId) => {
 }
 
 const jobAdded = (eventData) => {
-    const status = eventData.toList.name
+    // const status = eventData.toList.name
+    const status = "Rejected"
     const memberId = eventData.member.id
     const jobId = eventData.job.id
 
@@ -71,7 +72,7 @@ const jobAdded = (eventData) => {
         .then(entry => {
 
         })
-        .catch(error => next(error))
+        .catch(console.error)
 }
 
 const jobMoved = (eventData) => {
