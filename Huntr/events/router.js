@@ -54,53 +54,53 @@ router.post('/events', (req, res, next) => {
     const member = eventData.member
     const job = eventData.job
 
-    Member
-        .findOne({
-            where: {
-                id: eventData.member.id
-            }
-        })
-        .then(entity => {
-            if(!entity) {
-                Member
-                    .create({
-                        id: member.id,
-                        givenName: member.givenName,
-                        familyName: member.familyName,
-                        email: member.email,
-                        createdAt: member.createdAt
-                    })
-                    .then(newMember => {
+    // Member
+    //     .findOne({
+    //         where: {
+    //             id: eventData.member.id
+    //         }
+    //     })
+    //     .then(entity => {
+    //         if(!entity) {
+    //             Member
+    //                 .create({
+    //                     id: member.id,
+    //                     givenName: member.givenName,
+    //                     familyName: member.familyName,
+    //                     email: member.email,
+    //                     createdAt: member.createdAt
+    //                 })
+    //                 .then(newMember => {
 
-                    })
-                    .catch(error => next(error))
-            } else {
-                //
-            }
-        })
-        .catch(error => next(error))
+    //                 })
+    //                 .catch(error => next(error))
+    //         } else {
+    //             //
+    //         }
+    //     })
+    //     .catch(error => next(error))
     
-    Job
-        .findOne({
-            where: {
-                id: job.id
-            }
-        })
-        .then(entity => {
-            if(!entity) {
-                Job
-                    .create({
-                        id: job.id,
-                        title: job.title,
-                        employer: job.employer.name,
-                        url: job.url
-                    })
-                    .catch(error => next(error))
-            } else {
-                //
-            }
-        })
-        .catch(error => next(error))
+    // Job
+    //     .findOne({
+    //         where: {
+    //             id: job.id
+    //         }
+    //     })
+    //     .then(entity => {
+    //         if(!entity) {
+    //             Job
+    //                 .create({
+    //                     id: job.id,
+    //                     title: job.title,
+    //                     employer: job.employer.name,
+    //                     url: job.url
+    //                 })
+    //                 .catch(error => next(error))
+    //         } else {
+    //             //
+    //         }
+    //     })
+    //     .catch(error => next(error))
     
     Event
         .create({
