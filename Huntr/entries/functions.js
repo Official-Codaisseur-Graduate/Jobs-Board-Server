@@ -19,7 +19,6 @@ const sortData = (eventData) => {
     }
 }
 
-
 const entryCheck = (memberId, jobId) => {
     Entry
         .findOne({
@@ -61,6 +60,7 @@ const jobAdded = (eventData) => {
     }
 
     // const wishlistDate = null
+    //not only directly added to wishlist --> switch case?
 
     const entry = {
         status: status,
@@ -84,6 +84,7 @@ const jobMoved = (eventData) => {
     const date = new Date()
 
     // const entry = entryCheck(memberId, jobId)
+    //not only move to rejection also other --> switch case?
 
     const rejectionDate = (status) => {
         if (status === "Rejected") {
@@ -162,18 +163,29 @@ const jobStatusDateSet = (eventData) => {
                         return (
                             entry
                                 .update({
-                                    applicationDate: setDate
+                                    applicationDate: eventData.job.applicationDate
                                 })
                                 .then(entry => {
 
                                 })
                                 .catch(console.error)
                         )
-                    case ("JOB_FIRST_INTERVIEW_DATE_SET" || "JOB_SECOND_INTERVIEW_DATE_SET"):
+                    case ("JOB_FIRST_INTERVIEW_DATE_SET"):
                         return (
                             entry
                                 .update({
-                                    interviewDate: setDate
+                                    firstInterviewDate: eventData.job.firstInterviewDate
+                                })
+                                .then(entry => {
+
+                                })
+                                .catch(console.error)
+                        )
+                    case ("JOB_SECOND_INTERVIEW_DATE_SET"):
+                        return (
+                            entry
+                                .update({
+                                    secondInterviewDate: eventData.job.secondInterviewDate
                                 })
                                 .then(entry => {
 
@@ -184,7 +196,7 @@ const jobStatusDateSet = (eventData) => {
                         return (
                             entry
                                 .update({
-                                    offerDate: setDate
+                                    offerDate: eventData.job.offerDate
                                 })
                                 .then(entry => {
 

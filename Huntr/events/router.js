@@ -76,8 +76,7 @@ router.post('/events', (req, res, next) => {
 
                     })
                     .catch(error => next(error))
-            // } else {
-            //     //
+                    .next()
             }
         })
         .catch(error => next(error))
@@ -98,11 +97,36 @@ router.post('/events', (req, res, next) => {
                         url: job.url
                     })
                     .catch(error => next(error))
-            // } else {
-            //     //
+                    .next()
             }
         })
         .catch(error => next(error))
+    
+    Company
+        .findOne({
+            where: {
+                id: eventData.employer.id
+            }
+        })
+        .then(company => {
+            if(!company) {
+                Company
+                    .create({
+                        id: eventData.employer.id,
+                        name: eventData.employer.name,
+                        interviewCount: eventData.employer.interviewCount,
+                        jobCount: eventData.employer.jobCount,
+                        offerCount: eventData.employer.offerCount,
+                        domain: eventData.employer.domain,
+                        description: eventData.employer.description
+                    })
+                    .then(company => {
+
+                    })
+                    .catch(error => next(error))
+                    .next()
+            }
+        })
 
     Event
         .create({

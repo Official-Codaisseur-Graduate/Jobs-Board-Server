@@ -21,9 +21,12 @@ const Entry = sequelize.define(
             type: Sequelize.DATEONLY,
             // defaultValue: "tbd"
         },
-        interviewDate: {
+        firstInterviewDate: {
             type: Sequelize.DATEONLY,
             // defaultValue: "tbd"
+        },
+        secondInterviewDate: {
+            type: Sequelize.DATEONLY
         },
         offerDate: {
             type: Sequelize.DATEONLY,
