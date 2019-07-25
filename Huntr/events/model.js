@@ -15,6 +15,12 @@ const Event = sequelize.define(
         },
         eventType: {
             type: Sequelize.STRING,
+        },
+        memberId: {
+            type: Sequelize.STRING
+        },
+        jobId: {
+            type: Sequelize.STRING
         }
     }, {
         tableName: 'events',
@@ -22,7 +28,7 @@ const Event = sequelize.define(
     }
 )
 
-Event.belongsTo(Member)
-Event.belongsTo(Job)
+// Event.belongsTo(Member)
+// Event.belongsTo(Job)
 
 module.exports = Event

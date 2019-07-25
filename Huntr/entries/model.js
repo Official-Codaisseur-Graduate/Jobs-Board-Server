@@ -15,23 +15,23 @@ const Entry = sequelize.define(
         },
         wishlistDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
         },
         applicationDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
         },
         interviewDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
         },
         offerDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
         },
         rejectionDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
         }
     }, {
         tableName: 'entries',
