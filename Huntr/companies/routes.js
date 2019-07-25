@@ -39,24 +39,33 @@ router.get('/companies', function (req, res, next) {
   const page = req.query.page
   const sortProperty = req.query.sortBy
   const limit = 12
+  const applicationCount = req.query.applicationCount
+  const offerCount = req.query.offerCount
   const offset = page * limit
-
-  let searchName = {}
-  if (req.query.search !== undefined) {
-    searchName = {
-      name: { [Op.like]: `%${req.query.search}%` }
-    }
-  }
+  const searchName =  req.query.search ? 
+                        {name: { [Op.like]: `%${req.query.search}%` }}
+                        : 
+                        undefined
   Company
     .findAndCountAll({
       limit, offset,
-      order: [[sortProperty, 'DESC']],
-      where: searchName
+      order: [[sortProperty,'DESC']],
+      where:  searchName ? 
+                searchName 
+                : 
+                sortProperty==="jobOfferAfterApplyingRate" ?
+                  {applicationCount: {[Op.gte]:applicationCount ?
+                                                applicationCount:0
+                  }}
+                  :
+                  {offerCount: {[Op.gte]: offerCount?
+                                            offerCount:0
+                  }} 
     })
     .then(companies => {
-      const { count } = companies
-      const pages = Math.ceil(count / limit)
-      res.send({ rows: companies.rows, pages }).end()
+        const { count } = companies
+        const pages = Math.ceil(count / limit)
+        res.send({ rows: companies.rows, pages }).end()
     })
     .catch(error => next(error))
 })
