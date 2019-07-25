@@ -18,16 +18,16 @@ const Member = sequelize.define(
         email: {
             type: Sequelize.STRING,
         },
-        createdAt: {
-            type: Sequelize.DATE,
-            // allowNull: false
-        },
         isActive: {
             type: Sequelize.BOOLEAN,
             defaultValue: true
+        },
+        createdAt: {
+            type: Sequelize.DATE,
+            defaultValue: new Date()
         }
     }, {
-        timestamps: true,
+        timestamps: false,
         tableName: 'members'
     }
 )

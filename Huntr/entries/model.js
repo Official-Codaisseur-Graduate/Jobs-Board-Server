@@ -11,7 +11,7 @@ const Entry = sequelize.define(
     {
         status: {
             type: Sequelize.STRING,
-            defaultValue: "wishlist"
+            defaultValue: "Wishlist"
         },
         wishlistDate: {
             type: Sequelize.DATEONLY,
