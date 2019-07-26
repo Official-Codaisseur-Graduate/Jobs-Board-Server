@@ -16,7 +16,7 @@ axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-events', (req, res, next) => {
     axios
-        .get(`https://api.huntr.co/org/events`)
+        .get(`https://api.huntr.co/org/events?limit=10000`)
         .then(response => {
             const data = response.data.data
 
@@ -51,8 +51,9 @@ router.post('/events', (req, res, next) => {
     // memberCheck(eventData)
     // jobCheck(eventData)
     // companyCheck(eventData)
-    sortData(eventData)
+    // sortData(eventData) //-->here?
 
+    //doesn't go on to make an event
     Event
         .create({
             id: eventData.id,
@@ -61,10 +62,15 @@ router.post('/events', (req, res, next) => {
             memberId: member.id
         })
         .then(event => {
+            //sortData(eventData) --> here?
+            //always send back http code 200 to webhook!!
             res
                 .status(200)
-                .end()
+                .next()
         })
+        // sortData(eventData) //--> here?
+        .then(sortData(eventData))
+        .end()
         .catch(error => next(error))
 })
 
