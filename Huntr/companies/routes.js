@@ -41,6 +41,7 @@ router.get('/companies', function (req, res, next) {
   const limit = 12
   const applicationCount = req.query.applicationCount
   const offerCount = req.query.offerCount
+  const exactOfferCount = req.query.exactOfferCount
   const offset = page * limit
   const searchName =  req.query.search ? 
                         {name: { [Op.like]: `%${req.query.search}%` }}
@@ -53,14 +54,17 @@ router.get('/companies', function (req, res, next) {
       where:  searchName ? 
                 searchName 
                 : 
-                sortProperty==="jobOfferAfterApplyingRate" ?
-                  {applicationCount: {[Op.gte]:applicationCount ?
-                                                applicationCount:0
-                  }}
+                exactOfferCount ? 
+                  {offerCount: {[Op.eq]: exactOfferCount}} 
                   :
-                  {offerCount: {[Op.gte]: offerCount?
-                                            offerCount:0
-                  }} 
+                  sortProperty==="jobOfferAfterApplyingRate" ?
+                    {applicationCount: {[Op.gte]:applicationCount ?
+                                                  applicationCount:0
+                    }}
+                    :
+                    {offerCount: {[Op.gte]: offerCount?
+                                              offerCount:0
+                    }} 
     })
     .then(companies => {
         const { count } = companies
