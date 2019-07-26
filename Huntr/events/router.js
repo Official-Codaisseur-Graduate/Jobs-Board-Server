@@ -16,7 +16,7 @@ axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-events', (req, res, next) => {
     axios
-        .get(`https://api.huntr.co/org/events`)
+        .get(`https://api.huntr.co/org/events?limit=10000`)
         .then(response => {
             const data = response.data.data
 
