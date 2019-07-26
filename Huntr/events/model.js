@@ -21,10 +21,14 @@ const Event = sequelize.define(
         },
         jobId: {
             type: Sequelize.STRING
+        },
+        createdAt: {
+            type: Sequelize.DATEONLY,
+            defaultValue: new Date()
         }
     }, {
         tableName: 'events',
-        timestamps: true
+        // timestamps: true
     }
 )
 
