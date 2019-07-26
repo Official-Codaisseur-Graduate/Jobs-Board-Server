@@ -48,9 +48,9 @@ router.post('/events', (req, res, next) => {
     const member = eventData.member
     const job = eventData.job
 
-    memberCheck(eventData)
-    jobCheck(eventData)
-    companyCheck(eventData)
+    // memberCheck(eventData)
+    // jobCheck(eventData)
+    // companyCheck(eventData)
     sortData(eventData)
 
     Event
