@@ -5,7 +5,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const { baseURL, token } = require('../constants')
 const Job = require('./model')
-const { removeDuplicate } = require('./removeDuplicates')
+const { removeDuplicate } = require('./removeDuplicate')
 
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
