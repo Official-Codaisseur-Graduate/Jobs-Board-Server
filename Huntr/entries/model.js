@@ -11,27 +11,36 @@ const Entry = sequelize.define(
     {
         status: {
             type: Sequelize.STRING,
-            defaultValue: "wishlist"
+            defaultValue: "Wishlist"
         },
         wishlistDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
         },
         applicationDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
         },
-        interviewDate: {
+        firstInterviewDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
+        },
+        secondInterviewDate: {
+            type: Sequelize.DATEONLY
         },
         offerDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
         },
         rejectionDate: {
             type: Sequelize.DATEONLY,
-            defaultValue: "tbd"
+            // defaultValue: "tbd"
+        },
+        jobId: {
+            type: Sequelize.STRING
+        },
+        memberId: {
+            type: Sequelize.STRING
         }
     }, {
         tableName: 'entries',
@@ -39,7 +48,7 @@ const Entry = sequelize.define(
     }
 )
 
-Entry.belongsTo(Job)
-Entry.belongsTo(Member)
+// Entry.belongsTo(Job)
+// Entry.belongsTo(Member)
 
 module.exports = Entry

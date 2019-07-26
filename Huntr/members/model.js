@@ -18,13 +18,13 @@ const Member = sequelize.define(
         email: {
             type: Sequelize.STRING,
         },
-        createdAt: {
-            type: Sequelize.DATE,
-            // allowNull: false
-        },
         isActive: {
             type: Sequelize.BOOLEAN,
-            // allowNull: false
+            defaultValue: true
+        },
+        createdAt: {
+            type: Sequelize.DATE,
+            defaultValue: new Date()
         }
     }, {
         timestamps: false,
