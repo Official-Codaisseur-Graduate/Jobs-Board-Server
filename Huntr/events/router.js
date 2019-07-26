@@ -48,6 +48,13 @@ router.post('/events', (req, res, next) => {
     const member = eventData.member
     const job = eventData.job
 
+    const event = {
+        id: eventData.id,
+        jobId: eventData.job.id,
+        memberId: eventData.member.id,
+        eventType: eventData.eventType
+    }
+
     // memberCheck(eventData)
     // jobCheck(eventData)
     // companyCheck(eventData)
@@ -55,23 +62,16 @@ router.post('/events', (req, res, next) => {
 
     //doesn't go on to make an event
     Event
-        .create({
-            id: eventData.id,
-            eventType: eventData.eventType,
-            jobId: job.id,
-            memberId: member.id
-        })
+        .create(event)
         .then(event => {
             //sortData(eventData) --> here?
             //always send back http code 200 to webhook!!
             res
                 .status(200)
-            return
         })
         // sortData(eventData) //--> here?
         .then(() => {
             sortData(eventData)
-            return
         })
         .catch(error => next(error))
         .end()
