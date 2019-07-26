@@ -111,6 +111,7 @@ const jobAdded = (eventData) => {
                     wishlistDate: date
                 })
                 .then(entry => {
+                    return
                 })
                 .catch(console.error)
             return
@@ -123,6 +124,7 @@ const jobAdded = (eventData) => {
                     rejectionDate: date
                 })
                 .then(entry => {
+                    return
                 })
                 .catch(console.error)
             return
@@ -155,13 +157,96 @@ const jobMoved = (eventData) => {
                             wishlistDate: date
                         })
                         .then(entry => {
-
+                            return
                         })
                         .catch(console.error)
                 })
                 .catch(console.error)
             return
-
+        case "Applied":
+                Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    entry
+                        .update({
+                            status: status,
+                            applicationDate: date
+                        })
+                        .then(entry => {
+                            return
+                        })
+                        .catch(console.error)
+                })
+                .catch(console.error)
+            return
+        case "1st Interview":
+                Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    entry
+                        .update({
+                            status: status,
+                            firstInterviewDate: date
+                        })
+                        .then(entry => {
+                            return
+                        })
+                        .catch(console.error)
+                })
+                .catch(console.error)
+            return
+        case "2nd Interview":
+                Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    entry
+                        .update({
+                            status: status,
+                            secondInterviewDate: date
+                        })
+                        .then(entry => {
+                            return
+                        })
+                        .catch(console.error)
+                })
+                .catch(console.error)
+            return
+        case "Offer":
+                Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    entry
+                        .update({
+                            status: status,
+                            offerDate: date
+                        })
+                        .then(entry => {
+                            return
+                        })
+                        .catch(console.error)
+                })
+                .catch(console.error)
+            return
         case "Rejected":
             Entry
                 .findOne({
@@ -177,7 +262,7 @@ const jobMoved = (eventData) => {
                             rejectionDate: date
                         })
                         .then(entry => {
-
+                            return
                         })
                         .catch(console.error)
                 })
@@ -214,20 +299,22 @@ const jobStatusDateSet = (eventData) => {
                                 jobId: jobId,
                                 memberId: memberId,
                                 status: "Applied",
-                                applicationDate: new Date(eventData.job.applicationDate)
+                                // applicationDate: new Date(eventData.job.applicationDate)
+                                applicationDate: date
                             })
                             .then(newEntry => {
-
+                                return
                             })
                             .catch(console.error)
                     } else {
                         entry
                             .update({
-                                status: "Applied",
-                                applicationDate: new Date(eventData.job.applicationDate)
+                                // status: "Applied",
+                                // applicationDate: new Date(eventData.job.applicationDate)
+                                applicationDate: date
                             })
                             .then(entry => {
-
+                                return
                             })
                             .catch(console.error)
                     }
@@ -235,7 +322,7 @@ const jobStatusDateSet = (eventData) => {
                 .catch(console.error)
             return
 
-        case ("JOB_FIRST_INTERVIEW_DATE_SET"):
+        case "JOB_FIRST_INTERVIEW_DATE_SET":
             Entry
                 .findOne({
                     where: {
@@ -250,20 +337,22 @@ const jobStatusDateSet = (eventData) => {
                                 jobId: jobId,
                                 memberId: memberId,
                                 status: "1st Interview",
-                                firstInterviewDate: new Date(eventData.job.firstInterviewDate)
+                                // firstInterviewDate: new Date(eventData.job.firstInterviewDate)
+                                firstInterviewDate: date
                             })
                             .then(newEntry => {
-
+                                return
                             })
                             .catch(console.error)
                     } else {
                         entry
                             .update({
-                                status: "1st Interview",
-                                firstInterviewDate: new Date(eventData.job.firstInterviewDate)
+                                // status: "1st Interview",
+                                // firstInterviewDate: new Date(eventData.job.firstInterviewDate)
+                                firstInterviewDate: date
                             })
                             .then(entry => {
-
+                                return
                             })
                             .catch(console.error)
                     }
@@ -271,7 +360,7 @@ const jobStatusDateSet = (eventData) => {
                 .catch(console.error)
             return
 
-        case ("JOB_SECOND_INTERVIEW_DATE_SET"):
+        case "JOB_SECOND_INTERVIEW_DATE_SET":
             Entry
                 .findOne({
                     where: {
@@ -286,20 +375,22 @@ const jobStatusDateSet = (eventData) => {
                                 jobId: jobId,
                                 memberId: memberId,
                                 status: "2nd Interview",
-                                secondInterviewDate: new Date(eventData.job.secondInterviewDate)
+                                // secondInterviewDate: new Date(eventData.job.secondInterviewDate)
+                                secondInterviewDate: date
                             })
                             .then(newEntry => {
-
+                                return
                             })
                             .catch(console.error)
                     } else {
                         entry
                             .update({
-                                status: "2nd Interview",
-                                secondInterviewDate: new Date(eventData.job.secondInterviewDate)
+                                // status: "2nd Interview",
+                                // secondInterviewDate: new Date(eventData.job.secondInterviewDate)
+                                secondInterviewDate: date
                             })
                             .then(entry => {
-
+                                return
                             })
                             .catch(console.error)
                     }
@@ -322,20 +413,22 @@ const jobStatusDateSet = (eventData) => {
                                 jobId: jobId,
                                 memberId: memberId,
                                 status: "Offer",
-                                offerDate: new Date(eventData.job.offerDate)
+                                // offerDate: new Date(eventData.job.offerDate)
+                                offerDate: date
                             })
                             .then(newEntry => {
-
+                                return
                             })
                             .catch(console.error)
                     } else {
                         entry
                             .update({
-                                status: "Offer",
-                                offerDate: new Date(eventData.job.offerDate)
+                                // status: "Offer",
+                                // offerDate: new Date(eventData.job.offerDate)
+                                offerDate: date
                             })
                             .then(entry => {
-
+                                return
                             })
                             .catch(console.error)
                     }
