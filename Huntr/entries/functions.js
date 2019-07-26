@@ -142,7 +142,6 @@ const jobMoved = (eventData) => {
 
     switch (status) {
         case "Wishlist":
-            return (
                 Entry
                     .findOne({
                         where: {
@@ -162,9 +161,8 @@ const jobMoved = (eventData) => {
                             .catch(console.error)
                     })
                     .catch(console.error)
-            )
+            
         case "Rejected":
-            return (
                 Entry
                     .findOne({
                         where: {
@@ -184,7 +182,7 @@ const jobMoved = (eventData) => {
                             .catch(console.error)
                     })
                     .catch(console.error)
-            )
+            
         default:
             return
     }
@@ -201,7 +199,6 @@ const jobStatusDateSet = (eventData) => {
     //check if exists if not create
     switch (eventType) {
         case "JOB_APPLICATION_DATE_SET":
-            return (
                 Entry
                     .findOne({
                         where: {
@@ -235,9 +232,8 @@ const jobStatusDateSet = (eventData) => {
                         }
                     })
                     .catch(console.error)
-            )
+            
         case ("JOB_FIRST_INTERVIEW_DATE_SET"):
-            return (
                 Entry
                     .findOne({
                         where: {
@@ -271,9 +267,8 @@ const jobStatusDateSet = (eventData) => {
                         }
                     })
                     .catch(console.error)
-            )
+            
         case ("JOB_SECOND_INTERVIEW_DATE_SET"):
-            return (
                 Entry
                     .findOne({
                         where: {
@@ -307,9 +302,8 @@ const jobStatusDateSet = (eventData) => {
                         }
                     })
                     .catch(console.error)
-            )
+            
         case "JOB_OFFER_DATE_SET":
-            return (
                 Entry
                     .findOne({
                         where: {
@@ -343,7 +337,7 @@ const jobStatusDateSet = (eventData) => {
                         }
                     })
                     .catch(console.error)
-            )
+            
         default:
             return
     }
