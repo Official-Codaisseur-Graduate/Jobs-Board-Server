@@ -51,7 +51,7 @@ router.post('/events', (req, res, next) => {
     // memberCheck(eventData)
     // jobCheck(eventData)
     // companyCheck(eventData)
-    sortData(eventData)
+    // sortData(eventData)
 
     //doesn't go on to make an event
     Event
@@ -68,7 +68,7 @@ router.post('/events', (req, res, next) => {
                 .status(200)
                 .end()
         })
-        //sortData(eventData) --> here?
+        .then(sortData(eventData))
         .catch(error => next(error))
 })
 
