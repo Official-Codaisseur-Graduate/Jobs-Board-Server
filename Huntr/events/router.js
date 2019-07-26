@@ -1,5 +1,3 @@
-//NOTES --> EVENTS = events taht are coming in through the webhook
-
 const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')

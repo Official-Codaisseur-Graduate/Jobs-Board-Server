@@ -1,5 +1,3 @@
-//NOTES --> ENTRY = the status of a "jo" in regards to a member 
-
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
 
@@ -15,26 +13,21 @@ const Entry = sequelize.define(
         },
         wishlistDate: {
             type: Sequelize.DATEONLY,
-            // defaultValue: "tbd"
         },
         applicationDate: {
             type: Sequelize.DATEONLY,
-            // defaultValue: "tbd"
         },
         firstInterviewDate: {
             type: Sequelize.DATEONLY,
-            // defaultValue: "tbd"
         },
         secondInterviewDate: {
             type: Sequelize.DATEONLY
         },
         offerDate: {
             type: Sequelize.DATEONLY,
-            // defaultValue: "tbd"
         },
         rejectionDate: {
             type: Sequelize.DATEONLY,
-            // defaultValue: "tbd"
         },
         jobId: {
             type: Sequelize.STRING
@@ -52,8 +45,7 @@ const Entry = sequelize.define(
         }
 
     }, {
-        tableName: 'entries',
-        // timestamps: true
+        tableName: 'entries'
     }
 )
 

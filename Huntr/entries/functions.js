@@ -1,5 +1,3 @@
-//NOTES --> ENTRY = the status of a "jo" in regards to a member 
-
 const Entry = require('../entries/model');
 const Job = require('../jobs/model');
 const Company = require('../companies/model');
