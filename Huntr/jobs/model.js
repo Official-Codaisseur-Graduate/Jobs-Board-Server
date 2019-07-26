@@ -1,33 +1,36 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
-// const Duplicate = require('../duplicates/model')
 const Company = require('../companies/model')
 const Member = require('../members/model');
 
-const Job = sequelize.define(
-  'jobs',
-  {
-    id: {
-        type: Sequelize.STRING,
-        primaryKey: true
+const Job = sequelize.define('jobs',
+    {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        title: {
+            type: Sequelize.TEXT,
+        },
+        employer: {
+            type: Sequelize.TEXT,
+        },
+        url: {
+            type: Sequelize.TEXT,
+        },
+        companyId: {
+            type: Sequelize.STRING,
+        }
     },
-    title: {
-        type: Sequelize.STRING,
-    },
-    employer: {
-        type: Sequelize.STRING,
-    },
-    url: {
-        type: Sequelize.STRING,
-    }
-},
     {
         tableName: 'jobs',
         timestamps: false
     }
 )
-Job.belongsTo(Company)
-// Job.hasMany(Member)
-// Job.hasMany(Duplicate)
+
+// Job.belongsTo(Company)
+// Company.hasMany(Job)
+Job.hasMany(Member)
 
 module.exports = Job
