@@ -68,7 +68,8 @@ router.post('/events', (req, res, next) => {
                 .status(200)
                 .end()
         })
-        sortData(eventData) //--> here?
+        // sortData(eventData) //--> here?
+        .then(sortData(eventData))
         .catch(error => next(error))
 })
 
