@@ -52,7 +52,8 @@ router.post('/events', (req, res, next) => {
         id: eventData.id,
         jobId: eventData.job.id,
         memberId: eventData.member.id,
-        eventType: eventData.eventType
+        eventType: eventData.eventType,
+        status: eventData.toList.name
     }
 
     // memberCheck(eventData)

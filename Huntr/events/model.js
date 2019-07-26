@@ -25,6 +25,10 @@ const Event = sequelize.define(
         createdAt: {
             type: Sequelize.DATEONLY,
             defaultValue: new Date()
+        },
+        status: {
+            type: Sequelize.STRING,
+            defaultValue: "Wishlist"
         }
     }, {
         tableName: 'events',
