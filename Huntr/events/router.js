@@ -3,7 +3,7 @@ const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-const { baseURL, token } = require('../constants')
+const { baseURL } = require('../constants')
 
 
 const Event = require('./model');
