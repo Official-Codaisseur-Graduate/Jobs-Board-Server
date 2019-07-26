@@ -41,10 +41,19 @@ const Entry = sequelize.define(
         },
         memberId: {
             type: Sequelize.STRING
+        },
+        createdAt: {
+            type: Sequelize.DATEONLY,
+            defaultValue: new Date()
+        },
+        updatedAt: {
+            type: Sequelize.DATEONLY,
+            defaultValue: new Date()
         }
+
     }, {
         tableName: 'entries',
-        timestamps: true
+        // timestamps: true
     }
 )
 
