@@ -1,11 +1,12 @@
 const { Router } = require('express')
-const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
-const Op = Sequelize.Op
+// const Op = Sequelize.Op
 const { baseURL, token } = require('../constants')
 const Job = require('./model')
 const { removeDuplicate } = require('./removeDuplicate')
+
+const router = new Router()
 
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
@@ -39,7 +40,7 @@ router.post('/copy-jobs', (req, res, next) => {
 // router.get('/jobs', function (req, res, next) {
     // const page = req.query.page
     // const sortProperty = req.query.sortBy
-    // const limit = 12
+    // const limit = 30
     // const applicationCount = req.query.applicationCount
     // const offerCount = req.query.offerCount
     // const offset = page * limit
@@ -80,6 +81,15 @@ router.post('/copy-jobs', (req, res, next) => {
 // })
 
 router.get('/jobs', function (req, res, next) {
+    console.log('REQUEST :', req.query)
+    const page = req.query.page
+    // const sortProperty = req.query.sortBy
+    const limit = 30
+    // const applicationCount = req.query.applicationCount
+    // const offerCount = req.query.offerCount
+    const offset = page * limit
+
+
     Job
         .findAll()
         .then(jobs => res.status(200).json(jobs))
