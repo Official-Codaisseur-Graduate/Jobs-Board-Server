@@ -66,9 +66,8 @@ router.post('/events', (req, res, next) => {
             //always send back http code 200 to webhook!!
             res
                 .status(200)
-                .end()
+                .next()
         })
-
         .then(sortData(eventData))
 
         .catch(error => next(error))
