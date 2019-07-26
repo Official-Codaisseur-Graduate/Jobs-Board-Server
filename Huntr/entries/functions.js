@@ -111,10 +111,10 @@ const jobAdded = (eventData) => {
                     wishlistDate: date
                 })
                 .then(entry => {
-
+                
                 })
                 .catch(console.error)
-
+                .next()
         case "Rejected":
             Entry
                 .create({
@@ -126,7 +126,7 @@ const jobAdded = (eventData) => {
                 .then(entry => {
                 })
                 .catch(console.error)
-
+                .next()
         default:
             return
     }
