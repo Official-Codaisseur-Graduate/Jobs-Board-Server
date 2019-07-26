@@ -3,6 +3,8 @@ const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
+const { baseURL, token } = require('../constants')
+
 
 const Event = require('./model');
 
@@ -11,9 +13,9 @@ const { sortData,
         jobCheck, 
         companyCheck } = require('../entries/functions') //correct way of import & export?
 
-const token = process.env.token || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
-axios.defaults.baseURL = 'https://api.huntr.co/org'
+axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
+const token = process.env.token || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
 
 router.post('/copy-events', (req, res, next) => {
     axios
