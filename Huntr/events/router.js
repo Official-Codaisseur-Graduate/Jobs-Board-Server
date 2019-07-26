@@ -66,12 +66,12 @@ router.post('/events', (req, res, next) => {
             //always send back http code 200 to webhook!!
             res
                 .status(200)
-                .next()
+            return
         })
         // sortData(eventData) //--> here?
         .then(sortData(eventData))
-        .end()
         .catch(error => next(error))
+        .end()
 })
 
 router.get('/events', (req, res, next) => {
@@ -88,6 +88,9 @@ router.get('/events', (req, res, next) => {
         .catch(error => next(error))
 })
 
+router.post('/testevent', (req, res, next) => {
+
+})
 
 module.exports = router
 

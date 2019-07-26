@@ -111,10 +111,9 @@ const jobAdded = (eventData) => {
                     wishlistDate: date
                 })
                 .then(entry => {
-                
                 })
                 .catch(console.error)
-                .next()
+            return
         case "Rejected":
             Entry
                 .create({
@@ -126,7 +125,7 @@ const jobAdded = (eventData) => {
                 .then(entry => {
                 })
                 .catch(console.error)
-                .next()
+            return
         default:
             return
     }
@@ -142,47 +141,49 @@ const jobMoved = (eventData) => {
 
     switch (status) {
         case "Wishlist":
-                Entry
-                    .findOne({
-                        where: {
-                            jobId: jobId,
-                            memberId: memberId
-                        }
-                    })
-                    .then(entry => {
-                        entry
-                            .update({
-                                status: status,
-                                wishlistDate: date
-                            })
-                            .then(entry => {
+            Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    entry
+                        .update({
+                            status: status,
+                            wishlistDate: date
+                        })
+                        .then(entry => {
 
-                            })
-                            .catch(console.error)
-                    })
-                    .catch(console.error)
-            
+                        })
+                        .catch(console.error)
+                })
+                .catch(console.error)
+            return
+
         case "Rejected":
-                Entry
-                    .findOne({
-                        where: {
-                            jobId: jobId,
-                            memberId: memberId
-                        }
-                    })
-                    .then(entry => {
-                        entry
-                            .update({
-                                status: status,
-                                rejectionDate: date
-                            })
-                            .then(entry => {
+            Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    entry
+                        .update({
+                            status: status,
+                            rejectionDate: date
+                        })
+                        .then(entry => {
 
-                            })
-                            .catch(console.error)
-                    })
-                    .catch(console.error)
-            
+                        })
+                        .catch(console.error)
+                })
+                .catch(console.error)
+            return
+
         default:
             return
     }
@@ -199,145 +200,149 @@ const jobStatusDateSet = (eventData) => {
     //check if exists if not create
     switch (eventType) {
         case "JOB_APPLICATION_DATE_SET":
-                Entry
-                    .findOne({
-                        where: {
-                            jobId: jobId,
-                            memberId: memberId
-                        }
-                    })
-                    .then(entry => {
-                        if (!entry) {
-                            Entry
-                                .create({
-                                    jobId: jobId,
-                                    memberId: memberId,
-                                    status: "Applied",
-                                    applicationDate: eventData.job.applicationDate
-                                })
-                                .then(newEntry => {
+            Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    if (!entry) {
+                        Entry
+                            .create({
+                                jobId: jobId,
+                                memberId: memberId,
+                                status: "Applied",
+                                applicationDate: eventData.job.applicationDate
+                            })
+                            .then(newEntry => {
 
-                                })
-                                .catch(console.error)
-                        } else {
-                            entry
-                                .update({
-                                    status: "Applied",
-                                    applicationDate: eventData.job.applicationDate
-                                })
-                                .then(entry => {
+                            })
+                            .catch(console.error)
+                    } else {
+                        entry
+                            .update({
+                                status: "Applied",
+                                applicationDate: eventData.job.applicationDate
+                            })
+                            .then(entry => {
 
-                                })
-                                .catch(console.error)
-                        }
-                    })
-                    .catch(console.error)
-            
+                            })
+                            .catch(console.error)
+                    }
+                })
+                .catch(console.error)
+            return
+
         case ("JOB_FIRST_INTERVIEW_DATE_SET"):
-                Entry
-                    .findOne({
-                        where: {
-                            jobId: jobId,
-                            memberId: memberId
-                        }
-                    })
-                    .then(entry => {
-                        if (!entry) {
-                            Entry
-                                .create({
-                                    jobId: jobId,
-                                    memberId: memberId,
-                                    status: "1st Interview",
-                                    firstInterviewDate: eventData.job.firstInterviewDate
-                                })
-                                .then(newEntry => {
+            Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    if (!entry) {
+                        Entry
+                            .create({
+                                jobId: jobId,
+                                memberId: memberId,
+                                status: "1st Interview",
+                                firstInterviewDate: eventData.job.firstInterviewDate
+                            })
+                            .then(newEntry => {
 
-                                })
-                                .catch(console.error)
-                        } else {
-                            entry
-                                .update({
-                                    status: "1st Interview",
-                                    firstInterviewDate: eventData.job.firstInterviewDate
-                                })
-                                .then(entry => {
+                            })
+                            .catch(console.error)
+                    } else {
+                        entry
+                            .update({
+                                status: "1st Interview",
+                                firstInterviewDate: eventData.job.firstInterviewDate
+                            })
+                            .then(entry => {
 
-                                })
-                                .catch(console.error)
-                        }
-                    })
-                    .catch(console.error)
-            
+                            })
+                            .catch(console.error)
+                    }
+                })
+                .catch(console.error)
+            return
+
         case ("JOB_SECOND_INTERVIEW_DATE_SET"):
-                Entry
-                    .findOne({
-                        where: {
-                            jobId: jobId,
-                            memberId: memberId
-                        }
-                    })
-                    .then(entry => {
-                        if (!entry) {
-                            Entry
-                                .create({
-                                    jobId: jobId,
-                                    memberId: memberId,
-                                    status: "2nd Interview",
-                                    secondInterviewDate: eventData.job.secondInterviewDate
-                                })
-                                .then(newEntry => {
+            Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    if (!entry) {
+                        Entry
+                            .create({
+                                jobId: jobId,
+                                memberId: memberId,
+                                status: "2nd Interview",
+                                secondInterviewDate: eventData.job.secondInterviewDate
+                            })
+                            .then(newEntry => {
 
-                                })
-                                .catch(console.error)
-                        } else {
-                            entry
-                                .update({
-                                    status: "2nd Interview",
-                                    secondInterviewDate: eventData.job.secondInterviewDate
-                                })
-                                .then(entry => {
+                            })
+                            .catch(console.error)
+                    } else {
+                        entry
+                            .update({
+                                status: "2nd Interview",
+                                secondInterviewDate: eventData.job.secondInterviewDate
+                            })
+                            .then(entry => {
 
-                                })
-                                .catch(console.error)
-                        }
-                    })
-                    .catch(console.error)
-            
+                            })
+                            .catch(console.error)
+                    }
+                })
+                .catch(console.error)
+            return
+
         case "JOB_OFFER_DATE_SET":
-                Entry
-                    .findOne({
-                        where: {
-                            jobId: jobId,
-                            memberId: memberId
-                        }
-                    })
-                    .then(entry => {
-                        if (!entry) {
-                            Entry
-                                .create({
-                                    jobId: jobId,
-                                    memberId: memberId,
-                                    status: "Offer",
-                                    offerDate: eventData.job.offerDate
-                                })
-                                .then(newEntry => {
+            Entry
+                .findOne({
+                    where: {
+                        jobId: jobId,
+                        memberId: memberId
+                    }
+                })
+                .then(entry => {
+                    if (!entry) {
+                        Entry
+                            .create({
+                                jobId: jobId,
+                                memberId: memberId,
+                                status: "Offer",
+                                offerDate: eventData.job.offerDate
+                            })
+                            .then(newEntry => {
 
-                                })
-                                .catch(console.error)
-                        } else {
-                            entry
-                                .update({
-                                    status: "Offer",
-                                    offerDate: eventData.job.offerDate
-                                })
-                                .then(entry => {
+                            })
+                            .catch(console.error)
+                    } else {
+                        entry
+                            .update({
+                                status: "Offer",
+                                offerDate: eventData.job.offerDate
+                            })
+                            .then(entry => {
 
-                                })
-                                .catch(console.error)
-                        }
-                    })
-                    .catch(console.error)
-            
+                            })
+                            .catch(console.error)
+                    }
+                })
+                .catch(console.error)
+            return
+
         default:
             return
     }
