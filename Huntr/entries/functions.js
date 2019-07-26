@@ -214,7 +214,7 @@ const jobStatusDateSet = (eventData) => {
                                 jobId: jobId,
                                 memberId: memberId,
                                 status: "Applied",
-                                applicationDate: eventData.job.applicationDate
+                                applicationDate: new Date(eventData.job.applicationDate)
                             })
                             .then(newEntry => {
 
@@ -224,7 +224,7 @@ const jobStatusDateSet = (eventData) => {
                         entry
                             .update({
                                 status: "Applied",
-                                applicationDate: eventData.job.applicationDate
+                                applicationDate: new Date(eventData.job.applicationDate)
                             })
                             .then(entry => {
 
@@ -250,7 +250,7 @@ const jobStatusDateSet = (eventData) => {
                                 jobId: jobId,
                                 memberId: memberId,
                                 status: "1st Interview",
-                                firstInterviewDate: eventData.job.firstInterviewDate
+                                firstInterviewDate: new Date(eventData.job.firstInterviewDate)
                             })
                             .then(newEntry => {
 
@@ -260,7 +260,7 @@ const jobStatusDateSet = (eventData) => {
                         entry
                             .update({
                                 status: "1st Interview",
-                                firstInterviewDate: eventData.job.firstInterviewDate
+                                firstInterviewDate: new Date(eventData.job.firstInterviewDate)
                             })
                             .then(entry => {
 
@@ -286,7 +286,7 @@ const jobStatusDateSet = (eventData) => {
                                 jobId: jobId,
                                 memberId: memberId,
                                 status: "2nd Interview",
-                                secondInterviewDate: eventData.job.secondInterviewDate
+                                secondInterviewDate: new Date(eventData.job.secondInterviewDate)
                             })
                             .then(newEntry => {
 
@@ -296,7 +296,7 @@ const jobStatusDateSet = (eventData) => {
                         entry
                             .update({
                                 status: "2nd Interview",
-                                secondInterviewDate: eventData.job.secondInterviewDate
+                                secondInterviewDate: new Date(eventData.job.secondInterviewDate)
                             })
                             .then(entry => {
 
@@ -322,7 +322,7 @@ const jobStatusDateSet = (eventData) => {
                                 jobId: jobId,
                                 memberId: memberId,
                                 status: "Offer",
-                                offerDate: eventData.job.offerDate
+                                offerDate: new Date(eventData.job.offerDate)
                             })
                             .then(newEntry => {
 
@@ -332,7 +332,7 @@ const jobStatusDateSet = (eventData) => {
                         entry
                             .update({
                                 status: "Offer",
-                                offerDate: eventData.job.offerDate
+                                offerDate: new Date(eventData.job.offerDate)
                             })
                             .then(entry => {
 
