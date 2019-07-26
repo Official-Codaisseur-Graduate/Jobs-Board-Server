@@ -442,30 +442,3 @@ const jobStatusDateSet = (eventData) => {
 }
 
 module.exports = { sortData, memberCheck, jobCheck, companyCheck }
-
-//NOTES
-// const entryCheck = (memberId, jobId) => {
-//     Entry
-//         .findOne({
-//             where: {
-//                 jobId: jobId,
-//                 memberId: memberId
-//             }
-//         })
-//         .then(entity => {
-//             if (!entity) {
-//                 Entry
-//                     .create({
-//                         jobId: jobId,
-//                         memberId: memberId
-//                     })
-//                     .then(newEntry => {
-//                         return newEntry
-//                     })
-//                     .catch(console.error)
-//             } else {
-//                 return entity
-//             }
-//         })
-//         .catch(console.error)
-// }

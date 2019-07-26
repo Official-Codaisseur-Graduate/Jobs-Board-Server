@@ -1,5 +1,3 @@
-//NOTES --> EVENTS = events taht are coming in through the webhook
-
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
 
@@ -31,12 +29,13 @@ const Event = sequelize.define(
             defaultValue: "Wishlist"
         }
     }, {
-        tableName: 'events',
-        // timestamps: true
+        tableName: 'events'
     }
 )
 
+module.exports = Event
+
+//NOTES
 // Event.belongsTo(Member)
 // Event.belongsTo(Job)
-
-module.exports = Event
+// If ^^^ used to form relations -> error -> see issues for more explination

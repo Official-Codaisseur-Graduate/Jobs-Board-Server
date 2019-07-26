@@ -31,6 +31,6 @@ const Job = sequelize.define('jobs',
 
 // Job.belongsTo(Company)
 // Company.hasMany(Job)
-Job.hasMany(Member)
+// Job.hasMany(Member)
 
 module.exports = Job
