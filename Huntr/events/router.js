@@ -26,7 +26,8 @@ router.post('/copy-events', (req, res, next) => {
                     id: entity.id,
                     eventType: entity.eventType,
                     jobId: entity.job.id,
-                    memberId: entity.member.id
+                    memberId: entity.member.id,
+                    status: entity.toList.name
                 }
                 return (
                     Event
