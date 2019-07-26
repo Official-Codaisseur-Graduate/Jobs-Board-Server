@@ -53,6 +53,7 @@ router.post('/events', (req, res, next) => {
     // companyCheck(eventData)
     sortData(eventData)
 
+    //doesn't go on to make an event
     Event
         .create({
             id: eventData.id,
