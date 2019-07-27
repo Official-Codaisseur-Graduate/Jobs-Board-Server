@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize')
+require('dotenv').config();
 
 const connectionString = process.env.DATABASE_URL || 'postgres://postgres:secret@localhost:5432/postgres';
 

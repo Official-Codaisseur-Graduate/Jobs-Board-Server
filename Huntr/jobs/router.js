@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const axios = require('axios')
-const { baseURL, token } = require('../constants')
+const { baseURL } = require('../constants')
 const Job = require('./model')
 const { removeDuplicate } = require('./removeDuplicate')
 const Company = require('../companies/model')
@@ -9,7 +9,7 @@ const Duplicate = require('../duplicates/model')
 const router = new Router()
 
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
 
 router.post('/copy-jobs', (req, res, next) => {
     axios

@@ -1,11 +1,11 @@
 const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')
-const { baseURL, token } = require('../constants')
+const { baseURL } = require('../constants')
 const Member = require('./model')
 
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
 
 router.post(`/copy-members`, (req, res, next) => {
     axios

@@ -3,12 +3,11 @@
 const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')
-const Sequelize = require('sequelize')
-const { baseURL, token } = require('../constants')
+const { baseURL } = require('../constants')
 const Entry = require('./model');
 
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
 
 //all records of all jobs of all members
 router.get('/entries', (req, res, next) => {

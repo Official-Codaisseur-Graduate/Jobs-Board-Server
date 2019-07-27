@@ -3,13 +3,13 @@ const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-const { baseURL, token } = require('../constants')
+const { baseURL } = require('../constants')
 const Company = require('./model')
 const Duplicate = require('../duplicates/model')
 const { removeDuplicateCompanies } = require('./removeDuplicates')
 
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
 
 router.post('/copy-companies', function (req, res, next) {
   axios.get(`${baseURL}/employers?limit=10000`)
