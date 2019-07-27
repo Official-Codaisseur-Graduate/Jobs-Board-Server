@@ -1,7 +1,5 @@
 const { Router } = require('express')
 const axios = require('axios')
-const Sequelize = require('sequelize')
-// const Op = Sequelize.Op
 const { baseURL, token } = require('../constants')
 const Job = require('./model')
 const { removeDuplicate } = require('./removeDuplicate')
