@@ -18,9 +18,6 @@ const Job = sequelize.define('jobs',
         },
         url: {
             type: Sequelize.TEXT,
-        },
-        companyId: {
-            type: Sequelize.STRING,
         }
     },
     {
@@ -29,8 +26,8 @@ const Job = sequelize.define('jobs',
     }
 )
 
-// Job.belongsTo(Company)
-// Company.hasMany(Job)
+Job.belongsTo(Company)
+Company.hasMany(Job)
 Job.hasMany(Member)
 
 module.exports = Job
