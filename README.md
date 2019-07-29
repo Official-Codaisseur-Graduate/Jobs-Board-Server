@@ -178,6 +178,10 @@ This module de-duplicates the companies you get by calling the Huntr API at the 
 - We’re also keeping track of the thrown away duplicates and store which company in the “companies” table they’re related to. This might be nice if you want to use other endpoints of the Huntr API and need the information of the thrown away duplicates.
 
 [Jobs](./Huntr/jobs/removeDuplicate.js)
+This module de-duplicates the jobs you get by calling the Huntr API at the /jobs endpoint. 
+- The de-duplication algorithm first takes out the jobs where no-one from Codaisseur applied. 
+- Then we iterate over the list of jobs and compare it to all the jobs in the list for each iteration to find duplicates. 
+- It will remove all duplicated jobs id's and return only the no duplicated ones.
 
 
 
