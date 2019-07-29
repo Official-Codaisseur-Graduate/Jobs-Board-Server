@@ -140,7 +140,6 @@ const jobAdded = (eventData) => {
     }
 }
 
-///!!if an entry is moved huntr sends 2 events // a JOB_MOVED and JOB_**_DATE_SET
 const jobMoved = (eventData) => {
     const status = eventData.toList.name
     const memberId = eventData.member.id
