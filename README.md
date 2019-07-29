@@ -2,13 +2,14 @@
 - This repository is a continuation by members of Codaisseur class #27 of the "Jobs Board" real world project that was started by members of Codaisseur class #26. The original repo can be found here https://github.com/hastinc/Jobs-Board-Server.
 
 # Table of contents
-[Jobs Board Server](#Jobs-Board-Server)
-[Technologies used](#Technologies-used)
-[Access](#Access)
-[Setup](#Setup)
-[API](#API)
-[Huntr](#Huntr)
-[De-duplication Algorithm](#De-duplication-Algorithm)
+- [Jobs Board Server](#Jobs-Board-Server)
+- [Technologies used](#Technologies-used)
+- [Access](#Access)
+- [Setup](#Setup)
+- [API](#API)
+- [Huntr](#Huntr)
+- [De-duplication Algorithm](#De-duplication-Algorithm)
+- [Suggestions](#Suggestions)
 
 ## Jobs Board Server
 This is a node.js server for the Jobs Board real world project - which was 
@@ -82,10 +83,10 @@ http POST :4000/copy-events
 
 Connect to your database with:
 - Mac: Postico
-Linux: DBeaver
+- Linux: DBeaver
 
 Connect to API database:
-Please ask your product owner for the database credentials in order to access the API database.
+Please ask your product owner for the database credentials in order to access the API database. 
 
 If everything went well, you are now able to see a populated companies, jobs, members, events and duplicates table in your database.
 
@@ -129,29 +130,29 @@ ROUTES:
   Fetches all active members from the Huntr API
 
 ## Huntr
-Token:
+- Token:
 To create a valid token :
 Admin —> developers —> Access Tokens —> Add Token
 
-Webhook:
+- Webhook:
 Current endpoint: https://sleepy-tor-95168.herokuapp.com/events
 Please note that if you wish to add a new endpoint or edit the name of the URL of the deployed API, it might take some time (ie. 24 hours) before Huntr will recognise it as a valid endpoint.
 To create a new webhook endpoint:
 Admin —> developers —> Webhooks —> Add Endpoint
 Also note that a webhook is always a POST endpoint and always response with a HTTP status code of 200.
 
-Events:
+- Events:
 The Huntr API sends 2 types of events through to the webhook endpoint. These are identified by the “eventType” field: “JOB_ADDED” or “JOB_MOVED”.
 There are more event types however through testing we have noticed that Huntr only sends the 2 above mentioned even types.
 
-Testing:
+- Testing:
 How to test incoming events:
 Admin —> Boards —> Create Boards
 Invite yourself or your colleague to the board and set the “advisor” to yourself.
 Test by inputting: “adding jobs”, “moving jobs” and setting dates. 
 Expected result: Event entities created in the API database matching your input.
 
-Notes:
+- Notes:
 The values of the different fields to do with “date” are not accurate coming from Huntr. 
 
 Please see the Huntr API documentation [here](https://docs.huntr.co/#webhooks) for more information.
@@ -167,7 +168,7 @@ This module de-duplicates the companies you get by calling the Huntr API at the 
 - Once we’re done iterating over the whole list of companies we add them to our database table called “companies’. 
 - We’re also keeping track of the thrown away duplicates and store which company in the “companies” table they’re related to. This might be nice if you want to use other endpoints of the Huntr API and need the information of the thrown away duplicates. 
 
-Suggestions:
+## Suggestions:
 - Algorithm needs more thorough testing
 - You could expand upon the regular expressions to filter out more exceptions. 
 - The regular expressions get rid of any Cyrillic or Arabic characters, which might be a problem. 
