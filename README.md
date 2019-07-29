@@ -93,6 +93,7 @@ If everything went well, you are now able to see a populated companies, jobs, me
 ## API
 
 MODELS:
+
 - Companies -> employers inputted by Codaisseur Graduates in Huntr
 - Jobs -> jobs with inputted by Codiasseur Graduates in Huntr
 - Members -> Codaisseur Graduates
@@ -100,8 +101,10 @@ MODELS:
 - Entries -> (not implemented in routes yet) timeline of Jobs in relation to Members
 
 ENDPOINTS:
+
 \<base url\> is either http://localhost:4000 for local development or https://sleepy-tor-95168.herokuapp.com for the deployed backend.
 </br>
+
 Fetches all the companies/jobs/members/events from the Huntr API and stores them in the database:
 - POST \<base url\>/copy-companies 
 - POST \<base url\>/copy-jobs
