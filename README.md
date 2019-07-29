@@ -16,16 +16,16 @@ This is a node.js server for the Jobs Board real world project - which was
 created and worked on during weeks 9-10 of the Codaisseur Academy.
 The contributors are:
 Class #26 members:
-[Tiago Barros](https://github.com/limadebarros),
-[Cathal Hastings](https://github.com/hastinc),
-[Hager Hussein](https://github.com/hagerhussein), 
-[Dave Mollen](https://github.com/davemollen)
+- [Tiago Barros](https://github.com/limadebarros),
+- [Cathal Hastings](https://github.com/hastinc),
+- [Hager Hussein](https://github.com/hagerhussein), 
+- [Dave Mollen](https://github.com/davemollen)
 
 Class #27 members:
-[Jetske van der Wouden](https://github.com/JetskevdWouden),
-[Tatiany Costa](https://github.com/TatyCris),
-[Alina Beglarian](https://github.com/alinabeglarian),
-[Marlon Palpa](https://github.com/malanchito)
+- [Jetske van der Wouden](https://github.com/JetskevdWouden),
+- [Tatiany Costa](https://github.com/TatyCris),
+- [Alina Beglarian](https://github.com/alinabeglarian),
+- [Marlon Palpa](https://github.com/malanchito)
 
 The Front-end for the following repo may be found [here](https://github.com/Official-Codaisseur-Graduate/Jobs-Board-Client)
 
@@ -86,7 +86,7 @@ Connect to your database with:
 - Linux: DBeaver
 
 Connect to API database:
-Please ask your product owner for the database credentials in order to access the API database. 
+- Please ask your product owner for the database credentials in order to access the API database. 
 
 If everything went well, you are now able to see a populated companies, jobs, members, events and duplicates table in your database.
 
