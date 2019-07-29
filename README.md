@@ -173,6 +173,7 @@ This module de-duplicates the companies you get by calling the Huntr API at the 
 - If it’s bigger than a set threshold we add the contents of the duplicate company to the company we’re comparing with. Then we remove the duplicate company. 
 - Once we’re done iterating over the whole list of companies we add them to our database table called “companies’. 
 - We’re also keeping track of the thrown away duplicates and store which company in the “companies” table they’re related to. This might be nice if you want to use other endpoints of the Huntr API and need the information of the thrown away duplicates.
+
 [Jobs](./Huntr/jobs/removeDuplicate.js)
 
 
