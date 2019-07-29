@@ -65,12 +65,6 @@ http POST :4000/copy-jobs
 ```bash
 http POST :4000/copy-members
 ```
-*WARNING ONLY POST COPY-EVENTS WHEN RUNNING YOUR LOCAL DATABASE so http :4000/ NOT the heroku deployment*
-Please note that running locally will not provide you with the most recent and accurate data regarding “events”. For this please connect to the API database. See [Connect to API database].
-```bash
-http POST :4000/copy-events
-```
-
 Connect to your database with:
 - Mac: Postico
 - Linux: DBeaver
