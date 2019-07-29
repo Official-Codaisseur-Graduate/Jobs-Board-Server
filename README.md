@@ -38,8 +38,8 @@ https://sleepy-tor-95168.herokuapp.com)
 - Sequelize
 
 ## Access
-Please ask your product owner for admin access to the  Codaisseur’s Huntr account or for a valid token.
-Create a new token if you now have admin access.
+Go to the Official Codaisseur Graduate Github --> Projects --> Jobs Board --> Credentials. Here you will find the most recent token. If this token is not valid anymore, ask your product owner for admin access to the  Codaisseur’s Huntr account and then create a new token.
+If you have no admin access to the Codaisseur Huntr ask your product owner for a valid token.
 Save the token as an “env” variable in your terminal:
 ```bash
 export token=<token>
