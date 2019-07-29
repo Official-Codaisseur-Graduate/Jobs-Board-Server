@@ -62,56 +62,9 @@ router.post('/copy-jobs', (req, res, next) => {
         .catch(err => next(err))
 })
 
-// router.get('/jobs', function (req, res, next) {
-// const page = req.query.page
-// const sortProperty = req.query.sortBy
-// const limit = 30
-// const applicationCount = req.query.applicationCount
-// const offerCount = req.query.offerCount
-// const offset = page * limit
-// const searchName = req.query.search ?
-// { name: { [Op.like]: `%${req.query.search}%` } }
-// :
-// undefined
-// console.log(req)
-// Job
-//     .findAndCountAll({
-//         limit,
-// offset,
-// order: [[sortProperty, 'DESC']],
-// where: searchName ?
-// searchName
-// :
-// sortProperty === "jobOfferAfterApplyingRate" ?
-// {
-//     applicationCount: {
-//         [Op.gte]: applicationCount ?
-//             applicationCount : 0
-//     }
-// }
-// :
-// {
-//     offerCount: {
-//         [Op.gte]: offerCount ?
-//             offerCount : 0
-//     }
-// }
-//         })
-//         .then(jobs => {
-//             const { count } = jobs
-//             // const pages = Math.ceil(count / limit)
-//             res.send({ rows: jobs.rows, pages }).end()
-//         })
-//         .catch(error => next(error))
-// })
-
 router.get('/jobs', function (req, res, next) {
-    console.log('REQUEST :', req.query)
     const page = req.query.page
-    // const sortProperty = req.query.sortBy
     const limit = 30
-    // const applicationCount = req.query.applicationCount
-    // const offerCount = req.query.offerCount
     const offset = page * limit
 
     Job
