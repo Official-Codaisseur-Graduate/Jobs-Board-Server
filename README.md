@@ -9,7 +9,6 @@
 - [API](#API)
 - [Huntr](#Huntr)
 - [De-duplication Algorithm](#De-duplication-Algorithm)
-- [Suggestions](#Suggestions)
 
 ## Jobs Board Server
 This is a node.js server for the Jobs Board real world project - which was 
@@ -94,6 +93,7 @@ If everything went well, you are now able to see a populated companies, jobs, me
 ## API
 
 MODELS:
+
 - Companies -> employers inputted by Codaisseur Graduates in Huntr
 - Jobs -> jobs with inputted by Codiasseur Graduates in Huntr
 - Members -> Codaisseur Graduates
@@ -101,8 +101,10 @@ MODELS:
 - Entries -> (not implemented in routes yet) timeline of Jobs in relation to Members
 
 ENDPOINTS:
+
 \<base url\> is either http://localhost:4000 for local development or https://sleepy-tor-95168.herokuapp.com for the deployed backend.
 </br>
+
 Fetches all the companies/jobs/members/events from the Huntr API and stores them in the database:
 - POST \<base url\>/copy-companies 
 - POST \<base url\>/copy-jobs
@@ -164,7 +166,8 @@ The values of the different fields to do with “date” are not accurate coming
 Please see the Huntr API documentation [here](https://docs.huntr.co/#webhooks) for more information.
 
 
-## [De-duplication algorithm](./Huntr/companies/removeDuplicates.js)
+## De-duplication algorithm
+[Companies](./Huntr/companies/removeDuplicates.js)
 This module de-duplicates the companies you get by calling the Huntr API at the /employers endpoint. 
 - The de-duplication algorithm first takes out the companies where no-one from Codaisseur applied. 
 - Then we iterate over the list of companies and compare it to all the companies in the list for each iteration to find duplicates. 
@@ -172,7 +175,9 @@ This module de-duplicates the companies you get by calling the Huntr API at the 
 - Then we use the node package string-similarity to give us a matching score. 
 - If it’s bigger than a set threshold we add the contents of the duplicate company to the company we’re comparing with. Then we remove the duplicate company. 
 - Once we’re done iterating over the whole list of companies we add them to our database table called “companies’. 
-- We’re also keeping track of the thrown away duplicates and store which company in the “companies” table they’re related to. This might be nice if you want to use other endpoints of the Huntr API and need the information of the thrown away duplicates. 
+- We’re also keeping track of the thrown away duplicates and store which company in the “companies” table they’re related to. This might be nice if you want to use other endpoints of the Huntr API and need the information of the thrown away duplicates.
+
+[Jobs](./Huntr/jobs/removeDuplicate.js)
 
 
 
