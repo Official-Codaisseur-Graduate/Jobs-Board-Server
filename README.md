@@ -15,7 +15,7 @@
 This is a node.js server for the Jobs Board real world project - which was 
 created and worked on during weeks 9-10 of the Codaisseur Academy.
 The contributors are:
-< /br>
+</br>
 Class #26 members:
 - [Tiago Barros](https://github.com/limadebarros),
 - [Cathal Hastings](https://github.com/hastinc),
@@ -102,41 +102,35 @@ MODELS:
 
 ROUTES:
 \<base url\> is either http://localhost:4000 for local development or https://sleepy-tor-95168.herokuapp.com for the deployed backend.
-
+</br>
+Fetches all the companies/jobs/members/events from the Huntr API and stores them in the database.
 - POST \<base url\>/copy-companies 
 - POST \<base url\>/copy-jobs
 - POST \<base url\>/copy-members
 - POST \<base url\>/copy-events
 </br>
-  Fetches all the companies/jobs/members/events from the Huntr API and stores them in the database.
-
+Fetches 12 companies from the database. Query parameters are page, sortBy and search.
 - GET \<base url\>/companies
 </br>
-  Fetches 12 companies from the database. Query parameters are page, sortBy and search.
-  
+Fetches a company with a specified id from the database.
 - GET \<base url\>/companies/:id
 </br>
-  Fetches a company with a specified id from the database.
-
+Fetches all companies from the Huntr API without pagination
 - GET \<base url>/allcompanies
 </br>
-  Fetches all companies from the Huntr API without pagination
-
+Fetches jobs with the Indeed scraper. Query parameters are query (i.e. description) and city.
 - GET \<base url\>/jobs
 </br>
-  Fetches jobs with the Indeed scraper. Query parameters are query (i.e. description) and city.
-
+Webhook endpoint. Receives post requests from the Huntr API every time a new “event” has occurred. See [Huntr](#Huntr) for        more information.
 - POST \<base url>/events
 </br>
-  Webhook endpoint. Receives post requests from the Huntr API every time a new “event” has occurred. See [Huntr](#Huntr) for        more information.
 
+Fetches all events from the Huntr API
 - GET \<base url>/events
 </br>
-  Fetches all events from the Huntr API
-
+Fetches all active members from the Huntr API
 - GET \<base url>/members/active
 </br>
-  Fetches all active members from the Huntr API
 
 ## Huntr
 - Token:
