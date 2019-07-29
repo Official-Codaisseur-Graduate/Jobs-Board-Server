@@ -94,10 +94,10 @@ If everything went well, you are now able to see a populated companies, jobs, me
 
 MODELS:
 
-- Companies -> employers inputted by Codaisseur Graduates in Huntr
-- Jobs -> jobs with inputted by Codiasseur Graduates in Huntr
+- Companies -> employers inputted in Huntr by Codaisseur Graduates
+- Jobs -> jobs inputted in Huntr by Codiasseur Graduates
 - Members -> Codaisseur Graduates
-- Events -> Actions done by Codaisseur Graduates
+- Events -> Actions performed by Codaisseur Graduates
 - Entries -> (not implemented in routes yet) timeline of Jobs in relation to Members
 
 ENDPOINTS:
