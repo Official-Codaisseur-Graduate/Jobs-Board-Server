@@ -135,13 +135,15 @@ Fetches all active members from the Huntr API:
 ## Huntr
 - Token:
 
-To create a valid token :
+To create a valid token (if you have admin access to Huntr) :
 Admin —> developers —> Access Tokens —> Add Token
 
 - Webhook:
 
 Current endpoint: https://sleepy-tor-95168.herokuapp.com/events
+
 Please note that if you wish to add a new endpoint or edit the name of the URL of the deployed API, it might take some time (ie. 24 hours) before Huntr will recognise it as a valid endpoint.
+
 To create a new webhook endpoint:
 Admin —> developers —> Webhooks —> Add Endpoint
 Also note that a webhook is always a POST endpoint and always send back a HTTP status code of 200 as a response.
