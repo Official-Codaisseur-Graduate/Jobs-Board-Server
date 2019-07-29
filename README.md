@@ -86,7 +86,7 @@ Connect to your database with:
 - Linux: DBeaver
 
 Connect to API database:
-- Please ask your product owner for the database credentials in order to access the API database. 
+- Go to the Official Codaisseur Graduate Github --> Projects --> Jobs Board --> Credentials. Here you will find the credentials needed to access the API database.
 
 If everything went well, you are now able to see a populated companies, jobs, members, events and duplicates table in your database.
 
