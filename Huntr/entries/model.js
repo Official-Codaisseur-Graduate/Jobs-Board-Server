@@ -1,9 +1,6 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
 
-const Member = require('../members/model')
-const Job = require('../jobs/model')
-
 const Entry = sequelize.define(
     'entries',
     {
@@ -48,8 +45,5 @@ const Entry = sequelize.define(
         tableName: 'entries'
     }
 )
-
-// Entry.belongsTo(Job)
-// Entry.belongsTo(Member)
 
 module.exports = Entry

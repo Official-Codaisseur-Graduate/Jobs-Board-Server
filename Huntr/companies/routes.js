@@ -6,9 +6,11 @@ const Op = Sequelize.Op
 const Company = require('./model')
 const Duplicate = require('../duplicates/model')
 const { removeDuplicateCompanies } = require('./removeDuplicates')
+const { baseURL } = require('../constants')
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
-axios.defaults.baseURL = 'https://api.huntr.co/org'
+
+const token = process.env.token //|| "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTgyMmRjYWM2MjIxMDAwZWM3NjQ3ZSIsImp0aSI6ImQ1NWNkMzgyLTYyYWItNGQzOC04NmE5LThmMDUzNjU0NmZiOSIsImlhdCI6MTU2Mzk5NTQ0MH0.Tsp_8VXXrihtqIkMPdID6nui8JEE2rG_4CysRR4B93A"
+axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-companies', function (req, res, next) {
@@ -42,33 +44,39 @@ router.get('/companies', function (req, res, next) {
   const offerCount = req.query.offerCount
   const exactOfferCount = req.query.exactOfferCount
   const offset = page * limit
-  const searchName =  req.query.search ? 
-                        {name: { [Op.like]: `%${req.query.search}%` }}
-                        : 
-                        undefined
+  const searchName = req.query.search ?
+    { name: { [Op.like]: `%${req.query.search}%` } }
+    :
+    undefined
   Company
     .findAndCountAll({
       limit, offset,
-      order: [[sortProperty,'DESC']],
-      where:  searchName ? 
-                searchName 
-                : 
-                exactOfferCount ? 
-                  {offerCount: {[Op.eq]: exactOfferCount}} 
-                  :
-                  sortProperty==="jobOfferAfterApplyingRate" ?
-                    {applicationCount: {[Op.gte]:applicationCount ?
-                                                  applicationCount:0
-                    }}
-                    :
-                    {offerCount: {[Op.gte]: offerCount?
-                                              offerCount:0
-                    }} 
+      order: [[sortProperty, 'DESC']],
+      where: searchName ?
+        searchName
+        :
+        exactOfferCount ?
+          { offerCount: { [Op.eq]: exactOfferCount } }
+          :
+          sortProperty === "jobOfferAfterApplyingRate" ?
+            {
+              applicationCount: {
+                [Op.gte]: applicationCount ?
+                  applicationCount : 0
+              }
+            }
+            :
+            {
+              offerCount: {
+                [Op.gte]: offerCount ?
+                  offerCount : 0
+              }
+            }
     })
     .then(companies => {
-        const { count } = companies
-        const pages = Math.ceil(count / limit)
-        res.send({ rows: companies.rows, pages }).end()
+      const { count } = companies
+      const pages = Math.ceil(count / limit)
+      res.send({ rows: companies.rows, pages }).end()
     })
     .catch(error => next(error))
 })
