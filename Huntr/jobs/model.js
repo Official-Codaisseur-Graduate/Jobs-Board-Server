@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
+const Company = require('../companies/model')
 
 const Job = sequelize.define('jobs',
     {

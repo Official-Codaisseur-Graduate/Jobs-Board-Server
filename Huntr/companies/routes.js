@@ -7,8 +7,6 @@ const { baseURL } = require('../constants')
 const Company = require('./model')
 const Duplicate = require('../duplicates/model')
 const { removeDuplicateCompanies } = require('./removeDuplicates')
-const { baseURL } = require('../constants')
-
 
 const token = process.env.token
 axios.defaults.baseURL = baseURL
