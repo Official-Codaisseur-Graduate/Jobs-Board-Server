@@ -2,7 +2,6 @@ const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
-const Op = Sequelize.Op
 const { baseURL } = require('../constants')
 
 const Event = require('./model');
@@ -54,15 +53,10 @@ router.post('/events', (req, res, next) => {
         status: eventData.toList.name,
     }
 
-    // memberCheck(eventData)
-    // jobCheck(eventData)
-    // companyCheck(eventData)
-    // sortData(eventData)
-
     Event
         .create(event)
         .then(event => {
-            //always send back http code 200 to webhook!!
+            //ATTENTION! ALWAYS SEND BACK HTTP STATUS CODE 200 TO A WEBHOOK
             res
                 .status(200)
         })

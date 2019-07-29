@@ -7,9 +7,12 @@ const { baseURL } = require('../constants')
 const Company = require('./model')
 const Duplicate = require('../duplicates/model')
 const { removeDuplicateCompanies } = require('./removeDuplicates')
+const { baseURL } = require('../constants')
 
+
+const token = process.env.token
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-companies', function (req, res, next) {
   axios.get(`${baseURL}/employers?limit=10000`)
@@ -42,33 +45,39 @@ router.get('/companies', function (req, res, next) {
   const offerCount = req.query.offerCount
   const exactOfferCount = req.query.exactOfferCount
   const offset = page * limit
-  const searchName =  req.query.search ? 
-                        {name: { [Op.like]: `%${req.query.search}%` }}
-                        : 
-                        undefined
+  const searchName = req.query.search ?
+    { name: { [Op.like]: `%${req.query.search}%` } }
+    :
+    undefined
   Company
     .findAndCountAll({
       limit, offset,
-      order: [[sortProperty,'DESC']],
-      where:  searchName ? 
-                searchName 
-                : 
-                exactOfferCount ? 
-                  {offerCount: {[Op.eq]: exactOfferCount}} 
-                  :
-                  sortProperty==="jobOfferAfterApplyingRate" ?
-                    {applicationCount: {[Op.gte]:applicationCount ?
-                                                  applicationCount:0
-                    }}
-                    :
-                    {offerCount: {[Op.gte]: offerCount?
-                                              offerCount:0
-                    }} 
+      order: [[sortProperty, 'DESC']],
+      where: searchName ?
+        searchName
+        :
+        exactOfferCount ?
+          { offerCount: { [Op.eq]: exactOfferCount } }
+          :
+          sortProperty === "jobOfferAfterApplyingRate" ?
+            {
+              applicationCount: {
+                [Op.gte]: applicationCount ?
+                  applicationCount : 0
+              }
+            }
+            :
+            {
+              offerCount: {
+                [Op.gte]: offerCount ?
+                  offerCount : 0
+              }
+            }
     })
     .then(companies => {
-        const { count } = companies
-        const pages = Math.ceil(count / limit)
-        res.send({ rows: companies.rows, pages }).end()
+      const { count } = companies
+      const pages = Math.ceil(count / limit)
+      res.send({ rows: companies.rows, pages }).end()
     })
     .catch(error => next(error))
 })

@@ -1,7 +1,5 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../../db')
-const Company = require('../companies/model')
-const Member = require('../members/model');
 
 const Job = sequelize.define('jobs',
     {
@@ -26,9 +24,7 @@ const Job = sequelize.define('jobs',
     }
 )
 
-
 Job.belongsTo(Company)
 Company.hasMany(Job)
-Job.hasMany(Member)
 
 module.exports = Job

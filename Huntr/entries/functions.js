@@ -1,8 +1,17 @@
+//NOTES
+//this file is a work in progess
+//purpose: sort the data coming in through the webhook endpoint
+//check if company exists in Jobs-Board database --> if not: create
+//check if columns (e.g.applicationCount) in table 'comapnies' needs to be updated --> if yes: update
+//check if job exists in Jobs-Board databse --> if not: create
+//check if memeber exists in Jobs-Board databse --> if not: create
+
 const Entry = require('../entries/model');
 const Job = require('../jobs/model');
 const Company = require('../companies/model');
 
 const companyCheck = (eventData) => {
+    const employer = eventData.employer
     Company
         .findOne({
             where: {
@@ -13,13 +22,13 @@ const companyCheck = (eventData) => {
             if (!company) {
                 Company
                     .create({
-                        id: eventData.employer.id,
-                        name: eventData.employer.name,
-                        interviewCount: eventData.employer.interviewCount,
-                        jobCount: eventData.employer.jobCount,
-                        offerCount: eventData.employer.offerCount,
-                        domain: eventData.employer.domain,
-                        description: eventData.employer.description
+                        id: employer.id,
+                        name: employer.name,
+                        interviewCount: employer.interviewCount,
+                        jobCount: employer.jobCount,
+                        offerCount: employer.offerCount,
+                        domain: employer.domain,
+                        description: employer.description
                     })
                     .then(company => {
 
@@ -131,8 +140,7 @@ const jobAdded = (eventData) => {
     }
 }
 
-///!!if an entry is moved huntr send 2 events // a JOB_MOVED and JOB_**_DATE_SET
-//so only edit rejection and wishlist in jobMoved
+///!!if an entry is moved huntr sends 2 events // a JOB_MOVED and JOB_**_DATE_SET
 const jobMoved = (eventData) => {
     const status = eventData.toList.name
     const memberId = eventData.member.id
@@ -273,14 +281,12 @@ const jobMoved = (eventData) => {
 
 }
 
-//check if entry exdist if not make --> because 2 events being sent
 const jobStatusDateSet = (eventData) => {
     const memberId = eventData.member.id
     const jobId = eventData.job.id
     const date = new Date()
     const eventType = eventData.eventType
 
-    //check if exists if not create
     switch (eventType) {
         case "JOB_APPLICATION_DATE_SET":
             Entry
