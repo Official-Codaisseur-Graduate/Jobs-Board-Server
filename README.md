@@ -37,28 +37,6 @@ https://sleepy-tor-95168.herokuapp.com)
 - Express
 - Sequelize
 
-## Access
-Go to the Official Codaisseur Graduate Github --> Projects --> Jobs Board --> Credentials. Here you will find the most recent token. If this token is not valid anymore, ask your product owner for admin access to the  Codaisseur’s Huntr account and then create a new token.
-If you have no admin access to the Codaisseur Huntr ask your product owner for a valid token.
-
-To implement the token:
-- install module "dotenv"
-- create a .env file in the root directory (/Jobs-Board-Server)
-- the .env file should copy the .env.default values with the valid token
-- insert the token manually into the .env file
-
-Your files should look like this:
-
-./.env
-```bash
-API_TOKEN=<token>
-```
-
-./.env.default
-```bash
-API_TOKEN=
-```
-
 ## Setup
 Please note that in order to run the server locally you must also start a Postgres container
 using the following commands
@@ -71,7 +49,7 @@ $ docker run \
 ```
 - git clone
 - npm install
-- npm run start
+- npm run dev
 
 Make sure you have HTTPie installed by checking 'http --version' in the terminal, if not install it.
 - Mac: brew install httpie
@@ -100,6 +78,28 @@ Connect to API database:
 - Go to the Official Codaisseur Graduate Github --> Projects --> Jobs Board --> Credentials. Here you will find the credentials needed to access the API database.
 
 If everything went well, you are now able to see a populated companies, jobs, members, events and duplicates table in your database.
+
+## Access
+Go to the Official Codaisseur Graduate Github --> Projects --> Jobs Board --> Credentials. Here you will find the most recent token. If this token is not valid anymore, ask your product owner for admin access to the  Codaisseur’s Huntr account and then create a new token.
+If you have no admin access to the Codaisseur Huntr ask your product owner for a valid token.
+
+To implement the token:
+- install module "dotenv"
+- create a .env file in the root directory (/Jobs-Board-Server)
+- the .env file should copy the .env.default values with the valid token
+- insert the token manually into the .env file
+
+Your files should look like this:
+
+./.env
+```bash
+API_TOKEN=<token>
+```
+
+./.env.default
+```bash
+API_TOKEN=
+```
 
 ## API
 
