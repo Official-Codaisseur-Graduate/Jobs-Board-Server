@@ -10,6 +10,7 @@ const token = process.env.token
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
+//*WARNING ONLY POST COPY-EVENTS WHEN RUNNING YOUR LOCAL DATABASE so http :4000/ NOT the heroku deployment*
 router.post('/copy-events', (req, res, next) => {
     axios
         .get(`${baseURL}/events?limit=10000`)
