@@ -15,13 +15,14 @@
 This is a node.js server for the Jobs Board real world project - which was 
 created and worked on during weeks 9-10 of the Codaisseur Academy.
 The contributors are:
-- Class #26 members:
+< /br>
+Class #26 members:
 - [Tiago Barros](https://github.com/limadebarros),
 - [Cathal Hastings](https://github.com/hastinc),
 - [Hager Hussein](https://github.com/hagerhussein), 
 - [Dave Mollen](https://github.com/davemollen)
-
-- Class #27 members:
+< /br>
+Class #27 members:
 - [Jetske van der Wouden](https://github.com/JetskevdWouden),
 - [Tatiany Costa](https://github.com/TatyCris),
 - [Alina Beglarian](https://github.com/alinabeglarian),
@@ -105,36 +106,46 @@ ROUTES:
 - POST \<base url\>/copy-companies 
 - POST \<base url\>/copy-jobs
 - POST \<base url\>/copy-members
-- POST \<base url\>/copy-events 
+- POST \<base url\>/copy-events
+</br>
   Fetches all the companies/jobs/members/events from the Huntr API and stores them in the database.
 
 - GET \<base url\>/companies
+</br>
   Fetches 12 companies from the database. Query parameters are page, sortBy and search.
-
+  
 - GET \<base url\>/companies/:id
+</br>
   Fetches a company with a specified id from the database.
 
 - GET \<base url>/allcompanies
+</br>
   Fetches all companies from the Huntr API without pagination
 
 - GET \<base url\>/jobs
+</br>
   Fetches jobs with the Indeed scraper. Query parameters are query (i.e. description) and city.
 
 - POST \<base url>/events
+</br>
   Webhook endpoint. Receives post requests from the Huntr API every time a new “event” has occurred. See [Huntr](#Huntr) for        more information.
 
 - GET \<base url>/events
+</br>
   Fetches all events from the Huntr API
 
 - GET \<base url>/members/active
+</br>
   Fetches all active members from the Huntr API
 
 ## Huntr
 - Token:
+</br>
 To create a valid token :
 Admin —> developers —> Access Tokens —> Add Token
 
 - Webhook:
+</br>
 Current endpoint: https://sleepy-tor-95168.herokuapp.com/events
 Please note that if you wish to add a new endpoint or edit the name of the URL of the deployed API, it might take some time (ie. 24 hours) before Huntr will recognise it as a valid endpoint.
 To create a new webhook endpoint:
@@ -142,10 +153,12 @@ Admin —> developers —> Webhooks —> Add Endpoint
 Also note that a webhook is always a POST endpoint and always response with a HTTP status code of 200.
 
 - Events:
+</br>
 The Huntr API sends 2 types of events through to the webhook endpoint. These are identified by the “eventType” field: “JOB_ADDED” or “JOB_MOVED”.
 There are more event types however through testing we have noticed that Huntr only sends the 2 above mentioned even types.
 
 - Testing:
+</br>
 How to test incoming events:
 Admin —> Boards —> Create Boards
 Invite yourself or your colleague to the board and set the “advisor” to yourself.
@@ -153,6 +166,7 @@ Test by inputting: “adding jobs”, “moving jobs” and setting dates.
 Expected result: Event entities created in the API database matching your input.
 
 - Notes:
+</br>
 The values of the different fields to do with “date” are not accurate coming from Huntr. 
 
 Please see the Huntr API documentation [here](https://docs.huntr.co/#webhooks) for more information.
