@@ -21,7 +21,7 @@ Class #26 members:
 - [Cathal Hastings](https://github.com/hastinc),
 - [Hager Hussein](https://github.com/hagerhussein), 
 - [Dave Mollen](https://github.com/davemollen)
-< /br>
+
 Class #27 members:
 - [Jetske van der Wouden](https://github.com/JetskevdWouden),
 - [Tatiany Costa](https://github.com/TatyCris),
@@ -94,13 +94,13 @@ If everything went well, you are now able to see a populated companies, jobs, me
 ## API
 
 MODELS:
-- Companies
-- Jobs
-- Members
-- Events
-- Entries
+- Companies -> employers inputted by Codaisseur Graduates in Huntr
+- Jobs -> jobs with inputted by Codiasseur Graduates in Huntr
+- Members -> Codaisseur Graduates
+- Events -> Actions done by Codaisseur Graduates
+- Entries -> (not implemented in routes yet) timeline of Jobs in relation to Members
 
-ROUTES:
+ENDPOINTS:
 \<base url\> is either http://localhost:4000 for local development or https://sleepy-tor-95168.herokuapp.com for the deployed backend.
 </br>
 Fetches all the companies/jobs/members/events from the Huntr API and stores them in the database:
@@ -132,12 +132,12 @@ Fetches all active members from the Huntr API:
 
 ## Huntr
 - Token:
-</br>
+
 To create a valid token :
 Admin —> developers —> Access Tokens —> Add Token
 
 - Webhook:
-</br>
+
 Current endpoint: https://sleepy-tor-95168.herokuapp.com/events
 Please note that if you wish to add a new endpoint or edit the name of the URL of the deployed API, it might take some time (ie. 24 hours) before Huntr will recognise it as a valid endpoint.
 To create a new webhook endpoint:
@@ -145,12 +145,12 @@ Admin —> developers —> Webhooks —> Add Endpoint
 Also note that a webhook is always a POST endpoint and always response with a HTTP status code of 200.
 
 - Events:
-</br>
+
 The Huntr API sends 2 types of events through to the webhook endpoint. These are identified by the “eventType” field: “JOB_ADDED” or “JOB_MOVED”.
 There are more event types however through testing we have noticed that Huntr only sends the 2 above mentioned even types.
 
 - Testing:
-</br>
+
 How to test incoming events:
 Admin —> Boards —> Create Boards
 Invite yourself or your colleague to the board and set the “advisor” to yourself.
@@ -158,7 +158,7 @@ Test by inputting: “adding jobs”, “moving jobs” and setting dates.
 Expected result: Event entities created in the API database matching your input.
 
 - Notes:
-</br>
+
 The values of the different fields to do with “date” are not accurate coming from Huntr. 
 
 Please see the Huntr API documentation [here](https://docs.huntr.co/#webhooks) for more information.
@@ -174,9 +174,5 @@ This module de-duplicates the companies you get by calling the Huntr API at the 
 - Once we’re done iterating over the whole list of companies we add them to our database table called “companies’. 
 - We’re also keeping track of the thrown away duplicates and store which company in the “companies” table they’re related to. This might be nice if you want to use other endpoints of the Huntr API and need the information of the thrown away duplicates. 
 
-## Suggestions:
-- Algorithm needs more thorough testing
-- You could expand upon the regular expressions to filter out more exceptions. 
-- The regular expressions get rid of any Cyrillic or Arabic characters, which might be a problem. 
-- You might want to write some exception handling explicitly for the cases where the algorithm fails
-- When the algorithm finds a match and removes it from the list, it isn’t up for comparison anymore in the next iteration. However, it is possible to include the duplicates for comparison. The removed company names are accessible in the duplicates property of each company. So it might give you better results to include these names for the comparison too. Not sure if it will improve significantly though…. 
+
+
