@@ -9,13 +9,25 @@
 - [De-duplication Algorithm](#De-duplication-Algorithm)
 
 ## Jobs Board Server
-This is our node.js server for our Jobs board real world project which was 
-created during weeks 9-10 of Codaisseur by class #26 members [Tiago Barros](https://github.com/limadebarros),
-[Cathal Hastings](https://github.com/hastinc), [Hager Hussein](https://github.com/hagerhussein), 
-and [Dave Mollen](https://github.com/davemollen). The Front-end for the following repo may be found [here](https://github.com/hastinc/Jobs-Board-Client)
+This is a node.js server for the Jobs Board real world project - which was 
+created and worked on during weeks 9-10 of the Codaisseur Academy.
+The contributors are:
+Class #26 members:
+[Tiago Barros](https://github.com/limadebarros),
+[Cathal Hastings](https://github.com/hastinc),
+[Hager Hussein](https://github.com/hagerhussein), 
+[Dave Mollen](https://github.com/davemollen)
+
+Class #27 members:
+[Jetske van der Wouden](https://github.com/JetskevdWouden),
+[Tatiany Costa](https://github.com/TatyCris),
+[Alina Beglarian](https://github.com/alinabeglarian),
+[Marlon Palpa](https://github.com/malanchito)
+
+The Front-end for the following repo may be found [here](https://github.com/Official-Codaisseur-Graduate/Jobs-Board-Client)
 
 The Backend is deployed to heroku [here](
-https://glacial-thicket-13029.herokuapp.com/)
+https://sleepy-tor-95168.herokuapp.com)
 
 ## Technologies used
 - PostgreSQL
