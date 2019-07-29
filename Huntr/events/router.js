@@ -1,15 +1,14 @@
-//NOTES --> EVENTS = events taht are coming in through the webhook
-
 const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')
+const Sequelize = require('sequelize')
 const { baseURL } = require('../constants')
+
 const Event = require('./model');
 
-const { sortData, memberCheck, jobCheck, companyCheck } = require('../entries/functions') //correct way of import & export?
-
+const token = process.env.token
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-events', (req, res, next) => {
     axios
@@ -22,7 +21,8 @@ router.post('/copy-events', (req, res, next) => {
                     id: entity.id,
                     eventType: entity.eventType,
                     jobId: entity.job.id,
-                    memberId: entity.member.id
+                    memberId: entity.member.id,
+                    status: entity.toList.name
                 }
                 return (
                     Event
@@ -45,29 +45,21 @@ router.post('/events', (req, res, next) => {
     const member = eventData.member
     const job = eventData.job
 
-    // memberCheck(eventData)
-    // jobCheck(eventData)
-    // companyCheck(eventData)
-    // sortData(eventData) //-->here?
+    const event = {
+        id: eventData.id,
+        jobId: job.id,
+        memberId: member.id,
+        eventType: eventData.eventType,
+        status: eventData.toList.name,
+    }
 
-    //doesn't go on to make an event
     Event
-        .create({
-            id: eventData.id,
-            eventType: eventData.eventType,
-            jobId: job.id,
-            memberId: member.id
-        })
+        .create(event)
         .then(event => {
-            //sortData(eventData) --> here?
-            //always send back http code 200 to webhook!!
+            //ATTENTION! ALWAYS SEND BACK HTTP STATUS CODE 200 TO A WEBHOOK
             res
                 .status(200)
-                .next()
         })
-        // sortData(eventData) //--> here?
-        .then(sortData(eventData))
-        .end()
         .catch(error => next(error))
 })
 
@@ -85,80 +77,4 @@ router.get('/events', (req, res, next) => {
         .catch(error => next(error))
 })
 
-
 module.exports = router
-
-// NOTES
-
-// Member
-// .findOne({
-//     where: {
-//         id: eventData.member.id
-//     }
-// })
-// .then(entity => {
-//     if(!entity) {
-//         Member
-//             .create({
-//                 id: member.id,
-//                 givenName: member.givenName,
-//                 familyName: member.familyName,
-//                 email: member.email,
-//                 // createdAt: member.createdAt
-//             })
-//             .then(newMember => {
-
-//             })
-//             .catch(error => next(error))
-//             .next()
-//     }
-// })
-// .catch(error => next(error))
-
-// Job
-//         .findOne({
-//             where: {
-//                 id: job.id
-//             }
-//         })
-//         .then(entity => {
-//             if(!entity) {
-//                 Job
-//                     .create({
-//                         id: job.id,
-//                         title: job.title,
-//                         employer: job.employer.name,
-//                         url: job.url
-//                     })
-//                     .catch(error => next(error))
-//                     .next()
-//             }
-//         })
-//         .catch(error => next(error))
-
-// Company
-// .findOne({
-//     where: {
-//         id: eventData.employer.id
-//     }
-// })
-// .then(company => {
-//     if(!company) {
-//         Company
-//             .create({
-//                 id: eventData.employer.id,
-//                 name: eventData.employer.name,
-//                 interviewCount: eventData.employer.interviewCount,
-//                 jobCount: eventData.employer.jobCount,
-//                 offerCount: eventData.employer.offerCount,
-//                 domain: eventData.employer.domain,
-//                 description: eventData.employer.description
-//             })
-//             .then(company => {
-
-//             })
-//             .catch(error => next(error))
-//             .next()
-//     }
-// })
-// .catch(error => next(error))

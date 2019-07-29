@@ -8,8 +8,9 @@ const Company = require('./model')
 const Duplicate = require('../duplicates/model')
 const { removeDuplicateCompanies } = require('./removeDuplicates')
 
+const token = process.env.token
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-companies', function (req, res, next) {
   axios.get(`${baseURL}/employers?limit=10000`)

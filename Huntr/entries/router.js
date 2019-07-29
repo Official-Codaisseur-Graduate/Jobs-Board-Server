@@ -1,13 +1,14 @@
-//NOTES --> ENTRY = the status of a "jo" in regards to a member 
-
 const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')
+const Sequelize = require('sequelize')
 const { baseURL } = require('../constants')
+
 const Entry = require('./model');
 
+const token = process.env.token
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 //all records of all jobs of all members
 router.get('/entries', (req, res, next) => {
@@ -24,6 +25,4 @@ router.get('/entries', (req, res, next) => {
         .catch(error => next(error))
 })
 
-
-
- module.exports = router
+module.exports = router

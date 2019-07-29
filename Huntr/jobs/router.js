@@ -10,8 +10,9 @@ const Duplicate = require('../duplicates/model')
 
 const router = new Router()
 
+const token = process.env.token
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post('/copy-jobs', (req, res, next) => {
     axios
