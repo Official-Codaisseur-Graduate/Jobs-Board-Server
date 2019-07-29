@@ -38,14 +38,25 @@ https://sleepy-tor-95168.herokuapp.com)
 - Sequelize
 
 ## Access
-Please ask your product owner for admin access to the  Codaisseur’s Huntr account or for a valid token.
-Create a new token if you now have admin access.
-Save the token as an “env” variable in your terminal:
+Go to the Official Codaisseur Graduate Github --> Projects --> Jobs Board --> Credentials. Here you will find the most recent token. If this token is not valid anymore, ask your product owner for admin access to the  Codaisseur’s Huntr account and then create a new token.
+If you have no admin access to the Codaisseur Huntr ask your product owner for a valid token.
+
+To implement the token:
+- install module "dotenv"
+- create a .env file in the root directory (/Jobs-Board-Server)
+- the .env file should copy the .env.default values with the valid token
+- insert the token manually into the .env file
+
+Your files should look like this:
+
+./.env
 ```bash
-export token=<token>
+API_TOKEN=<token>
 ```
+
+./.env.default
 ```bash
-echo $token
+API_TOKEN=
 ```
 
 ## Setup
@@ -86,7 +97,7 @@ Connect to your database with:
 - Linux: DBeaver
 
 Connect to API database:
-- Please ask your product owner for the database credentials in order to access the API database. 
+- Go to the Official Codaisseur Graduate Github --> Projects --> Jobs Board --> Credentials. Here you will find the credentials needed to access the API database.
 
 If everything went well, you are now able to see a populated companies, jobs, members, events and duplicates table in your database.
 
@@ -94,10 +105,10 @@ If everything went well, you are now able to see a populated companies, jobs, me
 
 MODELS:
 
-- Companies -> employers inputted by Codaisseur Graduates in Huntr
-- Jobs -> jobs with inputted by Codiasseur Graduates in Huntr
+- Companies -> employers inputted in Huntr by Codaisseur Graduates
+- Jobs -> jobs inputted in Huntr by Codiasseur Graduates
 - Members -> Codaisseur Graduates
-- Events -> Actions done by Codaisseur Graduates
+- Events -> Actions performed by Codaisseur Graduates
 - Entries -> (not implemented in routes yet) timeline of Jobs in relation to Members
 
 ENDPOINTS:
@@ -135,26 +146,33 @@ Fetches all active members from the Huntr API:
 ## Huntr
 - Token:
 
-To create a valid token :
+To create a valid token (if you have admin access to Huntr):
+
 Admin —> developers —> Access Tokens —> Add Token
 
 - Webhook:
 
 Current endpoint: https://sleepy-tor-95168.herokuapp.com/events
+
 Please note that if you wish to add a new endpoint or edit the name of the URL of the deployed API, it might take some time (ie. 24 hours) before Huntr will recognise it as a valid endpoint.
+
 To create a new webhook endpoint:
 Admin —> developers —> Webhooks —> Add Endpoint
-Also note that a webhook is always a POST endpoint and always response with a HTTP status code of 200.
+
+Also note that a webhook is always a POST endpoint and always send back a HTTP status code of 200 as a response.
 
 - Events:
 
-The Huntr API sends 2 types of events through to the webhook endpoint. These are identified by the “eventType” field: “JOB_ADDED” or “JOB_MOVED”.
+The Huntr API sends 2 types of events through to the webhook endpoint. These are identified by the “eventType” field:
+“JOB_ADDED” or “JOB_MOVED”.
 There are more event types however through testing we have noticed that Huntr only sends the 2 above mentioned even types.
 
 - Testing:
 
 How to test incoming events:
+
 Admin —> Boards —> Create Boards
+
 Invite yourself or your colleague to the board and set the “advisor” to yourself.
 Test by inputting: “adding jobs”, “moving jobs” and setting dates. 
 Expected result: Event entities created in the API database matching your input.
@@ -178,6 +196,10 @@ This module de-duplicates the companies you get by calling the Huntr API at the 
 - We’re also keeping track of the thrown away duplicates and store which company in the “companies” table they’re related to. This might be nice if you want to use other endpoints of the Huntr API and need the information of the thrown away duplicates.
 
 [Jobs](./Huntr/jobs/removeDuplicate.js)
+This module de-duplicates the jobs you get by calling the Huntr API at the /jobs endpoint. 
+- The de-duplication algorithm first takes out the jobs where no-one from Codaisseur applied. 
+- Then we iterate over the list of jobs and compare it to all the jobs in the list for each iteration to find duplicates. 
+- It will remove all duplicated jobs id's and return only the no duplicated ones.
 
 
 

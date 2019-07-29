@@ -10,7 +10,7 @@ const Duplicate = require('../duplicates/model')
 
 const router = new Router()
 
-const token = process.env.token
+const token = process.env.API_TOKEN
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 

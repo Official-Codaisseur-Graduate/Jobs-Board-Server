@@ -6,7 +6,7 @@ const { baseURL } = require('../constants')
 
 const Event = require('./model');
 
-const token = process.env.token
+const token = process.env.API_TOKEN
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
