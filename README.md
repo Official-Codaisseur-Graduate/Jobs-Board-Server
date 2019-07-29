@@ -41,20 +41,21 @@ https://sleepy-tor-95168.herokuapp.com)
 Go to the Official Codaisseur Graduate Github --> Projects --> Jobs Board --> Credentials. Here you will find the most recent token. If this token is not valid anymore, ask your product owner for admin access to the  Codaisseur’s Huntr account and then create a new token.
 If you have no admin access to the Codaisseur Huntr ask your product owner for a valid token.
 
-To implement the token: 
+To implement the token:
+- install module "dotenv"
 - create a .env file in the root directory (/Jobs-Board-Server)
 - the .env file should copy the .env.default values with the valid token
 - insert the token manually into the .env file
 
 Your files should look like this:
-```bash
-.env
 
+./.env
+```bash
 API_TOKEN=<token>
 ```
-```bash
-.env.default
 
+./.env.default
+```bash
 API_TOKEN=
 ```
 
