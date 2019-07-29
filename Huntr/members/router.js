@@ -5,7 +5,7 @@ const { baseURL } = require('../constants')
 const Member = require('./model')
 
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.token}` }
 
 router.post(`/copy-members`, (req, res, next) => {
     axios
@@ -33,6 +33,7 @@ router.post(`/copy-members`, (req, res, next) => {
 })
 
 router.get('/members/active', (req,res, next) => {
+    console.log("TOKEN?!?!", process.env.token)
     Member
         .findAll({
             where: {
