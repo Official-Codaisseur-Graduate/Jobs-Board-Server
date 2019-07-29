@@ -65,6 +65,7 @@ http POST :4000/copy-jobs
 ```bash
 http POST :4000/copy-members
 ```
+*WARNING ONLY POST COPY-EVENTS WHEN RUNNING YOUR LOCAL DATABASE so http :4000/ NOT the heroku deployment*
 Please note that running locally will not provide you with the most recent and accurate data regarding “events”. For this please connect to the API database. See [Connect to API database].
 ```bash
 http POST :4000/copy-events
@@ -120,6 +121,8 @@ Fetches all the companies/jobs/members/events from the Huntr API and stores them
 - POST \<base url\>/copy-companies 
 - POST \<base url\>/copy-jobs
 - POST \<base url\>/copy-members
+
+*WARNING ONLY POST COPY-EVENTS WHEN RUNNING YOUR LOCAL DATABASE so http :4000/ NOT the heroku deployment*
 - POST \<base url\>/copy-events
 
 Fetches 12 companies from the database. Query parameters are page, sortBy and search:
