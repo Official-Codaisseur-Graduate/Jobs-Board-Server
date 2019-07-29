@@ -135,7 +135,8 @@ Fetches all active members from the Huntr API:
 ## Huntr
 - Token:
 
-To create a valid token (if you have admin access to Huntr) :
+To create a valid token (if you have admin access to Huntr):
+
 Admin —> developers —> Access Tokens —> Add Token
 
 - Webhook:
@@ -146,17 +147,21 @@ Please note that if you wish to add a new endpoint or edit the name of the URL o
 
 To create a new webhook endpoint:
 Admin —> developers —> Webhooks —> Add Endpoint
+
 Also note that a webhook is always a POST endpoint and always send back a HTTP status code of 200 as a response.
 
 - Events:
 
-The Huntr API sends 2 types of events through to the webhook endpoint. These are identified by the “eventType” field: “JOB_ADDED” or “JOB_MOVED”.
+The Huntr API sends 2 types of events through to the webhook endpoint. These are identified by the “eventType” field:
+“JOB_ADDED” or “JOB_MOVED”.
 There are more event types however through testing we have noticed that Huntr only sends the 2 above mentioned even types.
 
 - Testing:
 
 How to test incoming events:
+
 Admin —> Boards —> Create Boards
+
 Invite yourself or your colleague to the board and set the “advisor” to yourself.
 Test by inputting: “adding jobs”, “moving jobs” and setting dates. 
 Expected result: Event entities created in the API database matching your input.
