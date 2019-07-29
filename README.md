@@ -15,13 +15,13 @@
 This is a node.js server for the Jobs Board real world project - which was 
 created and worked on during weeks 9-10 of the Codaisseur Academy.
 The contributors are:
-Class #26 members:
+- Class #26 members:
 - [Tiago Barros](https://github.com/limadebarros),
 - [Cathal Hastings](https://github.com/hastinc),
 - [Hager Hussein](https://github.com/hagerhussein), 
 - [Dave Mollen](https://github.com/davemollen)
 
-Class #27 members:
+- Class #27 members:
 - [Jetske van der Wouden](https://github.com/JetskevdWouden),
 - [Tatiany Costa](https://github.com/TatyCris),
 - [Alina Beglarian](https://github.com/alinabeglarian),
