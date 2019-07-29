@@ -114,7 +114,6 @@ router.get('/jobs', function (req, res, next) {
     // const offerCount = req.query.offerCount
     const offset = page * limit
 
-
     Job
         .findAll()
         .then(jobs => res.status(200).json(jobs))

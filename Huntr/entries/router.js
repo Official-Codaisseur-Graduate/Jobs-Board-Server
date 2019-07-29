@@ -10,7 +10,6 @@ const token = process.env.token
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
-//all records of all jobs of all members
 router.get('/entries', (req, res, next) => {
     Entry
         .findAll()

@@ -1,10 +1,10 @@
 //NOTES
 //this file is a work in progess
 //purpose: sort the data coming in through the webhook endpoint
-//check if company exists in Jobs-Board database --> if not: create
-//check if columns (e.g.applicationCount) in table 'comapnies' needs to be updated --> if yes: update
-//check if job exists in Jobs-Board databse --> if not: create
-//check if memeber exists in Jobs-Board databse --> if not: create
+    //check if company exists in Jobs-Board database --> if not: create
+    //check if columns (e.g.applicationCount) in table 'comapnies' needs to be updated --> if yes: update
+    //check if job exists in Jobs-Board databse --> if not: create
+    //check if memeber exists in Jobs-Board databse --> if not: create
 
 const Entry = require('../entries/model');
 const Job = require('../jobs/model');

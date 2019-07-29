@@ -4,8 +4,9 @@ const axios = require('axios')
 const { baseURL } = require('../constants')
 const Member = require('./model')
 
+const token = process.env.token
 axios.defaults.baseURL = baseURL
-axios.defaults.headers.common = { 'Authorization': `bearer ${process.env.API_TOKEN}` }
+axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
 router.post(`/copy-members`, (req, res, next) => {
     axios
