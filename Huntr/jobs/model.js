@@ -9,9 +9,9 @@ const Job = sequelize.define('jobs',
             allowNull: false,
             primaryKey: true,
         },
-        // title: {
-        //     type: Sequelize.TEXT,
-        // },
+        title: {
+            type: Sequelize.TEXT,
+        },
         name: {
             type: Sequelize.TEXT,
         },
