@@ -9,7 +9,10 @@ const Job = sequelize.define('jobs',
             allowNull: false,
             primaryKey: true,
         },
-        title: {
+        // title: {
+        //     type: Sequelize.TEXT,
+        // },
+        name: {
             type: Sequelize.TEXT,
         },
         employer: {
