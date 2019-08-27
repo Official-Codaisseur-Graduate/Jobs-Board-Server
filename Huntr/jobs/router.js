@@ -67,6 +67,8 @@ router.get('/jobs', function (req, res, next) {
     const page = req.query.page || 1
     const sortProperty = req.query.sortBy || 'title'
     const searchName = req.query.search ?
+        // ?? `%${req.query.search}%`» 
+        // any number and kind of character befor and after
         { name: { [Op.like]: `%${req.query.search}%` } } : ''
     const limit = 30
     const offset = 8 * limit
