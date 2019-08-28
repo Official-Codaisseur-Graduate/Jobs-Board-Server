@@ -5,7 +5,8 @@ const Op = Sequelize.Op
 const { baseURL } = require('../constants')
 const Job = require('./model')
 const { removeDuplicate } = require('./removeDuplicate')
-const Company = require('../jobs/model')
+// const Company = require('../jobs/model')
+const Company = require('../companies/model')
 const Duplicate = require('../duplicates/model')
 
 const router = new Router()
@@ -64,22 +65,27 @@ router.post('/copy-jobs', (req, res, next) => {
 })
 
 router.get('/jobs', function (req, res, next) {
-    console.log('****************searchJobs query, /jobs request.body:', req.body)
+    console.log('****************searchJobs query » /jobs request.query:', req.query)
+    // console.log('****************searchJobs REQ » /jobs request.query:', req)
     const page = req.query.page || 1
     const sortProperty = req.query.sortBy || 'title'
+    // ?? `%${req.query.search}%`» 
+    // any number and kind of character befor and after
+    // 10: const searchName = req.query.search ? { name: { [Op.like]: `%${req.query.search}%` } } : ''
+    // maybe » searchRole and searchCity » check the if the db has name column!!!
     const searchName = req.query.search ? { name: { [Op.like]: `%${req.query.search}%` } } : ''
-        // ?? `%${req.query.search}%`» 
-        // any number and kind of character befor and after
-        
+    const searchRole = req.query.role ? { title: { [Op.like]: `%${req.query.role}%` } } : ''
+    console.log('/jobs searchName:', searchName)    
     const limit = 30
-    const offset = 8 * limit
+    const offset = 6 * limit
 
     Job
         .findAndCountAll({
             limit,
             offset,
             order: [[sortProperty, 'ASC']],
-            where: searchName
+            // where: searchName
+            where: [Op.and] [{searchName}, {searchRole}]
         })
         .then(jobs => {
             const { count } = jobs
