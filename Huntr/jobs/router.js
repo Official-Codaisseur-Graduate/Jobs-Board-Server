@@ -64,12 +64,13 @@ router.post('/copy-jobs', (req, res, next) => {
 })
 
 router.get('/jobs', function (req, res, next) {
+    console.log('****************searchJobs query, /jobs request.body:', req.body)
     const page = req.query.page || 1
     const sortProperty = req.query.sortBy || 'title'
-    const searchName = req.query.search ?
+    const searchName = req.query.search ? { name: { [Op.like]: `%${req.query.search}%` } } : ''
         // ?? `%${req.query.search}%`» 
         // any number and kind of character befor and after
-        { name: { [Op.like]: `%${req.query.search}%` } } : ''
+        
     const limit = 30
     const offset = 8 * limit
 
