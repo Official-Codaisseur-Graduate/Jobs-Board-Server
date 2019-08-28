@@ -12,9 +12,9 @@ const Job = sequelize.define('jobs',
         title: {
             type: Sequelize.TEXT,
         },
-        name: {
-            type: Sequelize.TEXT,
-        },
+        // name: {
+        //     type: Sequelize.TEXT,
+        // },
         employer: {
             type: Sequelize.TEXT,
         },
