@@ -1,14 +1,13 @@
 function removeDuplicate(arr, comp) {
-    const unique = arr
-        .map(e => e[comp])
+    const values = arr.map(e => e[comp])
 
         // store the keys of the unique objects
-        .map((e, i, final) => final.indexOf(e) === i && i)
+    const x = values.map((e, i, final) => final.indexOf(e) === i && i)
 
         // eliminate the dead keys & store unique objects
-        .filter(e => arr[e]).map(e => arr[e]);
+    const y = x.filter(e => arr[e]).map(e => arr[e]);
 
-    return unique;
+    return y;
 }
 
 module.exports = { removeDuplicate }

@@ -5,8 +5,9 @@ const Op = Sequelize.Op
 const { baseURL } = require('../constants')
 const Job = require('./model')
 const { removeDuplicate } = require('./removeDuplicate')
-const Company = require('../jobs/model')
+const Company = require('../companies/model')
 const Duplicate = require('../duplicates/model')
+const Member = require('../members/model')
 
 const router = new Router()
 
@@ -14,53 +15,54 @@ const token = process.env.API_TOKEN
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
-router.post('/copy-jobs', (req, res, next) => {
-    axios
-        .get(`${baseURL}/jobs?limit=10000`)
-        .then(response => {
-            const jobs = response.data.data
-            const noDuplicateJobs = removeDuplicate(jobs, 'id')
+router.post('/copy-jobs', async (req, res, next) => {
+    try {
+        const data = await axios.get(`${baseURL}/jobs?limit=100000`)
+        const jobs = data.data.data
+        const noDuplicateJobs = removeDuplicate(jobs, 'id')
+        const allJobs = noDuplicateJobs.map(async job => {
+            console.log('job.employer.id test:', job.employer.id)
+            const employer = job.employer.id && await Company.findByPk(job.employer.id)
 
-            const allJobs = noDuplicateJobs.map(job => {
-                let jobs = {
-                    id: job.id,
-                    companyId: job.employer.id || null,
-                    title: job.title,
-                    employer: job.employer.name,
-                    url: job.url
-                }
+            if (!employer && job.employer.id) {
+                console.log('employer test:', employer)
+                console.log('job.employer test:', job.employer)
+                await Company.create(job.employer)
+            }
 
-                Company
-                    .findOne({
-                        where: {
-                            name: job.employer.name
-                        }
-                    })
-                    .then(res => {
-                        if (res) {
-                            jobs.companyId = res.id
-                            Job.create(jobs)
-                        } else {
-                            Duplicate
-                                .findOne({
-                                    where: {
-                                        relatedId: job.employer.id
-                                    }
-                                })
-                                .then(res => {
-                                    jobs.companyId = res.companyId
-                                    Job.create(jobs)
-                                })
-                        }
-                    })
-                    .catch(err => next(err))
+            const safeCompanyId = job.employer.id || null
+            if (!safeCompanyId) {
+                console.log('safeCompanyId test:', safeCompanyId)
+            }
+
+            let newJob = {
+                id: job.id,
+                companyId: safeCompanyId,
+                title: job.title,
+                url: job.url,
+                applicationDate: job.applicationDate,
+                firstInterviewDate: job.firstInterviewDate,
+                secondInterviewDate: job.secondInterviewDate,
+                offerDate: job.offerDate,
+                memberId: job.member.id,
+
+            }
+
+            const created = await Job.create(newJob)
+
+            console.log('created test:', created)
+
+            return created
+        })
+        const createdJobs = await Promise.all(allJobs)
+        res.send({
+                length: createdJobs.length
             })
-            return Promise.all(allJobs)
-        })
-        .then(jobs => {
-            res.send({ length: jobs.length }).end()
-        })
-        .catch(err => next(err))
+            .end()
+    } catch (error) {
+        console.log('I am error', error)
+        next(error)
+    }
 })
 
 router.get('/jobs', function (req, res, next) {
@@ -93,5 +95,6 @@ router.get('/jobs/:id', function (req, res, next) {
         .then(job => res.send(job).end())
         .catch(error => next(error))
 })
+
 
 module.exports = router
