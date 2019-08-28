@@ -64,7 +64,7 @@ router.post('/copy-jobs', (req, res, next) => {
         .catch(err => next(err))
 })
 
-// Meena version is working
+// jobs1 endpoint filtering working
 // router.get('/jobs', function (req, res, next) {
 //     console.log('****************searchJobs query » /jobs request.query:', req.query)
 
@@ -94,30 +94,34 @@ router.post('/copy-jobs', (req, res, next) => {
 //         .catch(error => next(error))
 // })
 
-// new endpoint by Meena
+// new endpoint
 router.get('/jobs1', async (req, res, next) => {
     console.log('****************searchJobs query » /jobs request.query:', req.query)
 
     const searchTitle = req.query.role || ''
     const jobs = []
 
-    const page = req.query.page
+    // const page = req.query.page
     // const sortProperty = req.query.sortBy
-    const limit = 12
-    const offset = page * limit
+    // const limit = 12
+    // const offset = page * limit
 
     const AllJobsWithTitle = await Job.findAll({
-        // order: [[sortProperty, 'DESC']],
+        // limit,
+        // offset,
+        // order: [[sortProperty, 'ASC']],
         where: {
             title: { [Op.iLike]: `%${searchTitle}%` }
         }
     })
+
     const searchCity = req.query.city || ''
     const AllCompaniesInCity = await Company.findAll({
         where: {
             location: { [Op.iLike]: `%${searchCity}%` }
         }
     })
+
     AllJobsWithTitle.map(jobWithTitle => {
         return (AllCompaniesInCity.map(companyInCity => {
             if (jobWithTitle.companyId === companyInCity.id) {
@@ -126,12 +130,14 @@ router.get('/jobs1', async (req, res, next) => {
             }
         }))
     })
-    const count = jobs.length
-    const pages = Math.ceil(count/limit)
-    const jobsInPage = jobs.slice (offset, offset + limit) 
+
+    // const count = jobs.length
+    // const pages = Math.ceil(count/limit)
+    // const jobsInPage = jobs.slice (offset, offset + limit) 
 
     console.log('total number of jobs in the city', jobs.length)
-    res.send({ message: 'total jobs in the city', jobsInPage, pages })
+    // res.send({ message: 'total jobs in the city', jobsInPage, pages })
+    res.send({ message: 'total jobs in the city', jobs })
 })
 
 router.get('/jobs/:id', function (req, res, next) {
