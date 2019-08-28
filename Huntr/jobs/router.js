@@ -64,35 +64,74 @@ router.post('/copy-jobs', (req, res, next) => {
         .catch(err => next(err))
 })
 
-router.get('/jobs', function (req, res, next) {
-    console.log('****************searchJobs query » /jobs request.query:', req.query)
-    // console.log('****************searchJobs REQ » /jobs request.query:', req)
-    const page = req.query.page || 1
-    const sortProperty = req.query.sortBy || 'title'
-    // ?? `%${req.query.search}%`» 
-    // any number and kind of character befor and after
-    // 10: const searchName = req.query.search ? { name: { [Op.like]: `%${req.query.search}%` } } : ''
-    // maybe » searchRole and searchCity » check the if the db has name column!!!
-    const searchName = req.query.search ? { name: { [Op.like]: `%${req.query.search}%` } } : ''
-    const searchRole = req.query.role ? { title: { [Op.like]: `%${req.query.role}%` } } : ''
-    console.log('/jobs searchName:', searchName)    
-    const limit = 30
-    const offset = 6 * limit
+// Meena version is working
+// router.get('/jobs', function (req, res, next) {
+//     console.log('****************searchJobs query » /jobs request.query:', req.query)
 
-    Job
-        .findAndCountAll({
-            limit,
-            offset,
-            order: [[sortProperty, 'ASC']],
-            // where: searchName
-            where: [Op.and] [{searchName}, {searchRole}]
-        })
-        .then(jobs => {
-            const { count } = jobs
-            const pages = Math.ceil(count / limit)
-            res.send({ rows: jobs.rows, pages }).end()
-        })
-        .catch(error => next(error))
+//     const page = req.query.page || 1
+//     const sortProperty = req.query.sortBy || 'title'
+//     // ?? `%${req.query.search}%`» 
+//     // any number and kind of character befor and after
+//     const searchName = req.query.search ? { name: { [Op.like]: `%${req.query.search}%` } } : ''
+
+//     console.log('/jobs searchName:', searchName)    
+//     const limit = 30
+//     const offset = 8 * limit
+
+//     Job
+//         .findAndCountAll({
+//             limit,
+//             offset,
+//             order: [[sortProperty, 'ASC']],
+//             where: searchName
+
+//         })
+//         .then(jobs => {
+//             const { count } = jobs
+//             const pages = Math.ceil(count / limit)
+//             res.send({ rows: jobs.rows, pages }).end()
+//         })
+//         .catch(error => next(error))
+// })
+
+// new endpoint by Meena
+router.get('/jobs1', async (req, res, next) => {
+    console.log('****************searchJobs query » /jobs request.query:', req.query)
+
+    const searchTitle = req.query.role || ''
+    const jobs = []
+
+    const page = req.query.page
+    // const sortProperty = req.query.sortBy
+    const limit = 12
+    const offset = page * limit
+
+    const AllJobsWithTitle = await Job.findAll({
+        // order: [[sortProperty, 'DESC']],
+        where: {
+            title: { [Op.iLike]: `%${searchTitle}%` }
+        }
+    })
+    const searchCity = req.query.city || ''
+    const AllCompaniesInCity = await Company.findAll({
+        where: {
+            location: { [Op.iLike]: `%${searchCity}%` }
+        }
+    })
+    AllJobsWithTitle.map(jobWithTitle => {
+        return (AllCompaniesInCity.map(companyInCity => {
+            if (jobWithTitle.companyId === companyInCity.id) {
+                jobs.push(jobWithTitle)
+                return jobWithTitle
+            }
+        }))
+    })
+    const count = jobs.length
+    const pages = Math.ceil(count/limit)
+    const jobsInPage = jobs.slice (offset, offset + limit) 
+
+    console.log('total number of jobs in the city', jobs.length)
+    res.send({ message: 'total jobs in the city', jobsInPage, pages })
 })
 
 router.get('/jobs/:id', function (req, res, next) {
