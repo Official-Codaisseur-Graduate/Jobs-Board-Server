@@ -36,6 +36,7 @@ router.post('/copy-companies', function (req, res, next) {
 })
 
 router.get('/companies', function (req, res, next) {
+  console.log('COMPANIES:', req.query)
   const page = req.query.page
   const sortProperty = req.query.sortBy
   const limit = 12
