@@ -5,7 +5,6 @@ const Op = Sequelize.Op
 const { baseURL } = require('../constants')
 const Job = require('./model')
 const { removeDuplicate } = require('./removeDuplicate')
-// const Company = require('../jobs/model')
 const Company = require('../companies/model')
 const Duplicate = require('../duplicates/model')
 
@@ -64,51 +63,16 @@ router.post('/copy-jobs', (req, res, next) => {
         .catch(err => next(err))
 })
 
-// jobs1 endpoint filtering working
-// router.get('/jobs', function (req, res, next) {
-//     console.log('****************searchJobs query » /jobs request.query:', req.query)
-
-//     const page = req.query.page || 1
-//     const sortProperty = req.query.sortBy || 'title'
-//     // ?? `%${req.query.search}%`» 
-//     // any number and kind of character befor and after
-//     const searchName = req.query.search ? { name: { [Op.like]: `%${req.query.search}%` } } : ''
-
-//     console.log('/jobs searchName:', searchName)    
-//     const limit = 30
-//     const offset = 8 * limit
-
-//     Job
-//         .findAndCountAll({
-//             limit,
-//             offset,
-//             order: [[sortProperty, 'ASC']],
-//             where: searchName
-
-//         })
-//         .then(jobs => {
-//             const { count } = jobs
-//             const pages = Math.ceil(count / limit)
-//             res.send({ rows: jobs.rows, pages }).end()
-//         })
-//         .catch(error => next(error))
-// })
-
-// new endpoint
 router.get('/jobs', async (req, res, next) => {
-
-    const searchTitle = req.query.role || ''
-    const jobs = []
-
     const page = req.query.page
-    const sortProperty = req.query.sortBy
     const limit = 12
     const offset = page * limit
 
+    const jobs = []
+
+    const searchTitle = req.query.role || ''
     const AllJobsWithTitle = await Job.findAll({
-        // limit,
-        // offset,
-        // order: [[sortProperty, 'ASC']],
+        
         where: {
             title: { [Op.iLike]: `%${searchTitle}%` }
         }
@@ -134,11 +98,7 @@ router.get('/jobs', async (req, res, next) => {
     const pages = Math.ceil(count/limit)
     const jobsInPage = jobs.slice (offset, offset + limit) 
 
-    console.log('total number of jobs in the city', jobs.length)
-    console.log('total number of pages:', pages)
-    console.log('********request.query:', req.query)
     res.send({ jobs: jobsInPage, pages })
-    // res.send({ message: 'total jobs in the city', jobs })
 })
 
 router.get('/jobs/:id', function (req, res, next) {

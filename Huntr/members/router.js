@@ -33,7 +33,6 @@ router.post(`/copy-members`, (req, res, next) => {
 })
 
 router.get('/members/active', (req,res, next) => {
-    console.log("TOKEN?!?!", process.env.token)
     Member
         .findAll({
             where: {

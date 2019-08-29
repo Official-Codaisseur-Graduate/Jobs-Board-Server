@@ -16,11 +16,8 @@ router.post('/copy-events', (req, res, next) => {
         .then(response => {
             const data = response.data.data
 
-            // used for testing
-            // let wishlists = 0
-
             const allEvents = data.map(entity => {
-                // new
+                
                 const name = entity.toList
                     ? entity.toList.name
                     : 'Wishlist'
@@ -30,23 +27,12 @@ router.post('/copy-events', (req, res, next) => {
                     eventType: entity.eventType,
                     jobId: entity.job.id,
                     memberId: entity.member.id,
-                    // status: entity.toList.name
                     status: name
                 }
-
-                // used for testing
-                // if (name === "Wishlist") {
-                //     wishlists ++
-                // } else {
-                //     console.log("name is not Wishlist test:", name)
-                //     console.log("event test:", event)
-                // }
 
                 return Event.create(event)
             })
 
-            // used for testing
-            // console.log("wishlists test:", wishlists)
             return Promise.all(allEvents)
         })
         .then(events => {
