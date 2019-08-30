@@ -8,8 +8,10 @@ const { removeDuplicate } = require('./removeDuplicate')
 const Company = require('../companies/model')
 const Duplicate = require('../duplicates/model')
 const Member = require('../members/model')
+const moment = require('moment')
 
 const router = new Router()
+
 
 const token = process.env.API_TOKEN
 axios.defaults.baseURL = baseURL
@@ -35,10 +37,10 @@ router.post('/copy-jobs', async (req, res, next) => {
                 title: job.title,
                 employer: job.employer.name || null,
                 url: job.url,
-                applicationDate: job.applicationDate,
-                firstInterviewDate: job.firstInterviewDate,
-                secondInterviewDate: job.secondInterviewDate,
-                offerDate: job.offerDate,
+                applicationDate: job.applicationDate ? moment.unix(job.applicationDate) : null,
+                firstInterviewDate: job.firstInterviewDate ? moment.unix(job.firstInterviewDate) : null,
+                secondInterviewDate: job.secondInterviewDate ? moment.unix(job.secondInterviewDate) : null,
+                offerDate: job.offerDate ? moment.unix(job.offerDate) : null,
                 memberId: job.member.id,
 
             }
