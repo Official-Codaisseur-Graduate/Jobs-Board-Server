@@ -9,6 +9,9 @@ const Job = sequelize.define('jobs',
             allowNull: false,
             primaryKey: true,
         },
+        name: {
+            type: Sequelize.TEXT,
+        },
         title: {
             type: Sequelize.TEXT,
         },
@@ -17,7 +20,20 @@ const Job = sequelize.define('jobs',
         },
         url: {
             type: Sequelize.TEXT,
-        }
+        },
+        applicationDate: {
+            type: Sequelize.DATE
+        },
+        firstInterviewDate: {
+            type: Sequelize.DATE
+        },
+        secondInterviewDate: {
+            type: Sequelize.DATE,
+        },
+        offerDate: {
+            type: Sequelize.DATE
+        },
+
     },
     {
         tableName: 'jobs',
@@ -25,7 +41,7 @@ const Job = sequelize.define('jobs',
     }
 )
 
-Job.belongsTo(Company)
+Job.belongsTo(Company, {constraints: false})
 Company.hasMany(Job)
 
 module.exports = Job
