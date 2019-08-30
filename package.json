@@ -1,7 +1,7 @@
 {
-  "name": "server",
+  "name": "y",
   "version": "1.0.0",
-  "description": "",
+  "description": "- This repository is a continuation by members of Codaisseur class #27 of the \"Jobs Board\" real world project that was started by members of Codaisseur class #26. The original repo can be found here https://github.com/hastinc/Jobs-Board-Server.",
   "main": "index.js",
   "scripts": {
     "start": "node .",
@@ -21,5 +21,13 @@
     "pg": "^7.11.0",
     "sequelize": "^5.8.12",
     "string-similarity": "^3.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Official-Codaisseur-Graduate/Jobs-Board-Server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Official-Codaisseur-Graduate/Jobs-Board-Server/issues"
+  },
+  "homepage": "https://github.com/Official-Codaisseur-Graduate/Jobs-Board-Server#readme"
 }

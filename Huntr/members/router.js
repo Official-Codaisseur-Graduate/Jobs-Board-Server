@@ -37,8 +37,9 @@ router.post(`/copy-members`, (req, res, next) => {
         .catch(error => next(error))
 })
 
-router.get('/members/active', (req, res, next) => {
-    console.log("TOKEN?!?!", process.env.token)
+
+
+router.get('/members/active', (req,res, next) => {
     Member
         .findAll({
             where: {

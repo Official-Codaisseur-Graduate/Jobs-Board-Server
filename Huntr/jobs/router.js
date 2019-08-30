@@ -55,27 +55,42 @@ router.post('/copy-jobs', async (req, res, next) => {
     }
 })
 
-router.get('/jobs', function (req, res, next) {
-    const page = req.query.page || 1
-    const sortProperty = req.query.sortBy || 'title'
-    const searchName = req.query.search ?
-        { name: { [Op.like]: `%${req.query.search}%` } } : ''
-    const limit = 30
-    const offset = 8 * limit
+router.get('/jobs', async (req, res, next) => {
+    const page = req.query.page
+    const limit = 12
+    const offset = page * limit
 
-    Job
-        .findAndCountAll({
-            limit,
-            offset,
-            order: [[sortProperty, 'ASC']],
-            where: searchName
-        })
-        .then(jobs => {
-            const { count } = jobs
-            const pages = Math.ceil(count / limit)
-            res.send({ rows: jobs.rows, pages }).end()
-        })
-        .catch(error => next(error))
+    const jobs = []
+
+    const searchTitle = req.query.role || ''
+    const AllJobsWithTitle = await Job.findAll({
+        
+        where: {
+            title: { [Op.iLike]: `%${searchTitle}%` }
+        }
+    })
+
+    const searchCity = req.query.city || ''
+    const AllCompaniesInCity = await Company.findAll({
+        where: {
+            location: { [Op.iLike]: `%${searchCity}%` }
+        }
+    })
+
+    AllJobsWithTitle.map(jobWithTitle => {
+        return (AllCompaniesInCity.map(companyInCity => {
+            if (jobWithTitle.companyId === companyInCity.id) {
+                jobs.push(jobWithTitle)
+                return jobWithTitle
+            }
+        }))
+    })
+
+    const count = jobs.length
+    const pages = Math.ceil(count/limit)
+    const jobsInPage = jobs.slice (offset, offset + limit) 
+
+    res.send({ jobs: jobsInPage, pages })
 })
 
 router.get('/jobs/:id', function (req, res, next) {

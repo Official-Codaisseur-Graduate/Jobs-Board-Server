@@ -17,18 +17,22 @@ router.post('/copy-events', (req, res, next) => {
             const data = response.data.data
 
             const allEvents = data.map(entity => {
+                
+                const name = entity.toList
+                    ? entity.toList.name
+                    : 'Wishlist'
+
                 const event = {
                     id: entity.id,
                     eventType: entity.eventType,
                     jobId: entity.job.id,
                     memberId: entity.member.id,
-                    status: entity.toList.name
+                    status: name
                 }
-                return (
-                    Event
-                        .create(event)
-                )
+
+                return Event.create(event)
             })
+
             return Promise.all(allEvents)
         })
         .then(events => {

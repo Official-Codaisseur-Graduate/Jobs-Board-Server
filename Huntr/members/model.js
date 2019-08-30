@@ -8,6 +8,7 @@ const Member = sequelize.define(
         id: {
             type: Sequelize.STRING,
             allowNull: false,
+
             primaryKey: true
         },
         givenName: {
