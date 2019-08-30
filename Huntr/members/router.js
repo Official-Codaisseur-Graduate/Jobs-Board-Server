@@ -36,7 +36,10 @@ router.post(`/copy-members`, (req, res, next) => {
         .catch(error => next(error))
 })
 
-router.get('/members/active', (req, res, next) => {
+
+
+
+router.get('/members/active', (req,res, next) => {
     Member
         .findAll({
             where: {
