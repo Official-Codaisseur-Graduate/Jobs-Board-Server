@@ -21,24 +21,19 @@ router.post('/copy-jobs', async (req, res, next) => {
         const jobs = data.data.data
         const noDuplicateJobs = removeDuplicate(jobs, 'id')
         const allJobs = noDuplicateJobs.map(async job => {
-            console.log('job.employer.id test:', job.employer.id)
             const employer = job.employer.id && await Company.findByPk(job.employer.id)
 
             if (!employer && job.employer.id) {
-                console.log('employer test:', employer)
-                console.log('job.employer test:', job.employer)
-                await Company.create(job.employer)
+                await Company.findOrCreate({where: {id : job.employer.id},defaults: job.employer})
             }
 
             const safeCompanyId = job.employer.id || null
-            if (!safeCompanyId) {
-                console.log('safeCompanyId test:', safeCompanyId)
-            }
 
             let newJob = {
                 id: job.id,
                 companyId: safeCompanyId,
                 title: job.title,
+                employer: job.employer.name || null,
                 url: job.url,
                 applicationDate: job.applicationDate,
                 firstInterviewDate: job.firstInterviewDate,
@@ -47,12 +42,8 @@ router.post('/copy-jobs', async (req, res, next) => {
                 memberId: job.member.id,
 
             }
-
-            const created = await Job.create(newJob)
-
-            console.log('created test:', created)
-
-            return created
+            const jobCreated = await Job.create(newJob)
+            return jobCreated
         })
         const createdJobs = await Promise.all(allJobs)
         res.send({
@@ -60,7 +51,6 @@ router.post('/copy-jobs', async (req, res, next) => {
             })
             .end()
     } catch (error) {
-        console.log('I am error', error)
         next(error)
     }
 })
