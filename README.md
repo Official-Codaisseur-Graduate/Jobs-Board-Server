@@ -115,7 +115,7 @@ MODELS:
 
 ENDPOINTS:
 
-\<base url\> is either http://localhost:4000 for local development or https://sleepy-tor-95168.herokuapp.com for the deployed backend.
+\<base url\> is either http://localhost:4000 for local development or https://frozen-meadow-51398.herokuapp.com for the deployed backend.
 </br>
 
 Fetches all the companies/jobs/members/events from the Huntr API and stores them in the database:
@@ -160,7 +160,7 @@ Admin —> developers —> Access Tokens —> Add Token
 
 - Webhook:
 
-Current endpoint: https://sleepy-tor-95168.herokuapp.com/events
+Current endpoint: https://frozen-meadow-51398.herokuapp.com/events
 
 Please note that if you wish to add a new endpoint or edit the name of the URL of the deployed API, it might take some time (ie. 24 hours) before Huntr will recognise it as a valid endpoint.
 
