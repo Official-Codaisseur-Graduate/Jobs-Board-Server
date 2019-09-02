@@ -17,16 +17,28 @@ const token = process.env.API_TOKEN
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
 
-router.post('/copy-jobs', async (req, res, next) => {
+router.post('/copy-jobs/:id', async (req, res, next) => {
     try {
+        const { id } = req.params
         const data = await axios.get(`${baseURL}/jobs?limit=100000`)
         const jobs = data.data.data
-        const noDuplicateJobs = removeDuplicate(jobs, 'id')
+
+        let noDuplicateJobsFull = removeDuplicate(jobs, 'id')
+        if ((id * 1000) > noDuplicateJobsFull.length) {
+            res.send({
+                length: 0,
+                message: 'No more jobs data available'
+            })
+                .end()
+        }
+        else {
+            noDuplicateJobs = await Promise.all(noDuplicateJobsFull.slice((id - 1) * 1000, id * 1000))
+        }
         const allJobs = noDuplicateJobs.map(async job => {
             const employer = job.employer.id && await Company.findByPk(job.employer.id)
 
             if (!employer && job.employer.id) {
-                await Company.findOrCreate({where: {id : job.employer.id},defaults: job.employer})
+                await Company.findOrCreate({ where: { id: job.employer.id }, defaults: job.employer })
             }
 
             const safeCompanyId = job.employer.id || null
@@ -48,11 +60,15 @@ router.post('/copy-jobs', async (req, res, next) => {
             return jobCreated
         })
         const createdJobs = await Promise.all(allJobs)
+
         res.send({
-                length: createdJobs.length
-            })
+            length: createdJobs.length
+        })
             .end()
-    } catch (error) {
+
+    }
+
+    catch (error) {
         next(error)
     }
 })
@@ -66,7 +82,7 @@ router.get('/jobs', async (req, res, next) => {
 
     const searchTitle = req.query.role || ''
     const AllJobsWithTitle = await Job.findAll({
-        
+
         where: {
             title: { [Op.iLike]: `%${searchTitle}%` }
         }
@@ -89,8 +105,8 @@ router.get('/jobs', async (req, res, next) => {
     })
 
     const count = jobs.length
-    const pages = Math.ceil(count/limit)
-    const jobsInPage = jobs.slice (offset, offset + limit) 
+    const pages = Math.ceil(count / limit)
+    const jobsInPage = jobs.slice(offset, offset + limit)
 
     res.send({ jobs: jobsInPage, pages })
 })
