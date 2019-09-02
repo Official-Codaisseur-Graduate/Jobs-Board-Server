@@ -1,5 +1,5 @@
 # Preface
-- This repository is a continuation by members of Codaisseur class #27 of the "Jobs Board" real world project that was started by members of Codaisseur class #26. The original repo can be found here https://github.com/hastinc/Jobs-Board-Server.
+- This repository is a continuation by members of Codaisseur classes #28 and #27 of the "Jobs Board" real world project that was started by members of Codaisseur class #26. The original repo can be found here https://github.com/hastinc/Jobs-Board-Server.
 
 # Table of contents
 - [Jobs Board Server](#Jobs-Board-Server)
@@ -27,6 +27,12 @@ Class #27 members:
 - [Alina Beglarian](https://github.com/alinabeglarian),
 - [Marlon Palpa](https://github.com/malanchito)
 
+Class #28 members:
+- [Meenakshi Venkat](https://github.com/meena333),
+- [Julia Jankowska](https://github.com/julenia),
+- [Suhas K N](https://github.com/suhaskn),
+- [Gergő Kovács](https://github.com/gergokutu)
+
 The Front-end for the following repo may be found [here](https://github.com/Official-Codaisseur-Graduate/Jobs-Board-Client)
 
 The Backend is deployed to heroku [here](
@@ -41,11 +47,7 @@ https://sleepy-tor-95168.herokuapp.com)
 Please note that in order to run the server locally you must also start a Postgres container
 using the following commands
 ```bash
-$ docker run \
-  --rm \
-  -e POSTGRES_PASSWORD=secret \
-  -p 5432:5432 \
-  postgres
+$ docker run -p 5432:5432 --name job_board  -e POSTGRES_PASSWORD=secret -d postgres
 ```
 - git clone
 - npm install
@@ -55,16 +57,21 @@ Make sure you have HTTPie installed by checking 'http --version' in the terminal
 - Mac: brew install httpie
 - Linux: sudo apt-get install httpie
 
-To get all the data or update the data from the Huntr API into the database, run this HTTP request in the terminal:
+To get all the data or update the data from the Huntr API into the database, run this HTTP request in the terminal (use the order of commands displayed below):
 ```bash
 http POST :4000/copy-companies
 ```
 ```bash
-http POST :4000/copy-jobs
-```
-```bash
 http POST :4000/copy-members
 ```
+```bash
+http POST :4000/copy-jobs
+```
+Note: for the last copy-jobs endpoint you might have to increase the timeout. In case you run into this problem, use (you can modify the amount of seconds for which you want to increase it, but 300s should be a safe solution):
+```bash
+http POST :4000/copy-jobs --timeout=300
+```
+
 Connect to your database with:
 - Mac: Postico
 - Linux: DBeaver
@@ -101,7 +108,7 @@ API_TOKEN=
 MODELS:
 
 - Companies -> employers inputted in Huntr by Codaisseur Graduates
-- Jobs -> jobs inputted in Huntr by Codiasseur Graduates
+- Jobs -> jobs inputted in Huntr by Codaisseur Graduates (not open vacancies, each graduate creates a job when he or she applies for a position => 1 real vacancy can have multiple jobs (couple of Codaisseur Graduates applied to the same position))
 - Members -> Codaisseur Graduates
 - Events -> Actions performed by Codaisseur Graduates
 - Entries -> (not implemented in routes yet) timeline of Jobs in relation to Members
@@ -113,8 +120,11 @@ ENDPOINTS:
 
 Fetches all the companies/jobs/members/events from the Huntr API and stores them in the database:
 - POST \<base url\>/copy-companies 
-- POST \<base url\>/copy-jobs
 - POST \<base url\>/copy-members
+- POST \<base url\>/copy-jobs
+
+Fetches jobs in batches of 1000 from the Huntr API and stores them in the database (used for pushing data to heroku database, to avoid the timeout). Usage: id=1 => jobs 0-999 , id=2 => jobs 1000-1999 etc:
+-POST \<base url\>/copy-jobs/:id
 
 *WARNING ONLY POST COPY-EVENTS WHEN RUNNING YOUR LOCAL DATABASE so http :4000/ NOT the heroku deployment*
 - POST \<base url\>/copy-events
@@ -139,6 +149,7 @@ Fetches all events from the Huntr API:
 
 Fetches all active members from the Huntr API:
 - GET \<base url>/members/active
+
 
 ## Huntr
 - Token:
