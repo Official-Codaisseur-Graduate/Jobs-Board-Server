@@ -119,5 +119,40 @@ router.get('/jobs/:id', function (req, res, next) {
         .catch(error => next(error))
 })
 
+router.post('/copy-jobs', async (req, res, next) => {
+    try {
+        const data = await axios.get(`${baseURL} / jobs ? limit = 100000`)
+        const jobs = data.data.data
+        const noDuplicateJobs = removeDuplicate(jobs, 'id')
+        const allJobs = noDuplicateJobs.map(async job => {
+            const employer = job.employer.id && await Company.findByPk(job.employer.id)
+            if (!employer && job.employer.id) {
+                await Company.findOrCreate({ where: { id: job.employer.id }, defaults: job.employer })
+            }
+            const safeCompanyId = job.employer.id || null
+            let newJob = {
+                id: job.id,
+                companyId: safeCompanyId,
+                title: job.title,
+                employer: job.employer.name || null,
+                url: job.url,
+                applicationDate: job.applicationDate ? moment.unix(job.applicationDate) : null,
+                firstInterviewDate: job.firstInterviewDate ? moment.unix(job.firstInterviewDate) : null,
+                secondInterviewDate: job.secondInterviewDate ? moment.unix(job.secondInterviewDate) : null,
+                offerDate: job.offerDate ? moment.unix(job.offerDate) : null,
+                memberId: job.member.id,
+            }
+            const jobCreated = await Job.create(newJob)
+            return jobCreated
+        })
+        const createdJobs = await Promise.all(allJobs)
+        res.send({
+            length: createdJobs.length
+        })
+            .end()
+    } catch (error) {
+        next(error)
+    }
+})
 
 module.exports = router
