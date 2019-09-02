@@ -24,7 +24,7 @@ router.post('/copy-jobs/:id', async (req, res, next) => {
         const jobs = data.data.data
 
         let noDuplicateJobsFull = removeDuplicate(jobs, 'id')
-        if ((id * 1000) > noDuplicateJobsFull.length) {
+        if (((id - 1) * 1000) > noDuplicateJobsFull.length) {
             res.send({
                 length: 0,
                 message: 'No more jobs data available'
