@@ -72,6 +72,14 @@ Note: for the last copy-jobs endpoint you might have to increase the timeout. In
 http POST :4000/copy-jobs --timeout=300
 ```
 
+Note: The copy-jobs/:id endpoint can be used when you have to create a new database remotely (for e.g. in Heroku). This basically copies all the jobs from the Huntr API into the database in chunks of 1000 records or less instead of copying all at once (which is what the /copy-jobs endpoint above does). This was a way to deal with Heroku's timeout issues. The usage for this would be to use with id = 1,2,3 ..until the response is 'No more jobs data available'.
+```bash
+http POST :4000/copy-jobs/1
+http POST :4000/copy-jobs/2
+http POST :4000/copy-jobs/3
+http POST :4000/copy-jobs/4
+```
+
 Connect to your database with:
 - Mac: Postico
 - Linux: DBeaver
