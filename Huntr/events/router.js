@@ -50,7 +50,47 @@ router.post('/events', (req, res, next) => {
     const member = eventData.member
     const job = eventData.job
     console.log('TESTING WEBHOOK ENDPOINT')
-    const event = {
+    const eventType = eventData.eventType
+
+    switch(eventType){
+
+        case JOB_ADDED:
+            //call function to update
+            break;
+        case JOB_APPLICATION_DATE_SET:
+            //update
+            break;
+        case JOB_FIRST_INTERVIEW_DATE_SET:
+            //update
+            break;
+        case JOB_MOVED:
+            const event ={
+                id: eventData.id,
+                jobId: job.id,
+                memberId: member.id,
+                eventType: eventData.eventType,
+                status: eventData.toList.name,
+            }
+            Event
+            .create(event)
+            .then(event => {
+                //ATTENTION! ALWAYS SEND BACK HTTP STATUS CODE 200 TO A WEBHOOK
+                res
+                    .status(200)
+            })
+            .catch(error => next(error))
+            break;
+        case JOB_OFFER_DATE_SET:
+            //update
+            break;
+        case JOB_SECOND_INTERVIEW_DATE_SET:
+            //update
+            break;
+        default:
+            return
+        
+    }
+  /*  const event = {
         id: eventData.id,
         jobId: job.id,
         memberId: member.id,
@@ -64,7 +104,7 @@ router.post('/events', (req, res, next) => {
             res
                 .status(200)
         })
-        .catch(error => next(error))
+        .catch(error => next(error))*/
 })
 
 router.get('/events', (req, res, next) => {
