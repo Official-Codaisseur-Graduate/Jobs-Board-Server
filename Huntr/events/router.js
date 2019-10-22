@@ -2,7 +2,8 @@ const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')
 const Sequelize = require('sequelize')
-const { baseURL } = require('../constants')
+const { baseURL, JOB_ADDED, JOB_MOVED, JOB_APPLICATION_DATE_SET, JOB_FIRST_INTERVIEW_DATE_SET
+    , JOB_SECOND_INTERVIEW_DATE_SET, JOB_OFFER_DATE_SET } = require('../constants')
 
 const Event = require('./model');
 
@@ -48,7 +49,7 @@ router.post('/events', (req, res, next) => {
     const eventData = req.body
     const member = eventData.member
     const job = eventData.job
-
+    console.log('TESTING WEBHOOK ENDPOINT')
     const event = {
         id: eventData.id,
         jobId: job.id,
@@ -56,7 +57,6 @@ router.post('/events', (req, res, next) => {
         eventType: eventData.eventType,
         status: eventData.toList.name,
     }
-
     Event
         .create(event)
         .then(event => {
@@ -68,6 +68,7 @@ router.post('/events', (req, res, next) => {
 })
 
 router.get('/events', (req, res, next) => {
+    console.log('TESTING GET ENDPOINT')
     Event
         .findAll()
         .then(events => {
