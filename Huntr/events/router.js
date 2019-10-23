@@ -45,66 +45,118 @@ router.post('/copy-events', (req, res, next) => {
 })
 
 //WEBHOOK ENDPOINT
-router.post('/events', (req, res, next) => {
-    const eventData = req.body
-    const member = eventData.member
-    const job = eventData.job
-    console.log('TESTING WEBHOOK ENDPOINT')
-    const eventType = eventData.eventType
+router.post('/events', async (req, res, next) => {
 
-    switch(eventType){
+    try{
 
-        case JOB_ADDED:
-            //call function to update
-            break;
-        case JOB_APPLICATION_DATE_SET:
-            //update
-            break;
-        case JOB_FIRST_INTERVIEW_DATE_SET:
-            //update
-            break;
-        case JOB_MOVED:
-            const event ={
-                id: eventData.id,
-                jobId: job.id,
-                memberId: member.id,
-                eventType: eventData.eventType,
-                status: eventData.toList.name,
-            }
-            Event
-            .create(event)
-            .then(event => {
-                //ATTENTION! ALWAYS SEND BACK HTTP STATUS CODE 200 TO A WEBHOOK
-                res
-                    .status(200)
-            })
-            .catch(error => next(error))
-            break;
-        case JOB_OFFER_DATE_SET:
-            //update
-            break;
-        case JOB_SECOND_INTERVIEW_DATE_SET:
-            //update
-            break;
-        default:
-            return
-        
+        const eventData = req.body
+        const member = eventData.member
+        const job = eventData.job
+        console.log('TESTING WEBHOOK ENDPOINT')
+        const eventType = eventData.eventType
+
+        switch(eventType){
+            case JOB_ADDED:
+                //Create Event for member if it doesn't exist
+                const eventExists = await Event.findOne({
+                    where:
+                    {
+                        jobId: eventData.job.id,
+                        memberId: eventData.member.id
+                    }
+                })
+
+                //Create job and event if event does not exist
+                if(!eventExists){
+                    const EventToAdd = await Event.create({
+                        jobId: job.id,
+                        memberId: member.id,
+                        eventType: eventData.eventType,
+                        status: eventData.toList.name
+                    })
+                    const JobToAdd = await Job.create({
+                        name: eventData.member.givenName,
+                        title: eventData.title,
+                        employer: eventData.job.location.name,
+                        url: eventData.job.url,
+                        applicationDate: eventData.applicationDate,
+                        firstInterviewDate: eventData.firstInterviewDate,
+                        secondInterviewDate: eventData.secondInterviewDate
+                    })
+                    res.status(200)
+                }else{
+                    //Update to Event
+                    const EventUpdated = await EventExists.update({
+                        where:{
+                            status: eventData.toList.name
+                        }
+                    })
+                    //Find job to update
+                    const jobToUpdate = await Job.findOne({where:
+                    {
+                        id: eventData.jobId,
+                        memberId: eventData.member.id
+                    }})
+                    //Update job
+                    const jobUpdated = await jobToUpdate.update({
+                        applicationDate: eventData.applicationDate,
+                        firstInterviewDate: eventData.firstInterviewDate,
+                        secondInterviewDate: eventData.secondInterviewDate
+                    })
+                    res.status(200)
+                }
+                break;
+
+            case JOB_APPLICATION_DATE_SET:
+                //update
+                const JobToUpdate = await Job.findByPk(eventData.job.id)
+                const JobUpdated = await JobToUpdate.update({
+                    applicationDate: eventData.job.applicationDate
+                })
+                break;
+            case JOB_FIRST_INTERVIEW_DATE_SET:
+                const JobToUpdate = await Job.findByPk(eventData.job.id)
+                const JobUpdated = await JobToUpdate.update({
+                    firstInterviewDate: eventData.job.firstInterviewDate
+                })
+                //update
+                break;
+            case JOB_MOVED:
+                //update status of job
+                const eventToUpdate = await Event.findOne({
+                    where:{
+                        jobId: eventData.job.id,
+                        memberId: eventData.member.id
+                    }
+                })
+                const eventUpdated = await eventToUpdate.update({
+                    status: eventData.toList.name //update status from to
+                })
+                res.status(200)
+                break;
+            case JOB_OFFER_DATE_SET:
+                //update
+                const JobToUpdate = await Job.findByPk(eventData.job.id)
+                const JobUpdated = await JobToUpdate.update({
+                    offerDate: eventData.job.offerDate
+                })
+                res.status(200)
+                break;
+            case JOB_SECOND_INTERVIEW_DATE_SET:
+                //update
+                const JobToUpdate = await Job.findByPk(eventData.job.id)
+                const JobUpdated = await JobToUpdate.update({
+                    secondInterviewDate: eventData.job.secondInterviewDate
+                })
+                res.status(200)
+                break;
+            default:
+                res.status(404).send('Unknown event type')
+        }
     }
-  /*  const event = {
-        id: eventData.id,
-        jobId: job.id,
-        memberId: member.id,
-        eventType: eventData.eventType,
-        status: eventData.toList.name,
+    catch {
+        error => next(error)
     }
-    Event
-        .create(event)
-        .then(event => {
-            //ATTENTION! ALWAYS SEND BACK HTTP STATUS CODE 200 TO A WEBHOOK
-            res
-                .status(200)
-        })
-        .catch(error => next(error))*/
 })
 
 router.get('/events', (req, res, next) => {
