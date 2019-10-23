@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const router = new Router()
 const axios = require('axios')
+const Job = require('../jobs/model')
 const Sequelize = require('sequelize')
 const { baseURL, JOB_ADDED, JOB_MOVED, JOB_APPLICATION_DATE_SET, JOB_FIRST_INTERVIEW_DATE_SET
     , JOB_SECOND_INTERVIEW_DATE_SET, JOB_OFFER_DATE_SET } = require('../constants')
@@ -52,12 +53,13 @@ router.post('/events', async (req, res, next) => {
         const eventData = req.body
         const member = eventData.member
         const job = eventData.job
-        console.log('TESTING WEBHOOK ENDPOINT')
+        console.log('WEBHOOK ENDPOINT', 10000000 ,req.body)
         const eventType = eventData.eventType
-
+        
         switch(eventType){
             case JOB_ADDED:
                 //Create Event for member if it doesn't exist
+                
                 const eventExists = await Event.findOne({
                     where:
                     {
@@ -65,6 +67,7 @@ router.post('/events', async (req, res, next) => {
                         memberId: eventData.member.id
                     }
                 })
+                console.log('eventExists', 10001, eventExists)
 
                 //Create job and event if event does not exist
                 if(!eventExists){
@@ -83,7 +86,8 @@ router.post('/events', async (req, res, next) => {
                         firstInterviewDate: eventData.firstInterviewDate,
                         secondInterviewDate: eventData.secondInterviewDate
                     })
-                    res.status(200)
+                    console.log('EventToAdd', 1002, EventToAdd, JobToAdd)
+                    res.status(200).send('OK')
                 }else{
                     //Update to Event
                     const EventUpdated = await EventExists.update({
@@ -103,7 +107,8 @@ router.post('/events', async (req, res, next) => {
                         firstInterviewDate: eventData.firstInterviewDate,
                         secondInterviewDate: eventData.secondInterviewDate
                     })
-                    res.status(200)
+                    console.log('EventUpdate', 1003, EventUpdated, jobUpdated)
+                    res.status(200).send('OK')
                 }
                 break;
 
@@ -113,13 +118,15 @@ router.post('/events', async (req, res, next) => {
                 const JobUpdated = await JobToUpdate.update({
                     applicationDate: eventData.job.applicationDate
                 })
+                console.log('JOB_APPLICATION_DATE_SET', 1004, JobUpdated)
                 break;
             case JOB_FIRST_INTERVIEW_DATE_SET:
-                const JobToUpdate = await Job.findByPk(eventData.job.id)
-                const JobUpdated = await JobToUpdate.update({
+                const JobToUpdateF = await Job.findByPk(eventData.job.id)
+                const JobUpdatedF = await JobToUpdateF.update({
                     firstInterviewDate: eventData.job.firstInterviewDate
                 })
                 //update
+                console.log('JOB_FIRST_INTERVIEW_DATE_SET', 1005, JobUpdatedF)
                 break;
             case JOB_MOVED:
                 //update status of job
@@ -132,23 +139,30 @@ router.post('/events', async (req, res, next) => {
                 const eventUpdated = await eventToUpdate.update({
                     status: eventData.toList.name //update status from to
                 })
-                res.status(200)
+                console.log('JOB_MOVED', eventUpdated)
+                res.status(200).send('OK')
                 break;
             case JOB_OFFER_DATE_SET:
                 //update
-                const JobToUpdate = await Job.findByPk(eventData.job.id)
-                const JobUpdated = await JobToUpdate.update({
+                const JobToUpdateDS = await Job.findByPk(eventData.job.id)
+                const JobUpdatedDS = await JobToUpdateDS.update({
                     offerDate: eventData.job.offerDate
                 })
-                res.status(200)
+                console.log('JOB_OFFER_DATE_SET', JobUpdatedIDS)
+                res.status(200).send('OK')
                 break;
             case JOB_SECOND_INTERVIEW_DATE_SET:
                 //update
-                const JobToUpdate = await Job.findByPk(eventData.job.id)
-                const JobUpdated = await JobToUpdate.update({
+                const JobToUpdateIDS = await Job.findByPk(eventData.job.id)
+                const JobUpdatedIDS = await JobToUpdateIDS.update({
                     secondInterviewDate: eventData.job.secondInterviewDate
                 })
-                res.status(200)
+                console.log('JOB_SECOND_INTERVIEW_DATE_SET', JobToUpdateIDS)
+                res.status(200).send('OK')
+                break;
+            case "TEST":
+                console.log('CASE TEST', 1000, eventData.eventType)
+                res.status(200).send('OK')
                 break;
             default:
                 res.status(404).send('Unknown event type')
