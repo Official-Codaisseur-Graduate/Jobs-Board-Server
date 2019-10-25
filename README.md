@@ -33,6 +33,10 @@ Class #28 members:
 - [Suhas K N](https://github.com/suhaskn),
 - [Gergő Kovács](https://github.com/gergokutu)
 
+Class #30 members:
+- [Allan Man] (https://github.com/AllanRaf)
+- [Rezan Alhasan Al Ibrahim] (https://github.com/Rezan92/)
+
 The Front-end for the following repo may be found [here](https://github.com/Official-Codaisseur-Graduate/Jobs-Board-Client)
 
 The Backend is deployed to heroku [here](
