@@ -47,121 +47,221 @@ router.post('/copy-events', (req, res, next) => {
 
 //WEBHOOK ENDPOINT
 router.post('/events', async (req, res, next) => {
+    const eventData = req.body
+    console.log('WEBHOOK ENDPOINT', 10000000 ,eventData)
 
     try{
-
-        const eventData = req.body
         const member = eventData.member
         const job = eventData.job
-        console.log('WEBHOOK ENDPOINT', 10000000 ,req.body)
         const eventType = eventData.eventType
+        console.log('MEMBERID', member)
         
         switch(eventType){
             case JOB_ADDED:
-                //Create Event for member if it doesn't exist
-                
-                const eventExists = await Event.findOne({
-                    where:
-                    {
-                        jobId: eventData.job.id,
-                        memberId: eventData.member.id
+                try{
+                        //Create Event for member if it doesn't exist
+                        const applicationDate=job.applicationDate? new Date(job.applicationDate*1000): null
+                        const firstInterviewDate = job.firstInterviewDate? new Date(job.firstInterviewDate*1000):null
+                        const secondInterviewDate = job.secondInterviewDate? new Date(job.secondInterviewDate*1000): null
+                        const eventExists = await Event.findOne({
+                            where:
+                            {
+                                jobId: job.id,
+                                memberId: member.id
+                            }
+                        })
+                        //Create job and event if event does not exist
+                        if(eventExists===null){
+                    
+                            const event = {
+                                id: eventData.id,
+                                jobId: job.id,
+                                memberId: member.id,
+                                eventType: eventType,
+                                status: eventData.toList.name
+                            }
+                            const EventToAdd = await Event.create(event)
+                            const JobToAdd = await Job.create({
+                                id: job.id,
+                                name: eventData.member.givenName,
+                                title: job.title,
+                                employer: job.employer? job.employer.name: null,//job.location.name,
+                                url: job.url,
+                                //memberId: member.id, //added 1502 25 Oct 19
+                                applicationDate: applicationDate,
+                                firstInterviewDate: firstInterviewDate,
+                                secondInterviewDate: secondInterviewDate
+                            })
+                            res.status(200).send('OK')
+                    
+                    }else{
+                        //Update to Event
+                        const EventUpdated = await EventExists.update({
+                            where:{
+                                status: eventData.toList.name
+                            }
+                        })
+                        //Find job to update
+                        const jobToUpdate = await Job.findOne({where:
+                            {
+                                id: eventData.jobId,
+                                memberId: eventData.member.id
+                            }
+                        })
+                        //Update job
+                        const jobUpdated = await jobToUpdate.update({
+                            applicationDate: applicationDate, //eventData.applicationDate,
+                            firstInterviewDate: firstInterviewDate, //eventData.firstInterviewDate,
+                            secondInterviewDate: secondInterviewDate //eventData.secondInterviewDate
+                        })
+                        res.status(200).send('OK')
                     }
-                })
-                console.log('eventExists', 10001, eventExists)
-
-                //Create job and event if event does not exist
-                if(!eventExists){
-                    const EventToAdd = await Event.create({
-                        jobId: job.id,
-                        memberId: member.id,
-                        eventType: eventData.eventType,
-                        status: eventData.toList.name
-                    })
-                    const JobToAdd = await Job.create({
-                        name: eventData.member.givenName,
-                        title: eventData.title,
-                        employer: eventData.job.location.name,
-                        url: eventData.job.url,
-                        applicationDate: eventData.applicationDate,
-                        firstInterviewDate: eventData.firstInterviewDate,
-                        secondInterviewDate: eventData.secondInterviewDate
-                    })
-                    console.log('EventToAdd', 1002, EventToAdd, JobToAdd)
-                    res.status(200).send('OK')
-                }else{
-                    //Update to Event
-                    const EventUpdated = await EventExists.update({
-                        where:{
-                            status: eventData.toList.name
-                        }
-                    })
-                    //Find job to update
-                    const jobToUpdate = await Job.findOne({where:
-                    {
-                        id: eventData.jobId,
-                        memberId: eventData.member.id
-                    }})
-                    //Update job
-                    const jobUpdated = await jobToUpdate.update({
-                        applicationDate: eventData.applicationDate,
-                        firstInterviewDate: eventData.firstInterviewDate,
-                        secondInterviewDate: eventData.secondInterviewDate
-                    })
-                    console.log('EventUpdate', 1003, EventUpdated, jobUpdated)
-                    res.status(200).send('OK')
-                }
+            }
+            catch
+            {
+                console.error
+            }
                 break;
 
             case JOB_APPLICATION_DATE_SET:
-                //update
-                const JobToUpdate = await Job.findByPk(eventData.job.id)
-                const JobUpdated = await JobToUpdate.update({
-                    applicationDate: eventData.job.applicationDate
-                })
-                console.log('JOB_APPLICATION_DATE_SET', 1004, JobUpdated)
+                console.log('JOB_APPLICATION_DATE_SET')
+                //convert UNIX time stamp to correct date and store
+                try{
+                    const correctDateJADS = new Date(job.applicationDate*1000)
+                    const JobToUpdate = await Job.findByPk(job.id)
+                    const JobUpdated = await JobToUpdate.update({
+                        applicationDate: correctDateJADS//job.applicationDate
+                    })
+                    const eventExistsJADS = await Event.findOne({
+                        where:
+                        {
+                            jobId: job.id,
+                            memberId: member.id
+                        }
+                    })
+                    //update event
+                    const eventUpdatedJADS = eventExistsJADS.update({
+                        status: "applied"
+                    })
+                }
+                catch{
+                    console.error
+                }
                 break;
+
             case JOB_FIRST_INTERVIEW_DATE_SET:
-                const JobToUpdateF = await Job.findByPk(eventData.job.id)
-                const JobUpdatedF = await JobToUpdateF.update({
-                    firstInterviewDate: eventData.job.firstInterviewDate
-                })
-                //update
-                console.log('JOB_FIRST_INTERVIEW_DATE_SET', 1005, JobUpdatedF)
+
+                try{
+                    const correctDateJFIDS = new Date(job.firstInterviewDate*1000)
+                    const JobToUpdateF = await Job.findByPk(job.id)
+                    const JobUpdatedF = await JobToUpdateF.update({
+                        firstInterviewDate: correctDateJFIDS
+                    })
+                    //update Event
+                    const eventExistsJFIDS = await Event.findOne({
+                        where:
+                        {
+                            jobId: job.id,
+                            memberId: member.id
+                        }
+                    })
+                    //update event
+                    const eventUpdatedJFIDS = eventExistsJFIDS.update({
+                        status: "1st Interview"
+                    })
+                }
+                catch{
+                    console.error
+                }
                 break;
-            case JOB_MOVED:
+            case "JOB_MOVED":
                 //update status of job
-                const eventToUpdate = await Event.findOne({
-                    where:{
-                        jobId: eventData.job.id,
-                        memberId: eventData.member.id
+                console.log("JOB_MOVED")
+                //code added
+                try{
+                    const eventToUpdate = await Event.findOne({
+                        where:{
+                            jobId: eventData.job.id,
+                            memberId: eventData.member.id
+                        }
+                    })
+    
+                    const eventUpdated = await eventToUpdate.update({
+                        status: eventData.toList.name //update status from to
+                    })
+                    const jobToUpdateJM = await Job.findByPk(job.id)
+                    console.log('JOB MOVED job.applicationDate firstInterviewDate secondInterviewDate', job.applicationDate, job.firstInterviewDate, job.secondInterviewDate)
+                    if(job.secondInterviewDate){
+                        const jobUpdateJM = await jobToUpdateJM.update(
+                            {
+                                secondInterviewDate: new Date(job.secondInterviewDate*1000)
+                            }
+                        )
+
+                    }else if(job.firstInterviewDate){
+                        const jobUpdateJM = await jobToUpdateJM.update(
+                            {
+                                firstInterviewDate: new Date(job.firstInterviewDate*1000)
+                            }
+                        )
+                    } else {
+                        const jobUpdateJM = await jobToUpdateJM.update(
+                            {
+                                applicationDate: new Date(job.applicationDate*1000),
+                                //firstInterviewDate: new Date(job.firstInterviewDate*1000),
+                                //secondInterviewDate: secondInterviewDate || new Date(job.secondInterviewDate*1000)
+                            }
+                        )
                     }
-                })
-                const eventUpdated = await eventToUpdate.update({
-                    status: eventData.toList.name //update status from to
-                })
-                console.log('JOB_MOVED', eventUpdated)
+                }
+                catch{
+                    console.error
+                }
+            
                 res.status(200).send('OK')
                 break;
             case JOB_OFFER_DATE_SET:
                 //update
                 const JobToUpdateDS = await Job.findByPk(eventData.job.id)
                 const JobUpdatedDS = await JobToUpdateDS.update({
-                    offerDate: eventData.job.offerDate
+                    offerDate: new Date(eventData.date*1000)
                 })
-                console.log('JOB_OFFER_DATE_SET', JobUpdatedIDS)
+
+                const eventExistsJODS = await Event.findOne({
+                    where:
+                    {
+                        jobId: job.id,
+                        memberId: member.id
+                    }
+                })
+                //update event
+                console.log('JOB_OFFER_DATE_SET', eventExistsJODS)
+                const eventUpdatedJODS = eventExistsJODS.update({
+                    status: "offer"
+                })
                 res.status(200).send('OK')
                 break;
             case JOB_SECOND_INTERVIEW_DATE_SET:
                 //update
-                const JobToUpdateIDS = await Job.findByPk(eventData.job.id)
+                const JobToUpdateIDS = await Job.findByPk(job.id)
                 const JobUpdatedIDS = await JobToUpdateIDS.update({
-                    secondInterviewDate: eventData.job.secondInterviewDate
+                    secondInterviewDate: new Date(job.secondInterviewDate*1000)
                 })
                 console.log('JOB_SECOND_INTERVIEW_DATE_SET', JobToUpdateIDS)
+                const eventExistsJSIDS = await Event.findOne({
+                    where:
+                    {
+                        jobId: job.id,
+                        memberId: member.id
+                    }
+                })
+                //update event
+                const eventUpdatedJSIDS = eventExistsJSIDS.update({
+                    status: "2nd Interview"
+                })
                 res.status(200).send('OK')
                 break;
             case "TEST":
-                console.log('CASE TEST', 1000, eventData.eventType)
                 res.status(200).send('OK')
                 break;
             default:
