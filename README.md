@@ -183,27 +183,29 @@ To make your local server available to Huntr you can download and use a tool cal
 
 If the below set up does not work please read the detailed documentation in the above link.
 
-ngrok quick set up:
+- ngrok quick set up:
+
 For Mac users
-After downloading ngrok on Mac type the following on your terminal CLI:
-- $ "brew cask install ngrok"
-- $ "ngrok http 4000" (in this case 4000 is the port that you are listening to on your server)
+After downloading ngrok on Mac type the following commands without the $ sign on your terminal CLI:
+- $ brew cask install ngrok
+- $ ngrok http 4000 (in this case 4000 is the port that you are listening to on your server)
 
-For Ubuntu user
+For Ubuntu users
 After downloading ngrok type the following on your CLI:
--$ unzip /path/to/ngrok.zip
--$ ./ngrok http 4000
+- $ unzip /path/to/ngrok.zip
+- $ ./ngrok http 4000
 
 
-Also note that a webhook is always a POST endpoint and always send back a HTTP status code of 200 as a response.
+Note that a webhook is always a POST endpoint and always send back a HTTP status code of 200 as a response.
 
 - Events:
 
-The Huntr API sends 2 types of events through to the webhook endpoint. These are identified by the “eventType” field:
-“JOB_ADDED” or “JOB_MOVED”.
-There are more event types however through testing we have noticed that Huntr only sends the 2 above mentioned even types.
+The Huntr API sends various types of events through to the webhook endpoint. These are identified by the “eventType” field and are listed below:
+
+Two events can be triggered simultaneously.  For example if you create a new job and set the application date at the same time the JOB_ADDED and JOB_APPLICATION_DATE_SET will be triggered.
 
 EVENTS
+
 JOB_ADDED:
 Triggered when a new job is added by a member.
 
@@ -234,9 +236,15 @@ Triggered when one of the following happens:
 - user clicks on the job in their board and sets an "Offer" date under "LOG DATES".
 - user has dragged a job from one column into the "OFFER" column.
 
- ISSUES:
- Some users seemed to have extra columns such as "Assignment" in their Huntr account while others were able to create columns.  When jobs are dragged into these "extra" columns there will be no specific event triggered that are tied to these columns.
- The webhook is open and would allow anyone to update the database.  An authentication procedure should be implemented to prevent this.
+ ## ISSUES:
+ - Some users seemed to have extra columns such as "Assignment" in their Huntr account while others were able to create columns.  When jobs are dragged into these "extra" columns there will be no specific event triggered that are tied to these columns.
+
+ - The webhook is open and would allow anyone to update the database.  An authentication procedure should be implemented to prevent this.
+ 
+ - It is recommended the member table be up to date in order for the memberId field to be populated when you add a job in the Job table.  If the memberId does not exist in the member table when you add a job there will be no entry created in the Job table.
+
+- The use may do strange things like move a job from "1st Interview" to "Applied".  The dates may not update properly in the table as this is an unexpected order of events.
+
 
 
 - Testing:
