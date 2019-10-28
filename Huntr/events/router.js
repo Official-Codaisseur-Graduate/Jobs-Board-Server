@@ -60,25 +60,27 @@ router.post('/copy-events', (req, res, next) => {
 //WEBHOOK ENDPOINT
 router.post('/events', async (req, res, next) => {
     const eventData = req.body
-    console.log('WEBHOOK ENDPOINT', 10000000 ,eventData)
+    const eventType = eventData.eventType
+    
+    if(eventType=='TEST'){
+        console.log("TEST detected")
+        res.status(200).send('OK')
+        return
+    }
+    //console.log('WEBHOOK ENDPOINT', 200 ,eventData)
 
     try{
         const member = eventData.member
         const job = eventData.job
-        const eventType = eventData.eventType
-        console.log('MEMBERID', member)
         const applicationDate=job.applicationDate? new Date(job.applicationDate*1000): null
         const firstInterviewDate = job.firstInterviewDate? new Date(job.firstInterviewDate*1000):null
         const secondInterviewDate = job.secondInterviewDate? new Date(job.secondInterviewDate*1000): null
-        
+    
         switch(eventType){
             case JOB_ADDED:
-                console.log('JOB_ADDED EVENT', member)
+                
                 try{
                         //Create Event for member if it doesn't exist
-                        //const applicationDate=job.applicationDate? new Date(job.applicationDate*1000): null
-                        //const firstInterviewDate = job.firstInterviewDate? new Date(job.firstInterviewDate*1000):null
-                        //const secondInterviewDate = job.secondInterviewDate? new Date(job.secondInterviewDate*1000): null
                         const eventExists = await findEvent(job.id, member.id)
    
                         const memberExists = await Member.findByPk(member.id)   
@@ -94,7 +96,6 @@ router.post('/events', async (req, res, next) => {
 
                         //Create job and event if event does not exist
                         if(eventExists===null){
-                    
                             const event = {
                                 id: eventData.id,
                                 jobId: job.id,
@@ -115,7 +116,6 @@ router.post('/events', async (req, res, next) => {
                                 secondInterviewDate: secondInterviewDate
                             })
                             res.status(200).send('OK')
-                    
                     }else{
                         //Update Event
                         const EventUpdated = await eventExists.update({
@@ -149,15 +149,44 @@ router.post('/events', async (req, res, next) => {
                 try{
                     const correctDateJADS = new Date(job.applicationDate*1000)
                     const JobToUpdate = await Job.findByPk(job.id)
-                    const JobUpdated = await JobToUpdate.update({
-                        applicationDate: correctDateJADS//job.applicationDate
-                    })
+                    
+                    //if job exists update otherwise create job
+                    if(JobToUpdate){
+                        const JobUpdated = await JobToUpdate.update({
+                            applicationDate: correctDateJADS//job.applicationDate
+                        })
+                    }else{
+                        const JobToAdd = await Job.create({
+                            id: job.id,
+                            name: eventData.member.givenName,
+                            title: job.title,
+                            employer: job.employer? job.employer.name: null,//job.location.name,
+                            url: job.url,
+                            memberId: member.id,
+                            applicationDate: applicationDate,
+                            firstInterviewDate: firstInterviewDate,
+                            secondInterviewDate: secondInterviewDate
+                        })
+                    }
                     const eventExistsJADS = await findEvent(job.id, member.id)
-
-                    //update event
-                    const eventUpdatedJADS = eventExistsJADS.update({
-                        status: "applied"
-                    })
+                    console.log('eventUpdatedJADS', eventExistsJADS, eventData, 'jobId', job.id, 'memberId', member.id, 'eventType', eventType)
+                    //update event if it exists otherwise create ******
+                    if(eventExistsJADS){
+                        const eventUpdatedJADS = eventExistsJADS.update({
+                            status: "applied"
+                        })
+                    }else{
+                        const event = {
+                            id: eventData.id,
+                            jobId: job.id,
+                            memberId: member.id,
+                            eventType: eventType,
+                            status: eventData.toList? eventData.toList.name: "Applied"
+                        }
+                        console.log('CREATE EVENT')
+                        const EventToAdd = await Event.create(event)
+                        console.log('CREATE EVENT', 1000, EventToAdd)
+                    }
                 }
                 catch {
                     console.error
@@ -198,7 +227,7 @@ router.post('/events', async (req, res, next) => {
                     }
 
                     const eventToUpdate = await findEvent(job.id, member.id)
-                    //NEW CODE ADDED
+                    //Add event if it doesn't exist
                     if(eventToUpdate===null){
                         const event = {
                             id: eventData.id,
@@ -208,16 +237,15 @@ router.post('/events', async (req, res, next) => {
                             status: eventData.toList.name
                         }
                         const EventToAdd = await Event.create(event)
-                    }else{//
+                    }else{
                         const eventUpdated = await eventToUpdate.update({
                             status: eventData.toList.name
                         })
                     }
-                    //
-                        const jobToUpdateJM = await Job.findByPk(job.id)
 
-                    //NEW CODE ADDED
+                    const jobToUpdateJM = await Job.findByPk(job.id)
                     if(!jobToUpdateJM){
+                            //Add job if it doesn't exist
                             const JobToAdd = await Job.create({
                             id: job.id,
                             name: eventData.member.givenName,
@@ -229,8 +257,8 @@ router.post('/events', async (req, res, next) => {
                             firstInterviewDate: firstInterviewDate,
                             secondInterviewDate: secondInterviewDate
                         })
-                    }else {//
-                    
+                    }else {
+                        //if second interview date exists member is passed the wish list/application stage/first interview stage
                         if(job.secondInterviewDate){
                             const jobUpdateJM = await jobToUpdateJM.update(
                                 {
@@ -238,16 +266,12 @@ router.post('/events', async (req, res, next) => {
                                 }
                             )
                         }else if(job.firstInterviewDate){
-                            const jobUpdateJM = await jobToUpdateJM.update(
-                                {
+                            const jobUpdateJM = await jobToUpdateJM.update({
                                     firstInterviewDate: new Date(job.firstInterviewDate*1000)
-                                }
-                            )
+                                })
                         } else {
                             const jobUpdateJM = await jobToUpdateJM.update({
-                                    applicationDate: new Date(job.applicationDate*1000),
-                                    //firstInterviewDate: new Date(job.firstInterviewDate*1000),
-                                    //secondInterviewDate: secondInterviewDate || new Date(job.secondInterviewDate*1000)
+                                    applicationDate: new Date(job.applicationDate*1000)
                                 })
                         }
                     }
@@ -263,7 +287,6 @@ router.post('/events', async (req, res, next) => {
                     const JobUpdatedDS = await JobToUpdateDS.update({
                         offerDate: new Date(eventData.date*1000)
                     })
-
                     const eventExistsJODS = await findEvent(job.id, member.id)
 
                     const eventUpdatedJODS = eventExistsJODS.update({
