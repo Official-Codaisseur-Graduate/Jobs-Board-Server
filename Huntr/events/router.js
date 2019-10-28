@@ -8,6 +8,17 @@ const { baseURL, JOB_ADDED, JOB_MOVED, JOB_APPLICATION_DATE_SET, JOB_FIRST_INTER
 
 const Event = require('./model');
 
+//28 October 2019
+async function findEvent(jobid, memberid){
+    return Event.findOne({
+                where:
+                {
+                    jobId: jobid,
+                    memberId: memberid
+                }
+            })
+}
+
 const token = process.env.API_TOKEN
 axios.defaults.baseURL = baseURL
 axios.defaults.headers.common = { 'Authorization': `bearer ${token}` }
@@ -58,18 +69,20 @@ router.post('/events', async (req, res, next) => {
         
         switch(eventType){
             case JOB_ADDED:
+                console.log('JOB_ADDED EVENT', member)
                 try{
                         //Create Event for member if it doesn't exist
                         const applicationDate=job.applicationDate? new Date(job.applicationDate*1000): null
                         const firstInterviewDate = job.firstInterviewDate? new Date(job.firstInterviewDate*1000):null
                         const secondInterviewDate = job.secondInterviewDate? new Date(job.secondInterviewDate*1000): null
-                        const eventExists = await Event.findOne({
+                        const eventExists = await findEvent(job.id, member.id)
+                        /*await Event.findOne({
                             where:
                             {
                                 jobId: job.id,
                                 memberId: member.id
                             }
-                        })
+                        })*/
                         //Create job and event if event does not exist
                         if(eventExists===null){
                     
@@ -95,8 +108,8 @@ router.post('/events', async (req, res, next) => {
                             res.status(200).send('OK')
                     
                     }else{
-                        //Update to Event
-                        const EventUpdated = await EventExists.update({
+                        //Update to Event //EventExists
+                        const EventUpdated = await eventExists.update({
                             where:{
                                 status: eventData.toList.name
                             }
@@ -124,7 +137,7 @@ router.post('/events', async (req, res, next) => {
                 break;
 
             case JOB_APPLICATION_DATE_SET:
-                console.log('JOB_APPLICATION_DATE_SET')
+                console.log('JOB_APPLICATION_DATE_SET EVENT', member)
                 //convert UNIX time stamp to correct date and store
                 try{
                     const correctDateJADS = new Date(job.applicationDate*1000)
@@ -132,13 +145,14 @@ router.post('/events', async (req, res, next) => {
                     const JobUpdated = await JobToUpdate.update({
                         applicationDate: correctDateJADS//job.applicationDate
                     })
-                    const eventExistsJADS = await Event.findOne({
+                    const eventExistsJADS = await findEvent(job.id, member.id)
+                    /*Event.findOne({
                         where:
                         {
                             jobId: job.id,
                             memberId: member.id
                         }
-                    })
+                    })*/
                     //update event
                     const eventUpdatedJADS = eventExistsJADS.update({
                         status: "applied"
@@ -150,20 +164,21 @@ router.post('/events', async (req, res, next) => {
                 break;
 
             case JOB_FIRST_INTERVIEW_DATE_SET:
-
+                console.log('JOB_FIRST_INTERVIEW_DATE_SET EVENT', member)
                 try{
                     const correctDateJFIDS = new Date(job.firstInterviewDate*1000)
                     const JobToUpdateF = await Job.findByPk(job.id)
                     const JobUpdatedF = await JobToUpdateF.update({
                         firstInterviewDate: correctDateJFIDS
                     })
-                    const eventExistsJFIDS = await Event.findOne({
+                    const eventExistsJFIDS = await findEvent(job.id, member.id)
+                    /*Event.findOne({
                         where:
                         {
                             jobId: job.id,
                             memberId: member.id
                         }
-                    })
+                    })*/
                     const eventUpdatedJFIDS = eventExistsJFIDS.update({
                         status: "1st Interview"
                     })
@@ -173,13 +188,15 @@ router.post('/events', async (req, res, next) => {
                 }
                 break;
             case "JOB_MOVED":
+                console.log("JOB_MOVED_EVENT", member)
                 try{
-                    const eventToUpdate = await Event.findOne({
+                    const eventToUpdate = await findEvent(job.id, member.id)
+                    /*Event.findOne({
                         where:{
                             jobId: eventData.job.id,
                             memberId: eventData.member.id
                         }
-                    })
+                    })*/
     
                     const eventUpdated = await eventToUpdate.update({
                         status: eventData.toList.name //update status from to
@@ -216,21 +233,22 @@ router.post('/events', async (req, res, next) => {
                 res.status(200).send('OK')
                 break;
             case JOB_OFFER_DATE_SET:
-
+                console.log("JOB_OFFER_DATE_SET", member)
                 try{
                     const JobToUpdateDS = await Job.findByPk(eventData.job.id)
                     const JobUpdatedDS = await JobToUpdateDS.update({
                         offerDate: new Date(eventData.date*1000)
                     })
 
-                    const eventExistsJODS = await Event.findOne({
+                    const eventExistsJODS = await findEvent(job.id, member.id)
+                    /*Event.findOne({
                         where:
                         {
                             jobId: job.id,
                             memberId: member.id
                         }
-                    })
-                    console.log('JOB_OFFER_DATE_SET', eventExistsJODS)
+                    })*/
+   
                     const eventUpdatedJODS = eventExistsJODS.update({
                         status: "offer"
                     })
@@ -242,19 +260,21 @@ router.post('/events', async (req, res, next) => {
                 }
                 break;
             case JOB_SECOND_INTERVIEW_DATE_SET:
+                console.log("JOB_SECOND_INTERVIEW_DATE_SET", member)
                 //update
                 const JobToUpdateIDS = await Job.findByPk(job.id)
                 const JobUpdatedIDS = await JobToUpdateIDS.update({
                     secondInterviewDate: new Date(job.secondInterviewDate*1000)
                 })
                 console.log('JOB_SECOND_INTERVIEW_DATE_SET', JobToUpdateIDS)
-                const eventExistsJSIDS = await Event.findOne({
+                const eventExistsJSIDS = await findEvent(job.id, member.id)
+                /*Event.findOne({
                     where:
                     {
                         jobId: job.id,
                         memberId: member.id
                     }
-                })
+                })*/
                 //update event
                 const eventUpdatedJSIDS = eventExistsJSIDS.update({
                     status: "2nd Interview"

@@ -34,8 +34,8 @@ Class #28 members:
 - [Gergő Kovács](https://github.com/gergokutu)
 
 Class #30 members:
-- [Allan Man] (https://github.com/AllanRaf)
-- [Rezan Alhasan Al Ibrahim] (https://github.com/Rezan92/)
+- [Allan Man](https://github.com/AllanRaf),
+- [Rezan Alhasan Al Ibrahim](https://github.com/Rezan92/)
 
 The Front-end for the following repo may be found [here](https://github.com/Official-Codaisseur-Graduate/Jobs-Board-Client)
 
@@ -179,6 +179,22 @@ Please note that if you wish to add a new endpoint or edit the name of the URL o
 To create a new webhook endpoint:
 Admin —> developers —> Webhooks —> Add Endpoint
 
+To make your local server available to Huntr you can download and use a tool called ngrok (https://ngrok.com/download).  Follow the documentation to download ngrok and to install.
+
+If the below set up does not work please read the detailed documentation in the above link.
+
+ngrok quick set up:
+For Mac users
+After downloading ngrok on Mac type the following on your terminal CLI:
+- $ "brew cask install ngrok"
+- $ "ngrok http 4000" (in this case 4000 is the port that you are listening to on your server)
+
+For Ubuntu user
+After downloading ngrok type the following on your CLI:
+-$ unzip /path/to/ngrok.zip
+-$ ./ngrok http 4000
+
+
 Also note that a webhook is always a POST endpoint and always send back a HTTP status code of 200 as a response.
 
 - Events:
@@ -187,9 +203,54 @@ The Huntr API sends 2 types of events through to the webhook endpoint. These are
 “JOB_ADDED” or “JOB_MOVED”.
 There are more event types however through testing we have noticed that Huntr only sends the 2 above mentioned even types.
 
+EVENTS
+JOB_ADDED:
+Triggered when a new job is added by a member.
+
+JOB_MOVED:
+Triggered when the user drags a job from one column to another column.
+Depending on where it is dragged this will trigger another event listed below.
+
+JOB_APPLICATION_DATE_SET:
+Triggered when one of the following happens:
+- user clicks on the job in their board and sets the application date.
+- user drags a job into the Applied column.
+- user has added a job and sets an "Applied" date under "LOG DATES" in the new job.
+
+JOB_FIRST_INTERVIEW_DATE_SET:
+Triggered when one of the following happens:
+- user clicks on the job in their board and sets the 1st interview date.
+- user drags a job into the INTERVIEW column.
+- user has added a job and sets an "Interview 1" date under "LOG DATES" in the new job.
+
+
+JOB_SECOND_INTERVIEW_DATE_SET:
+Triggered when one of the following happens:
+- user clicks on the job in their board and sets the 2nd interview date.
+- user has added a new job and sets an "Interview 2" date under "LOG DATES" in the new job.
+
+JOB_OFFER_DATE_SET:
+Triggered when one of the following happens:
+- user clicks on the job in their board and sets an "Offer" date under "LOG DATES".
+- user has dragged a job from one column into the "OFFER" column.
+
+ ISSUES:
+ Some users seemed to have extra columns such as "Assignment" in their Huntr account while others were able to create columns.  When jobs are dragged into these "extra" columns there will be no specific event triggered that are tied to these columns.
+ The webhook is open and would allow anyone to update the database.  An authentication procedure should be implemented to prevent this.
+
+
 - Testing:
 
 How to test incoming events:
+
+Make sure you have exposed your local server to the internet by installing ngrok using the steps above.
+
+Then you can create a webhook end point by performing the following:
+- Log into https://hunter.co with the necessary permissions to access the developers menu.  
+- On the left handside find the icon that says "Developers" and click on it.  
+- On the table "Developers" click on "Webhooks".  
+- On the table Webhook endpoints click on the "Add endpoint" button.  
+- Paste your webhook URL there.
 
 Admin —> Boards —> Create Boards
 
