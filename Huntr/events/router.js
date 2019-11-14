@@ -57,11 +57,13 @@ async function createOrUpdateJob(eventData, member, job){
                 employer: job.employer? job.employer.name: null,//job.location.name,
                 url: job.url,
                 memberId: member.id,
-                applicationDate: job.applicationDate? new Date(job.applicationDate*1000): null
+                applicationDate: job.applicationDate? new Date(job.applicationDate*1000): null,
+                firstInterviewDate: job.firstInterviewDate? new Date(job.firstInterviewDate): null
         })
         }else{
             const jobToUpdate = await jobExists.update({
-                applicationDate: job.applicationDate? new Date(job.applicationDate*1000): null
+                applicationDate: job.applicationDate? new Date(job.applicationDate*1000): null,
+                firstInterviewDate: job.firstInterviewDate? new Date(job.firstInterviewDate): null
             })
             return jobExists
         }
@@ -174,21 +176,6 @@ router.post('/events', async (req, res, next) => {
                     const JobToAddOrUpdate = await createOrUpdateJob(eventData, member, job)
                     
                     const eventExistsJADS = await findEvent(eventData, job, member)
-                    //update event if it exists otherwise create ******
-                    /*if(eventExistsJADS){
-                        const eventUpdatedJADS = eventExistsJADS.update({
-                            status: "applied"
-                        })
-                    }else{
-                        const event = {
-                            id: eventData.id,
-                            jobId: job.id,
-                            memberId: member.id,
-                            eventType: eventType,
-                            status: eventData.toList? eventData.toList.name: "Applied"
-                        }
-                        const EventToAdd = await Event.create(event)
-                    }*/
                 break;
 
             case JOB_FIRST_INTERVIEW_DATE_SET:
@@ -230,7 +217,6 @@ router.post('/events', async (req, res, next) => {
                         }
                         
                         const EventToAdd = await Event.create(event)
-   
                     }
                 break;
             case "JOB_MOVED":
