@@ -11,7 +11,7 @@ const Event = require('./model');
 
 //Function to check if event exists
 async function findEvent(eventData, job, member){
-    console.log('EVENTDATE.TOLIST.NAME', eventData.toList, 'eventdata.eventtype', eventData.eventType)
+
     eventExists = await Event.findOne({
                 where:
                 {
@@ -19,7 +19,6 @@ async function findEvent(eventData, job, member){
                     memberId: member.id
                 }
             })
-    console.log('EVENT EXISTS', 33, eventExists, 'JOB', job)
     if(eventExists===null){
             const event = {
                 id: eventData.id,
@@ -50,6 +49,7 @@ async function createOrUpdateJob(eventData, member, job){
         })
         console.log('jobExists', jobExists)
         if(!jobExists){
+            console.log('CREATING JOB OFFER DATE', job.offerDate)
             const JobToAdd = await Job.create({
                 id: job.id,
                 name: member.givenName,
@@ -58,12 +58,15 @@ async function createOrUpdateJob(eventData, member, job){
                 url: job.url,
                 memberId: member.id,
                 applicationDate: job.applicationDate? new Date(job.applicationDate*1000): null,
-                firstInterviewDate: job.firstInterviewDate? new Date(job.firstInterviewDate): null
-        })
+                firstInterviewDate: job.firstInterviewDate? new Date(job.firstInterviewDate): null,
+                offerDate: job.offerDate? new Date(job.offderDate): null
+            })
         }else{
+            console.log('CREATING JOB OFFER DATE', job.offerDate)
             const jobToUpdate = await jobExists.update({
                 applicationDate: job.applicationDate? new Date(job.applicationDate*1000): null,
-                firstInterviewDate: job.firstInterviewDate? new Date(job.firstInterviewDate): null
+                firstInterviewDate: job.firstInterviewDate? new Date(job.firstInterviewDate): null,
+                offerDate: job.offerDate? new Date(job.offderDate): null
             })
             return jobExists
         }
@@ -172,7 +175,6 @@ router.post('/events', async (req, res, next) => {
                 console.log('3RD JOB_APPLICATION_DATE_SET', 2000)
                 //convert UNIX time stamp to correct date and store
                     const correctDateJADS = new Date(job.applicationDate*1000)
-                    //const JobToUpdate = await Job.findByPk(job.id)
                     const JobToAddOrUpdate = await createOrUpdateJob(eventData, member, job)
                     
                     const eventExistsJADS = await findEvent(eventData, job, member)
@@ -181,43 +183,9 @@ router.post('/events', async (req, res, next) => {
             case JOB_FIRST_INTERVIEW_DATE_SET:
                     console.log('4H JOB_FIRST_INTERVIEW_DATE_SET', 3000)
                     const correctDateJFIDS = new Date(job.firstInterviewDate*1000)
-                    const JobToUpdateF = await Job.findByPk(job.id)
+                    const JobToAddOrUpdateJFIDS = await createOrUpdateJob(eventData, member, job)
+                    const eventExistsJFIDS = await findEvent(eventData, job, member)
 
-                    //if job exists update otherwise create job*****
-                    if(JobToUpdateF){
-                        const JobUpdated = await JobToUpdateF.update({
-                            firstInterviewDate: correctDateJFIDS,//job.applicationDate
-                        })
-                    }else{
-                        const JobToAdd = await Job.create({
-                            id: job.id,
-                            name: eventData.member.givenName,
-                            title: job.title,
-                            employer: job.employer? job.employer.name: null,//job.location.name,
-                            url: job.url,
-                            memberId: member.id,
-                            applicationDate: applicationDate,
-                            firstInterviewDate: firstInterviewDate,
-                            secondInterviewDate: secondInterviewDate
-                        })
-                    }
-                    //update event if it doesn't exist otherwise create
-                    const eventExistsJFIDS = await findEvent(job.id, member.id)
-                    if(eventExistsJFIDS){
-                        const eventUpdatedFIDS = eventExistsJFIDS.update({
-                            status: "1st Interview"
-                        })
-                    }else{
-                        const event = {
-                            id: eventData.id,
-                            jobId: job.id,
-                            memberId: member.id,
-                            eventType: eventType,
-                            status: eventData.toList? eventData.toList.name: "Applied"
-                        }
-                        
-                        const EventToAdd = await Event.create(event)
-                    }
                 break;
             case "JOB_MOVED":
                     console.log('5TH JOB_MOVED', 4000)
@@ -295,57 +263,10 @@ router.post('/events', async (req, res, next) => {
                 break;
             case JOB_OFFER_DATE_SET:
                     console.log('6TH JOB_OFFER_DATE_SET', 5000)
-                try {
-                    const JobToUpdateDS = await Job.findByPk(eventData.job.id)
-                    //update if job exists otherwise create***
-                    if(JobToUpdateDS){
-                        const JobUpdatedDS = await JobToUpdateDS.update({
-                            offerDate: new Date(eventData.date*1000)
-                        })
-                        /*const JobUpdatedDS = await JobToUpdateDS.update({
-                            secondInterviewDate: new Date(job.secondInterviewDate*1000)
-                        })*/
-                    }else{
-                        const JobToAdd = await Job.create({
-                            id: job.id,
-                            name: eventData.member.givenName,
-                            title: job.title,
-                            employer: job.employer? job.employer.name: null,//job.location.name,
-                            url: job.url,
-                            memberId: member.id,
-                            offerDate: new Date(eventData.date*1000)
-                            //applicationDate: applicationDate,
-                            //firstInterviewDate: firstInterviewDate,
-                            //secondInterviewDate: secondInterviewDate
-                        })
-                    }   
 
-                    const eventExistsJODS = await findEvent(job.id, member.id)
-                    //update if event exists otherwise create
-                    if(eventExistsJODS){
-                        const eventUpdatedJODS = eventExistsJODS.update({
-                            status: "offer"
-                        })
-                    }else{
-                        const event = {
-                            id: eventData.id,
-                            jobId: job.id,
-                            memberId: member.id,
-                            eventType: eventType,
-                            offerDate: new Date(job.offerDate*1000),
-                            status: "offer"
-                        }
-            
-                        const EventToAdd = await Event.create(event)
-                    }
+                const JobToAddOrUpdateJODS = await createOrUpdateJob(eventData, member, job)
+                const eventExistsJODS = await findEvent(eventData, job, member)
 
-
-
-                    res.status(200).send('OK')
-                }
-                catch {
-                    console.error
-                }
                 break;
 
             case JOB_SECOND_INTERVIEW_DATE_SET:
