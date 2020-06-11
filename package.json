@@ -20,7 +20,7 @@
     "moment": "^2.24.0",
     "nodemon": "^1.19.1",
     "pg": "^7.11.0",
-    "sequelize": "^5.8.12",
+    "sequelize": "^5.15.1",
     "string-similarity": "^3.0.0"
   },
   "repository": {
